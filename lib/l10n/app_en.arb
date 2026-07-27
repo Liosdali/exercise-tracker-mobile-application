@@ -1,0 +1,67 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Exercise App",
+  "@appTitle": {"description": "App title"},
+
+  "navHome": "Home",
+  "navWorkouts": "Workouts",
+  "navExercises": "Exercises",
+  "navProfile": "Profile",
+
+  "commonSave": "Save",
+  "commonCancel": "Cancel",
+  "commonDelete": "Delete",
+  "commonEdit": "Edit",
+  "commonAdd": "Add",
+  "commonConfirm": "Confirm",
+  "commonClose": "Close",
+
+  "dashboardGreeting": "Hello! 👋",
+  "dashboardStreakActive": "{count} day streak, keep it up!",
+  "@dashboardStreakActive": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "dashboardStreakStart": "Work out today to start your streak!",
+  "dashboardWeeklyGoalTitle": "Weekly Goal",
+  "dashboardWeeklyGoalCount": "{done} / {goal} workouts",
+  "@dashboardWeeklyGoalCount": {
+    "placeholders": {"done": {"type": "int"}, "goal": {"type": "int"}}
+  },
+  "dashboardTodaysWorkoutTitle": "Today's Workout",
+  "dashboardCompletedLabel": "Completed",
+  "dashboardNoProgramSelected": "No program selected yet. Choose one from the Workouts tab.",
+  "dashboardManualAssignmentSubtitle": "Assigned for today",
+  "dashboardNextWorkoutSubtitle": "Next up",
+  "dashboardStartButton": "Start",
+  "dashboardTotalWorkoutsLabel": "Total Workouts",
+  "dashboardTotalVolumeLabel": "Total Volume",
+
+  "profileTitle": "Profile & Stats",
+  "profileBadgesLabel": "Badges",
+  "profileStreakLabel": "Streak",
+  "profileWeeklyVolumeChartTitle": "Weekly Volume (8 weeks)",
+  "profileAchievementsTitle": "Achievements",
+  "profileCalendarLinkTitle": "Workout Calendar / History",
+  "profileBodyMeasurementsTitle": "Body Measurements",
+  "profileNoMeasurements": "No measurements logged yet.",
+
+  "settingsTitle": "Settings",
+  "settingsLanguageSection": "Language",
+  "settingsLanguageSystem": "System default",
+  "settingsLanguageTurkish": "Türkçe",
+  "settingsLanguageEnglish": "English",
+  "settingsWeeklyGoalLabel": "Weekly goal (workouts)",
+  "settingsRestTimerSound": "Rest timer sound",
+  "settingsRestTimerVibration": "Rest timer vibration",
+  "settingsResetDataSection": "Data",
+  "settingsResetDataButton": "Reset All Data",
+  "settingsResetDataConfirmTitle": "Are you sure?",
+  "settingsResetDataConfirmMessage": "This will permanently delete all workout history, custom programs/routines, body measurements and achievements. This action cannot be undone.",
+  "settingsResetDataSuccess": "All data has been reset.",
+
+  "calendarScreenTitle": "Workout Calendar",
+  "calendarAssignProgramButton": "Assign a program",
+  "calendarClearAssignmentButton": "Remove assignment",
+  "calendarPlannedLabel": "Planned"
+}
