@@ -98,7 +98,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileStreakLabel => 'Streak';
 
   @override
-  String get profileWeeklyVolumeChartTitle => 'Weekly Volume (8 weeks)';
+  String get profileWeeklyVolumeChartTitle =>
+      'Weekly Workout Duration (Minutes)';
 
   @override
   String get profileAchievementsTitle => 'Achievements';

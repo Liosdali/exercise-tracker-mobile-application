@@ -9,6 +9,7 @@ import '../providers/exercise_provider.dart';
 import '../providers/program_provider.dart';
 import '../providers/routine_provider.dart';
 import '../providers/settings_provider.dart';
+import '../services/program_share_service.dart';
 import 'active_workout_screen.dart';
 import 'program_builder_screen.dart';
 import 'program_detail_screen.dart';
@@ -87,6 +88,47 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
     context.read<CustomProgramProvider>().load();
   }
 
+  Future<void> _importProgramWithCode() async {
+    final controller = TextEditingController();
+    final code = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Kod ile Program Ekle'),
+        content: TextField(
+          controller: controller,
+          maxLines: 5,
+          decoration: const InputDecoration(
+            hintText: 'OLYMPOS-PROGRAM-CODE:v1:... kodunu buraya yapıştırın',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('İptal'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(controller.text),
+            child: const Text('İçe Aktar'),
+          ),
+        ],
+      ),
+    );
+    if (code == null || code.trim().isEmpty || !mounted) return;
+
+    try {
+      final program = ProgramShareService.decodeProgram(code);
+      await context.read<CustomProgramProvider>().addProgram(program);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('"${program.name}" programı eklendi.')),
+      );
+    } on FormatException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final programProvider = context.watch<ProgramProvider>();
@@ -135,7 +177,17 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
               ),
             ),
           const SizedBox(height: 24),
-          Text('Programlarım', style: Theme.of(context).textTheme.titleLarge),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Programlarım', style: Theme.of(context).textTheme.titleLarge),
+              TextButton.icon(
+                onPressed: _importProgramWithCode,
+                icon: const Icon(Icons.qr_code),
+                label: const Text('Kod ile Ekle'),
+              ),
+            ],
+          ),
           const SizedBox(height: 8),
           if (!customProgramProvider.isLoaded)
             const Center(child: CircularProgressIndicator())

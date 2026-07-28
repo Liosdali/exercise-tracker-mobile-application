@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../data/database_helper.dart';
 import '../models/exercise.dart';
 import '../models/workout_entry.dart';
+import '../models/workout_session.dart';
 import '../providers/program_progress_provider.dart';
 import '../providers/stats_provider.dart';
+import '../providers/user_profile_provider.dart';
 import '../providers/workout_provider.dart';
+import '../services/calorie_calculator_service.dart';
 import '../widgets/category_style.dart';
 import '../widgets/rest_timer_sheet.dart';
 
@@ -63,6 +67,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
   int _exerciseIndex = 0;
   int _setIndex = 0;
   final Map<int, List<_SetLog>> _logs = {};
+  final Stopwatch _stopwatch = Stopwatch();
 
   late final TextEditingController _repsController;
   late final TextEditingController _weightController;
@@ -74,6 +79,9 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     super.initState();
     _repsController = TextEditingController(text: widget.steps.first.targetReps.toString());
     _weightController = TextEditingController(text: '0');
+    // "Antrenmanı Başlat": start the elapsed-time timer as soon as the
+    // guided workout screen opens.
+    _stopwatch.start();
   }
 
   @override
@@ -115,6 +123,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
   }
 
   Future<void> _finishWorkout() async {
+    _stopwatch.stop();
     final workoutProvider = context.read<WorkoutProvider>();
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     double totalVolume = 0;
@@ -149,6 +158,45 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
 
     if (!mounted) return;
 
+    // Duration tracked by the stopwatch started when this screen opened.
+    final durationMinutes = (_stopwatch.elapsed.inSeconds / 60).ceil().clamp(1, 1000000);
+
+    // Resolve the user's current weight for the MET calorie formula:
+    // profile weight -> latest logged body measurement -> a safe default.
+    double weightKg = CalorieCalculatorService.fallbackWeightKg;
+    final profileWeight = context.read<UserProfileProvider>().profile?.weightKg;
+    if (profileWeight != null && profileWeight > 0) {
+      weightKg = profileWeight;
+    } else {
+      final measurements = await DatabaseHelper.instance.allMeasurements();
+      for (final m in measurements) {
+        if (m.weightKg != null && m.weightKg! > 0) {
+          weightKg = m.weightKg!;
+          break;
+        }
+      }
+    }
+
+    final calories = CalorieCalculatorService.calculateCalories(
+      weightKg: weightKg,
+      durationMinutes: durationMinutes.toDouble(),
+    );
+
+    await DatabaseHelper.instance.insertWorkoutSession(
+      WorkoutSession(
+        date: today,
+        durationMinutes: durationMinutes,
+        calories: calories,
+        exerciseCount: widget.steps.length,
+        totalSets: totalSets,
+        totalVolume: totalVolume,
+        title: widget.title,
+        createdAt: DateTime.now().toIso8601String(),
+      ),
+    );
+
+    if (!mounted) return;
+
     if (widget.programKey != null && widget.dayIndex != null && widget.totalDays != null) {
       await context.read<ProgramProgressProvider>().markCompleted(
             widget.programKey!,
@@ -171,6 +219,8 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
           totalSets: totalSets,
           totalVolume: totalVolume,
           exerciseCount: widget.steps.length,
+          durationMinutes: durationMinutes,
+          calories: calories,
         ),
       ),
     );
@@ -201,17 +251,17 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
           const SizedBox(height: 4),
           Text(titleCase(step.exercise.bodyPart)),
           const SizedBox(height: 16),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              step.exercise.gifAsset,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 200,
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: const Icon(Icons.fitness_center, size: 48),
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                step.exercise.gifAsset,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: const Icon(Icons.fitness_center, size: 48),
+                ),
               ),
             ),
           ),
@@ -257,6 +307,8 @@ class WorkoutSummaryScreen extends StatelessWidget {
   final int totalSets;
   final double totalVolume;
   final int exerciseCount;
+  final int durationMinutes;
+  final double calories;
 
   const WorkoutSummaryScreen({
     super.key,
@@ -264,6 +316,8 @@ class WorkoutSummaryScreen extends StatelessWidget {
     required this.totalSets,
     required this.totalVolume,
     required this.exerciseCount,
+    required this.durationMinutes,
+    required this.calories,
   });
 
   @override
@@ -283,6 +337,8 @@ class WorkoutSummaryScreen extends StatelessWidget {
               _StatRow(label: 'Egzersiz sayısı', value: '$exerciseCount'),
               _StatRow(label: 'Toplam set', value: '$totalSets'),
               _StatRow(label: 'Toplam hacim', value: '${totalVolume.toStringAsFixed(0)} kg'),
+              _StatRow(label: 'Süre', value: '$durationMinutes dk'),
+              _StatRow(label: 'Tahmini kalori', value: '${calories.toStringAsFixed(0)} kcal'),
               const SizedBox(height: 24),
               FilledButton(
                 onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),

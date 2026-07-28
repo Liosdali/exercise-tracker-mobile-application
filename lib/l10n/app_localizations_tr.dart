@@ -99,7 +99,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profileStreakLabel => 'Seri';
 
   @override
-  String get profileWeeklyVolumeChartTitle => 'Haftalık Hacim (8 hafta)';
+  String get profileWeeklyVolumeChartTitle =>
+      'Haftalık Antrenman Süresi (Dakika)';
 
   @override
   String get profileAchievementsTitle => 'Başarımlar';

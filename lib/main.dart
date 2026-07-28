@@ -10,6 +10,7 @@ import 'providers/program_provider.dart';
 import 'providers/routine_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/stats_provider.dart';
+import 'providers/user_profile_provider.dart';
 import 'providers/workout_provider.dart';
 import 'screens/home_shell.dart';
 
@@ -33,6 +34,7 @@ class ExerciseApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => StatsProvider()),
         ChangeNotifierProvider(create: (_) => CustomProgramProvider()),
         ChangeNotifierProvider(create: (_) => ProgramProgressProvider()),
+        ChangeNotifierProvider(create: (_) => UserProfileProvider()),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {
@@ -85,6 +87,7 @@ class _AppLoaderState extends State<AppLoader> {
     super.initState();
     context.read<ExerciseProvider>().load();
     context.read<SettingsProvider>().load();
+    context.read<UserProfileProvider>().load();
   }
 
   @override

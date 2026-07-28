@@ -269,7 +269,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileWeeklyVolumeChartTitle.
   ///
   /// In en, this message translates to:
-  /// **'Weekly Volume (8 weeks)'**
+  /// **'Weekly Workout Duration (Minutes)'**
   String get profileWeeklyVolumeChartTitle;
 
   /// No description provided for @profileAchievementsTitle.

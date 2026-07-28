@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../models/custom_program.dart';
 import '../models/workout_program.dart';
@@ -8,6 +9,7 @@ import '../providers/exercise_provider.dart';
 import '../providers/program_progress_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/workout_provider.dart';
+import '../services/program_share_service.dart';
 import 'active_workout_screen.dart';
 
 /// A single training day, normalized from either a built-in [WorkoutProgram]
@@ -34,12 +36,17 @@ class ProgramDetailScreen extends StatefulWidget {
   final String? levelLabel;
   final List<_NormalizedDay> days;
 
+  /// Non-null only for user-created custom programs; used to enable the
+  /// "Programı Paylaş" share action.
+  final CustomProgram? sourceProgram;
+
   const ProgramDetailScreen._({
     required this.programKey,
     required this.title,
     required this.description,
     required this.levelLabel,
     required this.days,
+    this.sourceProgram,
   });
 
   factory ProgramDetailScreen.builtin(WorkoutProgram program) {
@@ -77,6 +84,7 @@ class ProgramDetailScreen extends StatefulWidget {
       title: program.name,
       description: 'Kullanıcı tarafından oluşturulan ${program.days.length} günlük program.',
       levelLabel: null,
+      sourceProgram: program,
       days: [
         for (final day in program.days)
           _NormalizedDay(
@@ -117,6 +125,17 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     });
   }
 
+  Future<void> _shareProgram() async {
+    final program = widget.sourceProgram;
+    if (program == null) return;
+    final code = ProgramShareService.encodeProgram(program);
+    await SharePlus.instance.share(
+      ShareParams(
+        text: 'Olympos antrenman programımı deneyin: "${program.name}"\n\n$code',
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final exerciseProvider = context.watch<ExerciseProvider>();
@@ -134,7 +153,17 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     final programKey = widget.programKey;
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          if (widget.sourceProgram != null)
+            IconButton(
+              icon: const Icon(Icons.share),
+              tooltip: 'Programı Paylaş',
+              onPressed: _shareProgram,
+            ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

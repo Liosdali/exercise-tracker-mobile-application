@@ -1,28 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+import '../data/achievement_definitions.dart';
 import '../data/database_helper.dart';
+import '../models/achievement.dart';
 import '../models/workout_entry.dart';
+import '../models/workout_session.dart';
 
 final DateFormat _dateFmt = DateFormat('yyyy-MM-dd');
 
-/// A single achievement/badge definition, with its unlocked state computed
-/// live from the current stats.
-class Achievement {
-  final String id;
-  final String title;
-  final String description;
-  final bool unlocked;
-
-  const Achievement({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.unlocked,
-  });
-}
-
-/// One data point in the weekly volume chart.
+/// One data point in the weekly volume chart (kept for backwards
+/// compatibility with any other call sites; the profile screen now uses
+/// [WeeklyDuration] instead).
 class WeeklyVolume {
   final String weekLabel;
   final double volume;
@@ -30,18 +19,35 @@ class WeeklyVolume {
   const WeeklyVolume(this.weekLabel, this.volume);
 }
 
+/// One day's total workout duration within the current week, used by the
+/// "Haftalık Antrenman Süresi" chart.
+class WeeklyDuration {
+  final String dayLabel; // Pzt, Sal, Çar, ...
+  final int minutes;
+
+  const WeeklyDuration(this.dayLabel, this.minutes);
+}
+
+const List<String> _turkishWeekdayLabels = ['Pzt', 'Sal', 'Çar', 'Perş', 'Cum', 'Cmt', 'Paz'];
+
 /// Computes gamification/progress stats (streaks, volume, calories,
-/// achievements, weekly chart data) from the logged workout entries.
+/// achievements, weekly chart data) from the logged workout entries and
+/// completed workout sessions.
 class StatsProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
 
   List<WorkoutEntry> _entries = [];
+  List<WorkoutSession> _sessions = [];
+  Map<String, String> _unlockedAchievements = {};
   bool _loaded = false;
 
   bool get isLoaded => _loaded;
 
   Future<void> load() async {
     _entries = await _db.allEntries();
+    _sessions = await _db.allWorkoutSessions();
+    _unlockedAchievements = await _db.allUnlockedAchievements();
+    await _persistNewlyUnlockedAchievements();
     _loaded = true;
     notifyListeners();
   }
@@ -62,9 +68,17 @@ class StatsProvider extends ChangeNotifier {
 
   int get totalSets => _entries.fold<int>(0, (sum, e) => sum + (e.sets ?? 0));
 
-  /// Simple heuristic: ~6 kcal per completed set plus a small volume-based
-  /// component, so bodyweight-only sessions still count.
+  /// Simple heuristic fallback (kept for compatibility); prefer
+  /// [totalCaloriesBurned], which uses the MET-based calculation from real
+  /// tracked session durations.
   double get estimatedCalories => totalSets * 6 + totalVolume * 0.05;
+
+  /// Sum of MET-based calorie estimates across all completed sessions.
+  double get totalCaloriesBurned => _sessions.fold<double>(0, (sum, s) => sum + s.calories);
+
+  /// Sum of tracked workout durations (minutes) across all completed
+  /// sessions.
+  int get totalWorkoutMinutes => _sessions.fold<int>(0, (sum, s) => sum + s.durationMinutes);
 
   /// Number of distinct workout days within the current calendar week
   /// (Monday-Sunday).
@@ -102,7 +116,8 @@ class StatsProvider extends ChangeNotifier {
     return streak;
   }
 
-  /// Weekly total volume for the last 8 calendar weeks (oldest first).
+  /// Weekly total volume for the last 8 calendar weeks (oldest first). Kept
+  /// for compatibility with any other consumers.
   List<WeeklyVolume> get weeklyVolumeSeries {
     final now = DateTime.now();
     final currentMonday = DateTime(now.year, now.month, now.day)
@@ -121,57 +136,86 @@ class StatsProvider extends ChangeNotifier {
     return result;
   }
 
-  List<Achievement> get achievements {
-    final streak = currentStreak;
+  /// Total workout duration (minutes) per day of the *current* week
+  /// (Monday -> Sunday), for the "Haftalık Antrenman Süresi" chart. Days
+  /// with no completed session show 0 minutes.
+  List<WeeklyDuration> get weeklyDurationSeries {
+    final now = DateTime.now();
+    final monday = DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1));
+    final result = <WeeklyDuration>[];
+    for (int i = 0; i < 7; i++) {
+      final day = monday.add(Duration(days: i));
+      final dayStr = _dateFmt.format(day);
+      final minutes = _sessions
+          .where((s) => s.date == dayStr)
+          .fold<int>(0, (sum, s) => sum + s.durationMinutes);
+      result.add(WeeklyDuration(_turkishWeekdayLabels[i], minutes));
+    }
+    return result;
+  }
+
+  /// Calories burned within the current calendar week (Monday-Sunday).
+  double get weeklyCalories {
+    final now = DateTime.now();
+    final monday = DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1));
+    final mondayStr = _dateFmt.format(monday);
+    final todayStr = _dateFmt.format(now);
+    return _sessions
+        .where((s) => s.date.compareTo(mondayStr) >= 0 && s.date.compareTo(todayStr) <= 0)
+        .fold<double>(0, (sum, s) => sum + s.calories);
+  }
+
+  /// Calories burned within the current calendar month.
+  double get monthlyCalories {
+    final now = DateTime.now();
+    final monthStart = _dateFmt.format(DateTime(now.year, now.month, 1));
+    final todayStr = _dateFmt.format(now);
+    return _sessions
+        .where((s) => s.date.compareTo(monthStart) >= 0 && s.date.compareTo(todayStr) <= 0)
+        .fold<double>(0, (sum, s) => sum + s.calories);
+  }
+
+  StatsSnapshot get _snapshot => StatsSnapshot(
+        totalWorkouts: totalWorkouts,
+        totalSets: totalSets,
+        totalVolume: totalVolume,
+        currentStreak: currentStreak,
+        totalCaloriesBurned: totalCaloriesBurned,
+        totalWorkoutMinutes: totalWorkoutMinutes,
+      );
+
+  /// Full achievement list (locked + unlocked), built from the extensible
+  /// [achievementDefinitions] registry. Unlock dates come from the
+  /// `achievements_unlocked` table (persisted the first time each one is
+  /// reached), not recomputed live.
+  List<AchievementModel> get achievements {
+    final snapshot = _snapshot;
     return [
-      Achievement(
-        id: 'first_workout',
-        title: 'İlk Adım',
-        description: 'İlk antrenmanını kaydet.',
-        unlocked: totalWorkouts >= 1,
-      ),
-      Achievement(
-        id: 'ten_workouts',
-        title: 'Kararlılık',
-        description: '10 antrenman günü tamamla.',
-        unlocked: totalWorkouts >= 10,
-      ),
-      Achievement(
-        id: 'fifty_workouts',
-        title: 'Alışkanlık',
-        description: '50 antrenman günü tamamla.',
-        unlocked: totalWorkouts >= 50,
-      ),
-      Achievement(
-        id: 'streak_3',
-        title: '3 Gün Üst Üste!',
-        description: '3 gün üst üste antrenman yap.',
-        unlocked: streak >= 3,
-      ),
-      Achievement(
-        id: 'streak_7',
-        title: 'Haftalık Seri',
-        description: '7 gün üst üste antrenman yap.',
-        unlocked: streak >= 7,
-      ),
-      Achievement(
-        id: 'streak_30',
-        title: 'Demir İrade',
-        description: '30 gün üst üste antrenman yap.',
-        unlocked: streak >= 30,
-      ),
-      Achievement(
-        id: 'volume_10000',
-        title: 'İlk 10.000 kg',
-        description: 'Toplamda 10.000 kg hacim kaldır.',
-        unlocked: totalVolume >= 10000,
-      ),
-      Achievement(
-        id: 'volume_100000',
-        title: 'İlk 100.000 kg',
-        description: 'Toplamda 100.000 kg hacim kaldır.',
-        unlocked: totalVolume >= 100000,
-      ),
+      for (final def in achievementDefinitions)
+        AchievementModel(
+          id: def.id,
+          title: def.title,
+          description: def.description,
+          iconName: def.iconName,
+          category: def.category,
+          unlocked: def.isUnlocked(snapshot),
+          unlockedAt: _unlockedAchievements[def.id] != null
+              ? DateTime.tryParse(_unlockedAchievements[def.id]!)
+              : null,
+        ),
     ];
+  }
+
+  /// Persists the first-unlock date for any achievement definition that's
+  /// newly satisfied but not yet recorded in the database.
+  Future<void> _persistNewlyUnlockedAchievements() async {
+    final snapshot = _snapshot;
+    final now = DateTime.now().toIso8601String();
+    for (final def in achievementDefinitions) {
+      if (def.isUnlocked(snapshot) && !_unlockedAchievements.containsKey(def.id)) {
+        await _db.markAchievementUnlocked(def.id, now);
+        _unlockedAchievements[def.id] = now;
+      }
+    }
   }
 }

@@ -20,22 +20,20 @@ class ExerciseDetailScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              exercise.gifAsset,
-              height: 220,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Image.asset(
-                exercise.imageAsset,
-                height: 220,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 220,
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: const Icon(Icons.fitness_center, size: 48),
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                exercise.gifAsset,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                  exercise.imageAsset,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    child: const Icon(Icons.fitness_center, size: 48),
+                  ),
                 ),
               ),
             ),

@@ -4,7 +4,9 @@ import 'package:sqflite/sqflite.dart';
 import '../models/body_measurement.dart';
 import '../models/custom_program.dart';
 import '../models/custom_routine.dart';
+import '../models/user_profile.dart';
 import '../models/workout_entry.dart';
+import '../models/workout_session.dart';
 
 /// Manages the local SQLite database that stores logged workout entries,
 /// user-created custom routines/programs, body measurements, and workout
@@ -13,7 +15,7 @@ class DatabaseHelper {
   DatabaseHelper._internal();
   static final DatabaseHelper instance = DatabaseHelper._internal();
 
-  static const int _dbVersion = 3;
+  static const int _dbVersion = 4;
 
   Database? _db;
   Future<Database>? _dbOpening;
@@ -40,6 +42,7 @@ class DatabaseHelper {
         await _createV1Tables(db);
         await _createV2Tables(db);
         await _createV3Tables(db);
+        await _createV4Tables(db);
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
@@ -47,6 +50,9 @@ class DatabaseHelper {
         }
         if (oldVersion < 3) {
           await _createV3Tables(db);
+        }
+        if (oldVersion < 4) {
+          await _createV4Tables(db);
         }
       },
     );
@@ -153,6 +159,42 @@ class DatabaseHelper {
         program_key TEXT NOT NULL,
         day_index INTEGER NOT NULL,
         day_name TEXT NOT NULL
+      )
+    ''');
+  }
+
+  Future<void> _createV4Tables(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS achievements_unlocked (
+        achievement_id TEXT PRIMARY KEY,
+        unlocked_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS workout_sessions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT NOT NULL,
+        duration_minutes INTEGER NOT NULL,
+        calories REAL NOT NULL,
+        exercise_count INTEGER NOT NULL,
+        total_sets INTEGER NOT NULL,
+        total_volume REAL NOT NULL,
+        title TEXT NOT NULL,
+        created_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_workout_sessions_date ON workout_sessions(date)',
+    );
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS user_profile (
+        id INTEGER PRIMARY KEY,
+        height_cm REAL,
+        age INTEGER,
+        gender TEXT,
+        weight_kg REAL,
+        body_fat_percent REAL,
+        updated_at TEXT NOT NULL
       )
     ''');
   }
@@ -505,6 +547,72 @@ class DatabaseHelper {
     await db.delete('planned_workouts', where: 'date = ?', whereArgs: [date]);
   }
 
+  // ---- Achievements unlock dates (v4) ----
+
+  /// All unlocked achievement ids mapped to their first-unlocked timestamp.
+  Future<Map<String, String>> allUnlockedAchievements() async {
+    final db = await database;
+    final rows = await db.query('achievements_unlocked');
+    return {
+      for (final row in rows) row['achievement_id'] as String: row['unlocked_at'] as String,
+    };
+  }
+
+  /// Records [achievementId] as unlocked at [unlockedAt] if not already
+  /// recorded (keeps the original first-unlock date on repeated calls).
+  Future<void> markAchievementUnlocked(String achievementId, String unlockedAt) async {
+    final db = await database;
+    await db.insert(
+      'achievements_unlocked',
+      {'achievement_id': achievementId, 'unlocked_at': unlockedAt},
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+  }
+
+  // ---- Workout sessions (v4) ----
+
+  Future<int> insertWorkoutSession(WorkoutSession session) async {
+    final db = await database;
+    final map = session.toMap()..remove('id');
+    return db.insert('workout_sessions', map);
+  }
+
+  Future<List<WorkoutSession>> allWorkoutSessions() async {
+    final db = await database;
+    final rows = await db.query('workout_sessions', orderBy: 'date DESC, id DESC');
+    return rows.map(WorkoutSession.fromMap).toList();
+  }
+
+  /// Sessions with date within [start, end] (inclusive, yyyy-MM-dd strings).
+  Future<List<WorkoutSession>> workoutSessionsBetween(String start, String end) async {
+    final db = await database;
+    final rows = await db.query(
+      'workout_sessions',
+      where: 'date >= ? AND date <= ?',
+      whereArgs: [start, end],
+      orderBy: 'date ASC',
+    );
+    return rows.map(WorkoutSession.fromMap).toList();
+  }
+
+  // ---- User profile (v4) ----
+
+  Future<UserProfile?> getUserProfile() async {
+    final db = await database;
+    final rows = await db.query('user_profile', where: 'id = 1', limit: 1);
+    if (rows.isEmpty) return null;
+    return UserProfile.fromMap(rows.first);
+  }
+
+  Future<void> saveUserProfile(UserProfile profile) async {
+    final db = await database;
+    await db.insert(
+      'user_profile',
+      profile.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   // ---- Factory reset ----
 
   /// Deletes all user data (workout history, custom routines/programs,
@@ -523,6 +631,9 @@ class DatabaseHelper {
       await txn.delete('custom_programs');
       await txn.delete('program_progress');
       await txn.delete('planned_workouts');
+      await txn.delete('achievements_unlocked');
+      await txn.delete('workout_sessions');
+      await txn.delete('user_profile');
     });
   }
 }
