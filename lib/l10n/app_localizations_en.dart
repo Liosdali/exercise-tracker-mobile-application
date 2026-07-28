@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navWorkouts => 'Workouts';
 
   @override
+  String get navCalendar => 'Calendar';
+
+  @override
   String get navExercises => 'Exercises';
 
   @override
@@ -87,6 +90,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashboardTotalVolumeLabel => 'Total Volume';
+
+  @override
+  String get dashboardMaxStreakLabel => 'Best Streak';
+
+  @override
+  String get dashboardTotalDurationLabel => 'Total Workout Time';
 
   @override
   String get profileTitle => 'Profile & Stats';
@@ -164,4 +173,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarPlannedLabel => 'Planned';
+
+  @override
+  String get calendarChangeAssignmentButton => 'Change assignment';
+
+  @override
+  String get calendarAddExerciseButton => 'Add exercise';
+
+  @override
+  String get calendarCompletedChip => 'Completed';
+
+  @override
+  String get calendarNoProgramsSnackbar =>
+      'First create a program from the Workouts tab.';
+
+  @override
+  String get calendarChooseProgramTitle => 'Choose a program';
+
+  @override
+  String get calendarChooseDayTitle => 'Which day?';
+
+  @override
+  String calendarAssignedLabel(String dayName) {
+    return 'Assigned: $dayName';
+  }
+
+  @override
+  String get calendarNoEntriesMessage => 'No exercises logged for this day.';
+
+  @override
+  String calendarTotalDaysLabel(int count) {
+    return '$count days';
+  }
 }

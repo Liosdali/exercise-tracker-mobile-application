@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/exercise.dart';
 import '../providers/exercise_provider.dart';
+import '../services/exercise_localizer.dart';
 import '../widgets/category_style.dart';
 import '../widgets/exercise_thumbnail.dart';
 
@@ -29,6 +31,8 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
   @override
   Widget build(BuildContext context) {
     final exerciseProvider = context.watch<ExerciseProvider>();
+    final l10n = AppLocalizations.of(context)!;
+    final lang = l10n.localeName;
     final categories = exerciseProvider.categories;
     final List<Exercise> results = exerciseProvider.search(_query, category: _category);
 
@@ -66,7 +70,7 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
                   (category) => Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: ChoiceChip(
-                      label: Text(titleCase(category)),
+                      label: Text(titleCase(ExerciseLocalizer.localizedBodyPart(category, lang))),
                       selected: _category == category,
                       onSelected: (_) => setState(() => _category = category),
                     ),
@@ -84,8 +88,8 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
                       final exercise = results[index];
                       return ListTile(
                         leading: ExerciseThumbnail(exercise: exercise),
-                        title: Text(exercise.name),
-                        subtitle: Text(titleCase(exercise.bodyPart)),
+                        title: Text(ExerciseLocalizer.localizedName(exercise.name, lang)),
+                        subtitle: Text(titleCase(ExerciseLocalizer.localizedBodyPart(exercise.bodyPart, lang))),
                         onTap: () => Navigator.of(context).pop(exercise),
                       );
                     },

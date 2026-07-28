@@ -5,6 +5,7 @@
 
   "navHome": "Ana Sayfa",
   "navWorkouts": "Antrenmanlar",
+  "navCalendar": "Takvim",
   "navExercises": "Egzersizler",
   "navProfile": "Profil",
 
@@ -29,6 +30,8 @@
   "dashboardStartButton": "Başla",
   "dashboardTotalWorkoutsLabel": "Toplam Antrenman",
   "dashboardTotalVolumeLabel": "Toplam Hacim",
+  "dashboardMaxStreakLabel": "En Uzun Seri",
+  "dashboardTotalDurationLabel": "Toplam Yapılan Spor Süresi",
 
   "profileTitle": "Profil & İstatistikler",
   "profileBadgesLabel": "Rozetler",
@@ -54,7 +57,26 @@
   "settingsResetDataSuccess": "Tüm veriler sıfırlandı.",
 
   "calendarScreenTitle": "Antrenman Takvimi",
-  "calendarAssignProgramButton": "Program ata",
+  "calendarAssignProgramButton": "Program Ata",
   "calendarClearAssignmentButton": "Atamayı kaldır",
-  "calendarPlannedLabel": "Planlandı"
+  "calendarPlannedLabel": "Planlandı",
+  "calendarChangeAssignmentButton": "Atamayı Değiştir",
+  "calendarAddExerciseButton": "Egzersiz Ekle",
+  "calendarCompletedChip": "Tamamlandı",
+  "calendarNoProgramsSnackbar": "Önce Antrenmanlar sekmesinden bir program oluşturun.",
+  "calendarChooseProgramTitle": "Bir program seçin",
+  "calendarChooseDayTitle": "Hangi gün?",
+  "calendarAssignedLabel": "Atanmış: {dayName}",
+  "@calendarAssignedLabel": {
+    "placeholders": {
+      "dayName": {"type": "String"}
+    }
+  },
+  "calendarNoEntriesMessage": "Bu gün için kayıtlı egzersiz yok.",
+  "calendarTotalDaysLabel": "{count} gün",
+  "@calendarTotalDaysLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
 }

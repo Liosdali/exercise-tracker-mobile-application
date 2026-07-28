@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/custom_program.dart';
 import '../models/exercise.dart';
 import '../providers/custom_program_provider.dart';
 import '../providers/exercise_provider.dart';
+import '../services/exercise_localizer.dart';
 import '../widgets/category_style.dart';
 import '../widgets/exercise_thumbnail.dart';
 
@@ -267,6 +269,8 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
   @override
   Widget build(BuildContext context) {
     final exerciseProvider = context.watch<ExerciseProvider>();
+    final l10n = AppLocalizations.of(context)!;
+    final lang = l10n.localeName;
     final results = exerciseProvider.search(_query);
 
     return Scaffold(
@@ -283,7 +287,7 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
         children: [
           if (_selected.isNotEmpty)
             SizedBox(
-              height: 130,
+              height: 172,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -295,40 +299,42 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         width: 130,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              item.exercise.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Set'),
-                                _Stepper(
-                                  value: item.targetSets,
-                                  onChanged: (v) => setState(() => item.targetSets = v),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Tekrar'),
-                                _Stepper(
-                                  value: item.targetReps,
-                                  onChanged: (v) => setState(() => item.targetReps = v),
-                                ),
-                              ],
-                            ),
-                            TextButton(
-                              onPressed: () => _toggle(item.exercise),
-                              child: const Text('Kaldır'),
-                            ),
-                          ],
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                ExerciseLocalizer.localizedName(item.exercise.name, lang),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.labelMedium,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Set'),
+                                  _Stepper(
+                                    value: item.targetSets,
+                                    onChanged: (v) => setState(() => item.targetSets = v),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Tekrar'),
+                                  _Stepper(
+                                    value: item.targetReps,
+                                    onChanged: (v) => setState(() => item.targetReps = v),
+                                  ),
+                                ],
+                              ),
+                              TextButton(
+                                onPressed: () => _toggle(item.exercise),
+                                child: const Text('Kaldır'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -357,8 +363,8 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                 final isSelected = _selected.any((s) => s.exercise.id == exercise.id);
                 return CheckboxListTile(
                   secondary: ExerciseThumbnail(exercise: exercise),
-                  title: Text(exercise.name),
-                  subtitle: Text(titleCase(exercise.bodyPart)),
+                  title: Text(ExerciseLocalizer.localizedName(exercise.name, lang)),
+                  subtitle: Text(titleCase(ExerciseLocalizer.localizedBodyPart(exercise.bodyPart, lang))),
                   value: isSelected,
                   onChanged: (_) => _toggle(exercise),
                 );

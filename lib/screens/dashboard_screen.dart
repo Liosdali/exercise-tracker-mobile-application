@@ -10,6 +10,7 @@ import '../providers/program_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
+import '../utils/duration_formatter.dart';
 import '../utils/program_resolver.dart';
 import 'active_workout_screen.dart';
 
@@ -213,6 +214,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickStat(
+                  icon: Icons.local_fire_department,
+                  label: l10n.dashboardMaxStreakLabel,
+                  value: '${stats.maxStreak}',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickStat(
+                  icon: Icons.timer_outlined,
+                  label: l10n.dashboardTotalDurationLabel,
+                  value: formatWorkoutDuration(stats.totalWorkoutMinutes),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -232,10 +253,14 @@ class _QuickStat extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon),
             const SizedBox(height: 8),
-            Text(value, style: Theme.of(context).textTheme.titleMedium),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(value, style: Theme.of(context).textTheme.titleMedium),
+            ),
             Text(label, style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
           ],
         ),

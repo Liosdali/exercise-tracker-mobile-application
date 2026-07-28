@@ -49,6 +49,16 @@ class Exercise {
   List<String> get stepsEn =>
       instructionSteps['en'] ?? instructionSteps.values.firstOrNull ?? const [];
 
+  /// Instructions text for [langCode], falling back to English (and then
+  /// any available language) if that language isn't present in the dataset.
+  String instructionsFor(String langCode) =>
+      instructions[langCode] ?? instructionsEn;
+
+  /// Step-by-step instructions for [langCode], with the same fallback
+  /// behavior as [instructionsFor].
+  List<String> stepsFor(String langCode) =>
+      instructionSteps[langCode] ?? stepsEn;
+
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
       id: json['id'] as String,

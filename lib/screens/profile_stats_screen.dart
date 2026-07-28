@@ -9,7 +9,6 @@ import '../models/achievement.dart';
 import '../models/body_measurement.dart';
 import '../providers/stats_provider.dart';
 import 'body_measurement_form.dart';
-import 'calendar_screen.dart';
 import 'settings_screen.dart';
 
 IconData _achievementIcon(String iconName) {
@@ -177,17 +176,6 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.calendar_month),
-            title: Text(l10n.profileCalendarLinkTitle),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CalendarScreen()),
-              );
-            },
-          ),
           const Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

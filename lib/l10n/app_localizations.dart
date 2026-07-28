@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Workouts'**
   String get navWorkouts;
 
+  /// No description provided for @navCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get navCalendar;
+
   /// No description provided for @navExercises.
   ///
   /// In en, this message translates to:
@@ -247,6 +253,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Volume'**
   String get dashboardTotalVolumeLabel;
+
+  /// No description provided for @dashboardMaxStreakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Streak'**
+  String get dashboardMaxStreakLabel;
+
+  /// No description provided for @dashboardTotalDurationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Workout Time'**
+  String get dashboardTotalDurationLabel;
 
   /// No description provided for @profileTitle.
   ///
@@ -397,6 +415,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Planned'**
   String get calendarPlannedLabel;
+
+  /// No description provided for @calendarChangeAssignmentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Change assignment'**
+  String get calendarChangeAssignmentButton;
+
+  /// No description provided for @calendarAddExerciseButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add exercise'**
+  String get calendarAddExerciseButton;
+
+  /// No description provided for @calendarCompletedChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get calendarCompletedChip;
+
+  /// No description provided for @calendarNoProgramsSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'First create a program from the Workouts tab.'**
+  String get calendarNoProgramsSnackbar;
+
+  /// No description provided for @calendarChooseProgramTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a program'**
+  String get calendarChooseProgramTitle;
+
+  /// No description provided for @calendarChooseDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which day?'**
+  String get calendarChooseDayTitle;
+
+  /// No description provided for @calendarAssignedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned: {dayName}'**
+  String calendarAssignedLabel(String dayName);
+
+  /// No description provided for @calendarNoEntriesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises logged for this day.'**
+  String get calendarNoEntriesMessage;
+
+  /// No description provided for @calendarTotalDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String calendarTotalDaysLabel(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -79,12 +79,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<void> _assignProgram() async {
+    final l10n = AppLocalizations.of(context)!;
     final builtinPrograms = context.read<ProgramProvider>();
     final customPrograms = context.read<CustomProgramProvider>();
     final options = allProgramOptions(builtinPrograms, customPrograms);
     if (options.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Önce Antrenmanlar sekmesinden bir program oluşturun.')),
+        SnackBar(content: Text(l10n.calendarNoProgramsSnackbar)),
       );
       return;
     }
@@ -94,14 +95,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
       builder: (context) => ListView(
         shrinkWrap: true,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Bir program seçin', style: TextStyle(fontWeight: FontWeight.bold)),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(l10n.calendarChooseProgramTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
           for (final option in options)
             ListTile(
               title: Text(option.name),
-              subtitle: Text('${option.totalDays} gün'),
+              subtitle: Text(l10n.calendarTotalDaysLabel(option.totalDays)),
               onTap: () => Navigator.of(context).pop(option),
             ),
         ],
@@ -117,9 +118,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       builder: (context) => ListView(
         shrinkWrap: true,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Hangi gün?', style: TextStyle(fontWeight: FontWeight.bold)),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(l10n.calendarChooseDayTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
           for (var i = 0; i < dayNames.length; i++)
             ListTile(
@@ -160,6 +161,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
             firstDay: DateTime(2000),
             lastDay: DateTime(2100),
             focusedDay: _focusedDay,
+            locale: l10n.localeName,
+            calendarFormat: CalendarFormat.month,
+            headerStyle: const HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: true,
+            ),
             selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
@@ -198,14 +205,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        DateFormat.yMMMMd().format(_selectedDay),
+                        DateFormat.yMMMMd(l10n.localeName).format(_selectedDay),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                     if (workoutProvider.loggedDates.contains(selectedKey))
-                      const Chip(
-                        avatar: Icon(Icons.check_circle, color: Colors.green, size: 18),
-                        label: Text('Tamamlandı'),
+                      Chip(
+                        avatar: const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                        label: Text(l10n.calendarCompletedChip),
                       ),
                   ],
                 ),
@@ -216,10 +223,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       children: [
                         const Icon(Icons.event_note, size: 16, color: Colors.orange),
                         const SizedBox(width: 4),
-                        Expanded(child: Text('Atanmış: ${planned.dayName}')),
+                        Expanded(child: Text(l10n.calendarAssignedLabel(planned.dayName))),
                         TextButton(
                           onPressed: _clearAssignment,
-                          child: const Text('Kaldır'),
+                          child: Text(l10n.calendarClearAssignmentButton),
                         ),
                       ],
                     ),
@@ -231,7 +238,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _assignProgram,
                         icon: const Icon(Icons.event_note),
-                        label: Text(planned == null ? 'Program Ata' : 'Atamayı Değiştir'),
+                        label: Text(planned == null ? l10n.calendarAssignProgramButton : l10n.calendarChangeAssignmentButton),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -239,7 +246,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: FilledButton.icon(
                         onPressed: _addExercise,
                         icon: const Icon(Icons.add),
-                        label: const Text('Add exercise'),
+                        label: Text(l10n.calendarAddExerciseButton),
                       ),
                     ),
                   ],
@@ -249,7 +256,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           Expanded(
             child: entries.isEmpty
-                ? const Center(child: Text('No exercises logged for this day.'))
+                ? Center(child: Text(l10n.calendarNoEntriesMessage))
                 : ListView.builder(
                     itemCount: entries.length,
                     itemBuilder: (context, index) {

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../utils/date_watcher.dart';
+import 'calendar_screen.dart';
 import 'categories_screen.dart';
 import 'dashboard_screen.dart';
 import 'profile_stats_screen.dart';
 import 'workouts_screen.dart';
 
-/// Root shell with bottom navigation across the 4 main sections: Dashboard,
-/// Workouts, Exercise library, Profile & Stats.
+/// Root shell with bottom navigation across the 5 main sections: Dashboard,
+/// Workouts, Calendar, Exercise library, Profile & Stats.
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
 
@@ -22,6 +23,7 @@ class _HomeShellState extends State<HomeShell> {
   static const _screens = [
     DashboardScreen(),
     WorkoutsScreen(),
+    CalendarScreen(),
     CategoriesScreen(),
     ProfileStatsScreen(),
   ];
@@ -45,6 +47,11 @@ class _HomeShellState extends State<HomeShell> {
               icon: const Icon(Icons.calendar_view_week_outlined),
               selectedIcon: const Icon(Icons.calendar_view_week),
               label: l10n.navWorkouts,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.calendar_month_outlined),
+              selectedIcon: const Icon(Icons.calendar_month),
+              label: l10n.navCalendar,
             ),
             NavigationDestination(
               icon: const Icon(Icons.fitness_center_outlined),

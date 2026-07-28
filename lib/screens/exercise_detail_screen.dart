@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/exercise.dart';
+import '../services/exercise_localizer.dart';
 import '../widgets/category_style.dart';
 import 'log_entry_screen.dart';
 
@@ -15,8 +17,11 @@ class ExerciseDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = l10n.localeName;
+    final name = ExerciseLocalizer.localizedName(exercise.name, lang);
     return Scaffold(
-      appBar: AppBar(title: Text(exercise.name)),
+      appBar: AppBar(title: Text(name)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -43,8 +48,8 @@ class ExerciseDetailScreen extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              _chip(titleCase(exercise.bodyPart)),
-              _chip(exercise.equipment),
+              _chip(titleCase(ExerciseLocalizer.localizedBodyPart(exercise.bodyPart, lang))),
+              _chip(ExerciseLocalizer.localizedEquipment(exercise.equipment, lang)),
               _chip('Target: ${exercise.target}'),
               _chip(exercise.muscleGroup),
             ],
@@ -62,8 +67,8 @@ class ExerciseDetailScreen extends StatelessWidget {
           const SizedBox(height: 20),
           Text('Instructions', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          if (exercise.stepsEn.isNotEmpty)
-            ...exercise.stepsEn.asMap().entries.map(
+          if (exercise.stepsFor(lang).isNotEmpty)
+            ...exercise.stepsFor(lang).asMap().entries.map(
               (entry) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
@@ -76,7 +81,7 @@ class ExerciseDetailScreen extends StatelessWidget {
               ),
             )
           else
-            Text(exercise.instructionsEn),
+            Text(exercise.instructionsFor(lang)),
           const SizedBox(height: 24),
           FilledButton.icon(
             icon: const Icon(Icons.add_task),

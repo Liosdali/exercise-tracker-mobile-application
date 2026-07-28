@@ -18,6 +18,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get navWorkouts => 'Antrenmanlar';
 
   @override
+  String get navCalendar => 'Takvim';
+
+  @override
   String get navExercises => 'Egzersizler';
 
   @override
@@ -90,6 +93,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dashboardTotalVolumeLabel => 'Toplam Hacim';
 
   @override
+  String get dashboardMaxStreakLabel => 'En Uzun Seri';
+
+  @override
+  String get dashboardTotalDurationLabel => 'Toplam Yapılan Spor Süresi';
+
+  @override
   String get profileTitle => 'Profil & İstatistikler';
 
   @override
@@ -158,11 +167,43 @@ class AppLocalizationsTr extends AppLocalizations {
   String get calendarScreenTitle => 'Antrenman Takvimi';
 
   @override
-  String get calendarAssignProgramButton => 'Program ata';
+  String get calendarAssignProgramButton => 'Program Ata';
 
   @override
   String get calendarClearAssignmentButton => 'Atamayı kaldır';
 
   @override
   String get calendarPlannedLabel => 'Planlandı';
+
+  @override
+  String get calendarChangeAssignmentButton => 'Atamayı Değiştir';
+
+  @override
+  String get calendarAddExerciseButton => 'Egzersiz Ekle';
+
+  @override
+  String get calendarCompletedChip => 'Tamamlandı';
+
+  @override
+  String get calendarNoProgramsSnackbar =>
+      'Önce Antrenmanlar sekmesinden bir program oluşturun.';
+
+  @override
+  String get calendarChooseProgramTitle => 'Bir program seçin';
+
+  @override
+  String get calendarChooseDayTitle => 'Hangi gün?';
+
+  @override
+  String calendarAssignedLabel(String dayName) {
+    return 'Atanmış: $dayName';
+  }
+
+  @override
+  String get calendarNoEntriesMessage => 'Bu gün için kayıtlı egzersiz yok.';
+
+  @override
+  String calendarTotalDaysLabel(int count) {
+    return '$count gün';
+  }
 }

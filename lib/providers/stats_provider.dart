@@ -120,6 +120,31 @@ class StatsProvider extends ChangeNotifier {
     return streak;
   }
 
+  /// Historical record streak ("En Uzun Seri"): the longest consecutive
+  /// run ever achieved, using the same 7-day-gap tolerance rule as
+  /// [currentStreak], but not clamped to zero by inactivity relative to
+  /// today (it's a permanent best-ever record).
+  int get maxStreak {
+    final dates = _entries.map((e) => e.date).toSet().toList()..sort();
+    if (dates.isEmpty) return 0;
+
+    int best = 1;
+    int running = 1;
+    for (int i = 1; i < dates.length; i++) {
+      final prev = _dateFmt.parse(dates[i - 1]);
+      final curr = _dateFmt.parse(dates[i]);
+      final gap = curr.difference(prev).inDays;
+      if (gap <= 0) continue; // same-day duplicate entries
+      if (gap <= 6) {
+        running++;
+      } else {
+        running = 1;
+      }
+      if (running > best) best = running;
+    }
+    return best;
+  }
+
   /// Weekly total volume for the last 8 calendar weeks (oldest first). Kept
   /// for compatibility with any other consumers.
   List<WeeklyVolume> get weeklyVolumeSeries {

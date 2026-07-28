@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/app_localizations.dart';
 import '../providers/exercise_provider.dart';
+import '../services/exercise_localizer.dart';
 import '../widgets/category_style.dart';
 import 'category_exercises_screen.dart';
 
@@ -12,6 +14,8 @@ class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exerciseProvider = context.watch<ExerciseProvider>();
+    final l10n = AppLocalizations.of(context)!;
+    final lang = l10n.localeName;
 
     if (!exerciseProvider.isLoaded) {
       return const Center(child: CircularProgressIndicator());
@@ -51,7 +55,7 @@ class CategoriesScreen extends StatelessWidget {
                     Icon(iconForCategory(category), size: 36),
                     const SizedBox(height: 8),
                     Text(
-                      titleCase(category),
+                      titleCase(ExerciseLocalizer.localizedBodyPart(category, lang)),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),

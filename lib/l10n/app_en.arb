@@ -6,6 +6,7 @@
 
   "navHome": "Home",
   "navWorkouts": "Workouts",
+  "navCalendar": "Calendar",
   "navExercises": "Exercises",
   "navProfile": "Profile",
 
@@ -36,6 +37,8 @@
   "dashboardStartButton": "Start",
   "dashboardTotalWorkoutsLabel": "Total Workouts",
   "dashboardTotalVolumeLabel": "Total Volume",
+  "dashboardMaxStreakLabel": "Best Streak",
+  "dashboardTotalDurationLabel": "Total Workout Time",
 
   "profileTitle": "Profile & Stats",
   "profileBadgesLabel": "Badges",
@@ -63,5 +66,24 @@
   "calendarScreenTitle": "Workout Calendar",
   "calendarAssignProgramButton": "Assign a program",
   "calendarClearAssignmentButton": "Remove assignment",
-  "calendarPlannedLabel": "Planned"
+  "calendarPlannedLabel": "Planned",
+  "calendarChangeAssignmentButton": "Change assignment",
+  "calendarAddExerciseButton": "Add exercise",
+  "calendarCompletedChip": "Completed",
+  "calendarNoProgramsSnackbar": "First create a program from the Workouts tab.",
+  "calendarChooseProgramTitle": "Choose a program",
+  "calendarChooseDayTitle": "Which day?",
+  "calendarAssignedLabel": "Assigned: {dayName}",
+  "@calendarAssignedLabel": {
+    "placeholders": {
+      "dayName": {"type": "String"}
+    }
+  },
+  "calendarNoEntriesMessage": "No exercises logged for this day.",
+  "calendarTotalDaysLabel": "{count} days",
+  "@calendarTotalDaysLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
 }
