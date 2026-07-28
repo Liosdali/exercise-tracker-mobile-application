@@ -56,6 +56,20 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   sqflite_common_ffi: ^2.4.2
+  flutter_launcher_icons: ^0.14.4
+
+# Generates native app-icon assets (Android/iOS/Windows) from the "Atlas
+# Workout" logo bundled under web/icons/. Run with:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  windows:
+    generate: true
+  image_path: "web/icons/Icon-512.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "web/icons/Icon-maskable-512.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

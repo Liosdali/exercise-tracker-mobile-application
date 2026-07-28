@@ -131,7 +131,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     final code = ProgramShareService.encodeProgram(program);
     await SharePlus.instance.share(
       ShareParams(
-        text: 'Olympos antrenman programımı deneyin: "${program.name}"\n\n$code',
+        text: 'Atlas Workout antrenman programımı deneyin: "${program.name}"\n\n$code',
       ),
     );
   }

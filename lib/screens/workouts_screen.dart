@@ -98,7 +98,7 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
           controller: controller,
           maxLines: 5,
           decoration: const InputDecoration(
-            hintText: 'OLYMPOS-PROGRAM-CODE:v1:... kodunu buraya yapıştırın',
+            hintText: 'Program kodunu buraya yapıştırın',
             border: OutlineInputBorder(),
           ),
         ),

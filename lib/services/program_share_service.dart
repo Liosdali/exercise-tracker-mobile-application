@@ -6,9 +6,9 @@ import '../models/custom_program.dart';
 /// (no backend required), e.g. for sending via WhatsApp/Telegram with
 /// `share_plus`.
 ///
-/// Format: `OLYMPOS-PROGRAM-CODE:v1:<base64(json)>`
+/// Format: `ATLAS-WORKOUT-CODE:<base64(json)>`
 class ProgramShareService {
-  static const String _prefix = 'OLYMPOS-PROGRAM-CODE:v1:';
+  static const String _prefix = 'ATLAS-WORKOUT-CODE:';
 
   const ProgramShareService._();
 
@@ -47,7 +47,7 @@ class ProgramShareService {
   static CustomProgram decodeProgram(String code) {
     final trimmed = code.trim();
     if (!trimmed.startsWith(_prefix)) {
-      throw const FormatException('Geçersiz program kodu. Kodun başında OLYMPOS-PROGRAM-CODE bulunmalı.');
+      throw const FormatException('Geçersiz program kodu. Kodun başında ATLAS-WORKOUT-CODE bulunmalı.');
     }
     final base64Str = trimmed.substring(_prefix.length);
 
