@@ -4,7 +4,6 @@ import 'package:sqflite/sqflite.dart';
 import '../models/body_measurement.dart';
 import '../models/custom_program.dart';
 import '../models/custom_routine.dart';
-import '../models/user_profile.dart';
 import '../models/workout_entry.dart';
 import '../models/workout_session.dart';
 
@@ -15,7 +14,7 @@ class DatabaseHelper {
   DatabaseHelper._internal();
   static final DatabaseHelper instance = DatabaseHelper._internal();
 
-  static const int _dbVersion = 4;
+  static const int _dbVersion = 5;
 
   Database? _db;
   Future<Database>? _dbOpening;
@@ -43,6 +42,7 @@ class DatabaseHelper {
         await _createV2Tables(db);
         await _createV3Tables(db);
         await _createV4Tables(db);
+        await _createV5Migration(db);
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
@@ -53,6 +53,9 @@ class DatabaseHelper {
         }
         if (oldVersion < 4) {
           await _createV4Tables(db);
+        }
+        if (oldVersion < 5) {
+          await _createV5Migration(db);
         }
       },
     );
@@ -197,6 +200,28 @@ class DatabaseHelper {
         updated_at TEXT NOT NULL
       )
     ''');
+  }
+
+  /// Adds the extra body-composition columns (height/gender/neck/hip +
+  /// the auto-calculated U.S. Navy body fat %) to `body_measurements`.
+  /// `ALTER TABLE ADD COLUMN` throws if a column already exists, so each
+  /// statement is wrapped defensively (harmless no-op on re-run).
+  Future<void> _createV5Migration(Database db) async {
+    final columns = <String, String>{
+      'height_cm': 'REAL',
+      'gender': 'TEXT',
+      'neck_cm': 'REAL',
+      'hip_cm': 'REAL',
+      'calculated_body_fat': 'REAL',
+    };
+    for (final entry in columns.entries) {
+      try {
+        await db.execute('ALTER TABLE body_measurements ADD COLUMN ${entry.key} ${entry.value}');
+      } on DatabaseException {
+        // Column already present (e.g. onCreate ran this once already) -
+        // safe to ignore.
+      }
+    }
   }
 
   // ---- Workout entries (v1) ----
@@ -491,6 +516,8 @@ class DatabaseHelper {
   // ---- Program progress (v3) ----
 
   /// Returns the next-day index for [programKey], or 0 if never tracked.
+  /// If 7 or more days have elapsed since the last completed workout for
+  /// this program, the sequence resets back to day 0 (Day 1).
   Future<int> nextDayIndex(String programKey) async {
     final db = await database;
     final rows = await db.query(
@@ -499,6 +526,17 @@ class DatabaseHelper {
       whereArgs: [programKey],
     );
     if (rows.isEmpty) return 0;
+    final lastCompletedStr = rows.first['last_completed_date'] as String?;
+    if (lastCompletedStr != null) {
+      final lastCompleted = DateTime.tryParse(lastCompletedStr);
+      if (lastCompleted != null) {
+        final today = DateTime.now();
+        final daysSince = DateTime(today.year, today.month, today.day)
+            .difference(DateTime(lastCompleted.year, lastCompleted.month, lastCompleted.day))
+            .inDays;
+        if (daysSince >= 7) return 0;
+      }
+    }
     return rows.first['next_day_index'] as int;
   }
 
@@ -593,24 +631,6 @@ class DatabaseHelper {
       orderBy: 'date ASC',
     );
     return rows.map(WorkoutSession.fromMap).toList();
-  }
-
-  // ---- User profile (v4) ----
-
-  Future<UserProfile?> getUserProfile() async {
-    final db = await database;
-    final rows = await db.query('user_profile', where: 'id = 1', limit: 1);
-    if (rows.isEmpty) return null;
-    return UserProfile.fromMap(rows.first);
-  }
-
-  Future<void> saveUserProfile(UserProfile profile) async {
-    final db = await database;
-    await db.insert(
-      'user_profile',
-      profile.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
   }
 
   // ---- Factory reset ----

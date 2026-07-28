@@ -8,7 +8,6 @@ import '../models/workout_entry.dart';
 import '../models/workout_session.dart';
 import '../providers/program_progress_provider.dart';
 import '../providers/stats_provider.dart';
-import '../providers/user_profile_provider.dart';
 import '../providers/workout_provider.dart';
 import '../services/calorie_calculator_service.dart';
 import '../widgets/category_style.dart';
@@ -162,18 +161,13 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     final durationMinutes = (_stopwatch.elapsed.inSeconds / 60).ceil().clamp(1, 1000000);
 
     // Resolve the user's current weight for the MET calorie formula:
-    // profile weight -> latest logged body measurement -> a safe default.
+    // latest logged body measurement -> a safe default.
     double weightKg = CalorieCalculatorService.fallbackWeightKg;
-    final profileWeight = context.read<UserProfileProvider>().profile?.weightKg;
-    if (profileWeight != null && profileWeight > 0) {
-      weightKg = profileWeight;
-    } else {
-      final measurements = await DatabaseHelper.instance.allMeasurements();
-      for (final m in measurements) {
-        if (m.weightKg != null && m.weightKg! > 0) {
-          weightKg = m.weightKg!;
-          break;
-        }
+    final measurements = await DatabaseHelper.instance.allMeasurements();
+    for (final m in measurements) {
+      if (m.weightKg != null && m.weightKg! > 0) {
+        weightKg = m.weightKg!;
+        break;
       }
     }
 
@@ -216,9 +210,6 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
       MaterialPageRoute(
         builder: (_) => WorkoutSummaryScreen(
           title: widget.title,
-          totalSets: totalSets,
-          totalVolume: totalVolume,
-          exerciseCount: widget.steps.length,
           durationMinutes: durationMinutes,
           calories: calories,
         ),
@@ -304,18 +295,12 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
 /// Shown after finishing a guided workout session: totals summary.
 class WorkoutSummaryScreen extends StatelessWidget {
   final String title;
-  final int totalSets;
-  final double totalVolume;
-  final int exerciseCount;
   final int durationMinutes;
   final double calories;
 
   const WorkoutSummaryScreen({
     super.key,
     required this.title,
-    required this.totalSets,
-    required this.totalVolume,
-    required this.exerciseCount,
     required this.durationMinutes,
     required this.calories,
   });
@@ -334,9 +319,6 @@ class WorkoutSummaryScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Text(title, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
               const SizedBox(height: 24),
-              _StatRow(label: 'Egzersiz sayısı', value: '$exerciseCount'),
-              _StatRow(label: 'Toplam set', value: '$totalSets'),
-              _StatRow(label: 'Toplam hacim', value: '${totalVolume.toStringAsFixed(0)} kg'),
               _StatRow(label: 'Süre', value: '$durationMinutes dk'),
               _StatRow(label: 'Tahmini kalori', value: '${calories.toStringAsFixed(0)} kcal'),
               const SizedBox(height: 24),

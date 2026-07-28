@@ -100,7 +100,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(l10n.dashboardGreeting, style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            settings.userName != null && settings.userName!.isNotEmpty
+                ? 'Merhaba, ${settings.userName}'
+                : 'Merhaba',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 16),
           Card(
             color: Theme.of(context).colorScheme.primaryContainer,

@@ -92,26 +92,30 @@ class StatsProvider extends ChangeNotifier {
         .length;
   }
 
-  /// Current streak: number of consecutive days with a logged workout,
-  /// counting back from today (or yesterday, so a rest day today doesn't
-  /// immediately zero out yesterday's streak).
+  /// Current streak using the flexible "7-day grace" rule: the streak does
+  /// NOT reset just because a day was skipped. It only resets to 0 once a
+  /// full 7 days have passed since the most recent workout with no new
+  /// entry logged. Gaps of up to 6 days keep the streak alive and simply
+  /// add 1 for the new day worked.
   int get currentStreak {
-    final dateSet = _entries.map((e) => e.date).toSet();
-    if (dateSet.isEmpty) return 0;
+    final dates = _entries.map((e) => e.date).toSet().toList()..sort();
+    if (dates.isEmpty) return 0;
 
-    DateTime cursor = DateTime.now();
-    if (!dateSet.contains(_dateFmt.format(cursor)) &&
-        !dateSet.contains(_dateFmt.format(cursor.subtract(const Duration(days: 1))))) {
-      return 0;
-    }
-    if (!dateSet.contains(_dateFmt.format(cursor))) {
-      cursor = cursor.subtract(const Duration(days: 1));
-    }
+    final lastDate = _dateFmt.parse(dates.last);
+    final daysSinceLast = DateTime.now().difference(DateTime(lastDate.year, lastDate.month, lastDate.day)).inDays;
+    if (daysSinceLast >= 7) return 0;
 
-    int streak = 0;
-    while (dateSet.contains(_dateFmt.format(cursor))) {
-      streak++;
-      cursor = cursor.subtract(const Duration(days: 1));
+    int streak = 1;
+    for (int i = 1; i < dates.length; i++) {
+      final prev = _dateFmt.parse(dates[i - 1]);
+      final curr = _dateFmt.parse(dates[i]);
+      final gap = curr.difference(prev).inDays;
+      if (gap <= 0) continue; // same-day duplicate entries
+      if (gap <= 6) {
+        streak++;
+      } else {
+        streak = 1;
+      }
     }
     return streak;
   }

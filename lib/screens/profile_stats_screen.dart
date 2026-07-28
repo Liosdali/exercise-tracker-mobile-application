@@ -162,7 +162,7 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
           Text(l10n.profileAchievementsTitle, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           SizedBox(
-            height: 100,
+            height: 116,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -217,7 +217,8 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
                 title: Text(DateFormat.yMMMd().format(DateTime.parse(m.date))),
                 subtitle: Text([
                   if (m.weightKg != null) '${m.weightKg} kg',
-                  if (m.bodyFatPercent != null) '%${m.bodyFatPercent} yağ',
+                  if (m.heightCm != null) '${m.heightCm} cm boy',
+                  if (m.calculatedBodyFat != null) '%${m.calculatedBodyFat!.toStringAsFixed(1)} yağ',
                   if (m.chestCm != null) 'Göğüs ${m.chestCm} cm',
                   if (m.waistCm != null) 'Bel ${m.waistCm} cm',
                 ].join(' • ')),
@@ -278,17 +279,21 @@ class _AchievementCard extends StatelessWidget {
                 color: achievement.unlocked ? Colors.amber : null,
               ),
               const SizedBox(height: 4),
-              Text(
-                achievement.title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelLarge,
+              Flexible(
+                child: Text(
+                  achievement.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
               ),
-              Text(
-                achievement.description,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodySmall,
+              Flexible(
+                child: Text(
+                  achievement.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ),
             ],
           ),

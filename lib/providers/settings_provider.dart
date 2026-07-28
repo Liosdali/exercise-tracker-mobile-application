@@ -9,18 +9,30 @@ class SettingsProvider extends ChangeNotifier {
   static const _keyVibrationEnabled = 'vibration_enabled';
   static const _keyActiveProgramKey = 'active_program_key';
   static const _keyLanguageCode = 'app_language';
+  static const _keyUserName = 'user_name';
+  static const _keyHasCompletedOnboarding = 'has_completed_onboarding';
 
   int _weeklyGoal = 3;
   bool _soundEnabled = true;
   bool _vibrationEnabled = true;
   String? _activeProgramKey;
   String? _languageCode;
+  String? _userName;
+  bool _hasCompletedOnboarding = false;
   bool _loaded = false;
 
   int get weeklyGoal => _weeklyGoal;
   bool get soundEnabled => _soundEnabled;
   bool get vibrationEnabled => _vibrationEnabled;
   bool get isLoaded => _loaded;
+
+  /// Optional display name captured during first-launch onboarding, shown
+  /// in the Dashboard greeting ("Merhaba, [İsim]"). Null/empty if skipped.
+  String? get userName => _userName;
+
+  /// Whether the user has already been shown (or skipped) the first-launch
+  /// onboarding name dialog.
+  bool get hasCompletedOnboarding => _hasCompletedOnboarding;
 
   /// Manually-selected UI language ('tr'/'en'), or null to follow the
   /// device's system locale (with English as the ultimate fallback).
@@ -38,8 +50,26 @@ class SettingsProvider extends ChangeNotifier {
     _vibrationEnabled = prefs.getBool(_keyVibrationEnabled) ?? true;
     _activeProgramKey = prefs.getString(_keyActiveProgramKey);
     _languageCode = prefs.getString(_keyLanguageCode);
+    _userName = prefs.getString(_keyUserName);
+    _hasCompletedOnboarding = prefs.getBool(_keyHasCompletedOnboarding) ?? false;
     _loaded = true;
     notifyListeners();
+  }
+
+  /// Saves the optional onboarding name (or clears it if null/empty) and
+  /// marks onboarding as completed so the dialog isn't shown again.
+  Future<void> completeOnboarding(String? name) async {
+    final trimmed = name?.trim();
+    _userName = (trimmed == null || trimmed.isEmpty) ? null : trimmed;
+    _hasCompletedOnboarding = true;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    if (_userName == null) {
+      await prefs.remove(_keyUserName);
+    } else {
+      await prefs.setString(_keyUserName, _userName!);
+    }
+    await prefs.setBool(_keyHasCompletedOnboarding, true);
   }
 
   Future<void> setLanguageCode(String? code) async {

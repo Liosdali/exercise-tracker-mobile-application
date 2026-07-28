@@ -9,7 +9,7 @@ import '../providers/routine_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
-import 'user_profile_form.dart';
+import 'about_screen.dart';
 
 /// Settings screen: manual language override, rest-timer/weekly-goal
 /// preferences, and a "reset all data" factory-reset action.
@@ -115,22 +115,6 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text('Vücut Bilgilerim', style: Theme.of(context).textTheme.titleMedium),
-          ),
-          ListTile(
-            leading: const Icon(Icons.accessibility_new),
-            title: const Text('Boy, kilo, yaş, cinsiyet, yağ oranı'),
-            subtitle: const Text('Kalori hesaplaması için kullanılır'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const UserProfileForm()),
-              );
-            },
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
             child: Text(l10n.settingsResetDataSection, style: Theme.of(context).textTheme.titleMedium),
           ),
           Padding(
@@ -141,6 +125,17 @@ class SettingsScreen extends StatelessWidget {
               icon: const Icon(Icons.delete_forever),
               label: Text(l10n.settingsResetDataButton),
             ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('Hakkında'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AboutScreen()),
+              );
+            },
           ),
         ],
       ),
