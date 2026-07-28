@@ -65,7 +65,7 @@ class _CategoryExercisesScreenState extends State<CategoryExercisesScreen> {
                       final exercise = exercises[index];
                       return ListTile(
                         leading: ExerciseThumbnail(exercise: exercise),
-                        title: Text(ExerciseLocalizer.localizedName(exercise.name, lang)),
+                        title: Text(exercise.name),
                         subtitle: Text(ExerciseLocalizer.localizedEquipment(exercise.equipment, lang)),
                         onTap: () {
                           Navigator.of(context).push(

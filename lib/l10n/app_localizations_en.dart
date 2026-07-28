@@ -205,4 +205,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String calendarTotalDaysLabel(int count) {
     return '$count days';
   }
+
+  @override
+  String exerciseDetailTargetLabel(String target) {
+    return 'Target: $target';
+  }
+
+  @override
+  String get exerciseDetailSecondaryMusclesTitle => 'Secondary muscles';
+
+  @override
+  String get exerciseDetailInstructionsTitle => 'Instructions';
+
+  @override
+  String get exerciseDetailLogButton => 'Log this exercise';
 }

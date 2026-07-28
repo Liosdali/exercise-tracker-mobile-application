@@ -206,4 +206,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String calendarTotalDaysLabel(int count) {
     return '$count gün';
   }
+
+  @override
+  String exerciseDetailTargetLabel(String target) {
+    return 'Hedef: $target';
+  }
+
+  @override
+  String get exerciseDetailSecondaryMusclesTitle => 'İkincil kaslar';
+
+  @override
+  String get exerciseDetailInstructionsTitle => 'Nasıl Yapılır?';
+
+  @override
+  String get exerciseDetailLogButton => 'Egzersizi Kaydet';
 }

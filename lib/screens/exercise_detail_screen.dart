@@ -19,7 +19,8 @@ class ExerciseDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final lang = l10n.localeName;
-    final name = ExerciseLocalizer.localizedName(exercise.name, lang);
+    // Exercise names always stay in English, regardless of app language.
+    final name = exercise.name;
     return Scaffold(
       appBar: AppBar(title: Text(name)),
       body: ListView(
@@ -50,13 +51,13 @@ class ExerciseDetailScreen extends StatelessWidget {
             children: [
               _chip(titleCase(ExerciseLocalizer.localizedBodyPart(exercise.bodyPart, lang))),
               _chip(ExerciseLocalizer.localizedEquipment(exercise.equipment, lang)),
-              _chip('Target: ${exercise.target}'),
+              _chip(l10n.exerciseDetailTargetLabel(exercise.target)),
               _chip(exercise.muscleGroup),
             ],
           ),
           if (exercise.secondaryMuscles.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Text('Secondary muscles', style: Theme.of(context).textTheme.titleSmall),
+            Text(l10n.exerciseDetailSecondaryMusclesTitle, style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 4),
             Wrap(
               spacing: 8,
@@ -65,7 +66,7 @@ class ExerciseDetailScreen extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 20),
-          Text('Instructions', style: Theme.of(context).textTheme.titleMedium),
+          Text(l10n.exerciseDetailInstructionsTitle, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           if (exercise.stepsFor(lang).isNotEmpty)
             ...exercise.stepsFor(lang).asMap().entries.map(
@@ -85,7 +86,7 @@ class ExerciseDetailScreen extends StatelessWidget {
           const SizedBox(height: 24),
           FilledButton.icon(
             icon: const Icon(Icons.add_task),
-            label: const Text('Log this exercise'),
+            label: Text(l10n.exerciseDetailLogButton),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

@@ -85,5 +85,15 @@
     "placeholders": {
       "count": {"type": "int"}
     }
-  }
+  },
+
+  "exerciseDetailTargetLabel": "Target: {target}",
+  "@exerciseDetailTargetLabel": {
+    "placeholders": {
+      "target": {"type": "String"}
+    }
+  },
+  "exerciseDetailSecondaryMusclesTitle": "Secondary muscles",
+  "exerciseDetailInstructionsTitle": "Instructions",
+  "exerciseDetailLogButton": "Log this exercise"
 }

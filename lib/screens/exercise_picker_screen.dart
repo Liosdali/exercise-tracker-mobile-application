@@ -88,7 +88,7 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
                       final exercise = results[index];
                       return ListTile(
                         leading: ExerciseThumbnail(exercise: exercise),
-                        title: Text(ExerciseLocalizer.localizedName(exercise.name, lang)),
+                        title: Text(exercise.name),
                         subtitle: Text(titleCase(ExerciseLocalizer.localizedBodyPart(exercise.bodyPart, lang))),
                         onTap: () => Navigator.of(context).pop(exercise),
                       );

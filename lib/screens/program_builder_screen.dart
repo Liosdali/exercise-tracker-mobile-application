@@ -304,7 +304,7 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                ExerciseLocalizer.localizedName(item.exercise.name, lang),
+                                item.exercise.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.labelMedium,
@@ -363,7 +363,7 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                 final isSelected = _selected.any((s) => s.exercise.id == exercise.id);
                 return CheckboxListTile(
                   secondary: ExerciseThumbnail(exercise: exercise),
-                  title: Text(ExerciseLocalizer.localizedName(exercise.name, lang)),
+                  title: Text(exercise.name),
                   subtitle: Text(titleCase(ExerciseLocalizer.localizedBodyPart(exercise.bodyPart, lang))),
                   value: isSelected,
                   onChanged: (_) => _toggle(exercise),

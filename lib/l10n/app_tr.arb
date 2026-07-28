@@ -78,5 +78,15 @@
     "placeholders": {
       "count": {"type": "int"}
     }
-  }
+  },
+
+  "exerciseDetailTargetLabel": "Hedef: {target}",
+  "@exerciseDetailTargetLabel": {
+    "placeholders": {
+      "target": {"type": "String"}
+    }
+  },
+  "exerciseDetailSecondaryMusclesTitle": "İkincil kaslar",
+  "exerciseDetailInstructionsTitle": "Nasıl Yapılır?",
+  "exerciseDetailLogButton": "Egzersizi Kaydet"
 }

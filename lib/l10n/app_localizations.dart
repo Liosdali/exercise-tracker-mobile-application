@@ -469,6 +469,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} days'**
   String calendarTotalDaysLabel(int count);
+
+  /// No description provided for @exerciseDetailTargetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target: {target}'**
+  String exerciseDetailTargetLabel(String target);
+
+  /// No description provided for @exerciseDetailSecondaryMusclesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary muscles'**
+  String get exerciseDetailSecondaryMusclesTitle;
+
+  /// No description provided for @exerciseDetailInstructionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get exerciseDetailInstructionsTitle;
+
+  /// No description provided for @exerciseDetailLogButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Log this exercise'**
+  String get exerciseDetailLogButton;
 }
 
 class _AppLocalizationsDelegate
