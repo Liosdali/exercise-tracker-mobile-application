@@ -90,7 +90,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dashboardTotalWorkoutsLabel => 'Toplam Antrenman';
 
   @override
-  String get dashboardTotalVolumeLabel => 'Toplam Hacim';
+  String get dashboardTotalVolumeLabel => 'Toplam Kaldırılan Ağırlık';
 
   @override
   String get dashboardMaxStreakLabel => 'En Uzun Seri';
@@ -220,4 +220,55 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get exerciseDetailLogButton => 'Egzersizi Kaydet';
+
+  @override
+  String get exercisePickerTitle => 'Egzersiz Seç';
+
+  @override
+  String get exerciseSearchLabel => 'Egzersiz ara';
+
+  @override
+  String get exercisePickerAllChip => 'Tümü';
+
+  @override
+  String get exerciseSearchNoResults => 'Egzersiz bulunamadı.';
+
+  @override
+  String get logEntryTitleAdd => 'Antrenman Kaydet';
+
+  @override
+  String get logEntryTitleEdit => 'Kaydı Düzenle';
+
+  @override
+  String get logEntryDateLabel => 'Tarih';
+
+  @override
+  String get logEntrySetsLabel => 'Set';
+
+  @override
+  String get logEntryRepsLabel => 'Tekrar';
+
+  @override
+  String get logEntryWeightLabel => 'Ağırlık (kg, opsiyonel)';
+
+  @override
+  String get logEntryNotesLabel => 'Notlar (opsiyonel)';
+
+  @override
+  String get logEntrySaveEntryButton => 'Kaydı Kaydet';
+
+  @override
+  String get logEntrySaveChangesButton => 'Değişiklikleri Kaydet';
+
+  @override
+  String get programBuilderPickerTitle => 'Egzersiz Seç';
+
+  @override
+  String get programBuilderSetsLabel => 'Set';
+
+  @override
+  String get programBuilderRepsLabel => 'Tekrar';
+
+  @override
+  String get programBuilderRemoveButton => 'Kaldır';
 }

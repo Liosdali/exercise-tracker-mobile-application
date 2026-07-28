@@ -48,17 +48,17 @@ class _CategoryExercisesScreenState extends State<CategoryExercisesScreen> {
             padding: const EdgeInsets.all(12),
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search exercises',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.exerciseSearchLabel,
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (value) => setState(() => _query = value),
             ),
           ),
           Expanded(
             child: exercises.isEmpty
-                ? const Center(child: Text('No exercises found.'))
+                ? Center(child: Text(l10n.exerciseSearchNoResults))
                 : ListView.builder(
                     itemCount: exercises.length,
                     itemBuilder: (context, index) {

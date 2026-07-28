@@ -89,7 +89,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboardTotalWorkoutsLabel => 'Total Workouts';
 
   @override
-  String get dashboardTotalVolumeLabel => 'Total Volume';
+  String get dashboardTotalVolumeLabel => 'Total Weight Lifted';
 
   @override
   String get dashboardMaxStreakLabel => 'Best Streak';
@@ -219,4 +219,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exerciseDetailLogButton => 'Log this exercise';
+
+  @override
+  String get exercisePickerTitle => 'Pick an exercise';
+
+  @override
+  String get exerciseSearchLabel => 'Search exercises';
+
+  @override
+  String get exercisePickerAllChip => 'All';
+
+  @override
+  String get exerciseSearchNoResults => 'No exercises found.';
+
+  @override
+  String get logEntryTitleAdd => 'Log workout';
+
+  @override
+  String get logEntryTitleEdit => 'Edit entry';
+
+  @override
+  String get logEntryDateLabel => 'Date';
+
+  @override
+  String get logEntrySetsLabel => 'Sets';
+
+  @override
+  String get logEntryRepsLabel => 'Reps';
+
+  @override
+  String get logEntryWeightLabel => 'Weight (kg, optional)';
+
+  @override
+  String get logEntryNotesLabel => 'Notes (optional)';
+
+  @override
+  String get logEntrySaveEntryButton => 'Save entry';
+
+  @override
+  String get logEntrySaveChangesButton => 'Save changes';
+
+  @override
+  String get programBuilderPickerTitle => 'Select exercises';
+
+  @override
+  String get programBuilderSetsLabel => 'Sets';
+
+  @override
+  String get programBuilderRepsLabel => 'Reps';
+
+  @override
+  String get programBuilderRemoveButton => 'Remove';
 }

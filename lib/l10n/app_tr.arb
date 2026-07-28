@@ -29,7 +29,7 @@
   "dashboardNextWorkoutSubtitle": "Sıradaki antrenman",
   "dashboardStartButton": "Başla",
   "dashboardTotalWorkoutsLabel": "Toplam Antrenman",
-  "dashboardTotalVolumeLabel": "Toplam Hacim",
+  "dashboardTotalVolumeLabel": "Toplam Kaldırılan Ağırlık",
   "dashboardMaxStreakLabel": "En Uzun Seri",
   "dashboardTotalDurationLabel": "Toplam Yapılan Spor Süresi",
 
@@ -88,5 +88,25 @@
   },
   "exerciseDetailSecondaryMusclesTitle": "İkincil kaslar",
   "exerciseDetailInstructionsTitle": "Nasıl Yapılır?",
-  "exerciseDetailLogButton": "Egzersizi Kaydet"
+  "exerciseDetailLogButton": "Egzersizi Kaydet",
+
+  "exercisePickerTitle": "Egzersiz Seç",
+  "exerciseSearchLabel": "Egzersiz ara",
+  "exercisePickerAllChip": "Tümü",
+  "exerciseSearchNoResults": "Egzersiz bulunamadı.",
+
+  "logEntryTitleAdd": "Antrenman Kaydet",
+  "logEntryTitleEdit": "Kaydı Düzenle",
+  "logEntryDateLabel": "Tarih",
+  "logEntrySetsLabel": "Set",
+  "logEntryRepsLabel": "Tekrar",
+  "logEntryWeightLabel": "Ağırlık (kg, opsiyonel)",
+  "logEntryNotesLabel": "Notlar (opsiyonel)",
+  "logEntrySaveEntryButton": "Kaydı Kaydet",
+  "logEntrySaveChangesButton": "Değişiklikleri Kaydet",
+
+  "programBuilderPickerTitle": "Egzersiz Seç",
+  "programBuilderSetsLabel": "Set",
+  "programBuilderRepsLabel": "Tekrar",
+  "programBuilderRemoveButton": "Kaldır"
 }

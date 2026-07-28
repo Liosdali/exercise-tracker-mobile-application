@@ -36,7 +36,7 @@
   "dashboardNextWorkoutSubtitle": "Next up",
   "dashboardStartButton": "Start",
   "dashboardTotalWorkoutsLabel": "Total Workouts",
-  "dashboardTotalVolumeLabel": "Total Volume",
+  "dashboardTotalVolumeLabel": "Total Weight Lifted",
   "dashboardMaxStreakLabel": "Best Streak",
   "dashboardTotalDurationLabel": "Total Workout Time",
 
@@ -95,5 +95,25 @@
   },
   "exerciseDetailSecondaryMusclesTitle": "Secondary muscles",
   "exerciseDetailInstructionsTitle": "Instructions",
-  "exerciseDetailLogButton": "Log this exercise"
+  "exerciseDetailLogButton": "Log this exercise",
+
+  "exercisePickerTitle": "Pick an exercise",
+  "exerciseSearchLabel": "Search exercises",
+  "exercisePickerAllChip": "All",
+  "exerciseSearchNoResults": "No exercises found.",
+
+  "logEntryTitleAdd": "Log workout",
+  "logEntryTitleEdit": "Edit entry",
+  "logEntryDateLabel": "Date",
+  "logEntrySetsLabel": "Sets",
+  "logEntryRepsLabel": "Reps",
+  "logEntryWeightLabel": "Weight (kg, optional)",
+  "logEntryNotesLabel": "Notes (optional)",
+  "logEntrySaveEntryButton": "Save entry",
+  "logEntrySaveChangesButton": "Save changes",
+
+  "programBuilderPickerTitle": "Select exercises",
+  "programBuilderSetsLabel": "Sets",
+  "programBuilderRepsLabel": "Reps",
+  "programBuilderRemoveButton": "Remove"
 }

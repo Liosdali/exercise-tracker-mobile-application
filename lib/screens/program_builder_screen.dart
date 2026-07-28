@@ -275,7 +275,7 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Egzersiz Seç'),
+        title: Text(l10n.programBuilderPickerTitle),
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(_selected),
@@ -287,7 +287,7 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
         children: [
           if (_selected.isNotEmpty)
             SizedBox(
-              height: 172,
+              height: 184,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -296,9 +296,9 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                   final item = _selected[index];
                   return Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                       child: SizedBox(
-                        width: 130,
+                        width: 150,
                         child: SingleChildScrollView(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -312,7 +312,13 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Set'),
+                                  Flexible(
+                                    child: Text(
+                                      l10n.programBuilderSetsLabel,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                   _Stepper(
                                     value: item.targetSets,
                                     onChanged: (v) => setState(() => item.targetSets = v),
@@ -322,7 +328,13 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Tekrar'),
+                                  Flexible(
+                                    child: Text(
+                                      l10n.programBuilderRepsLabel,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                   _Stepper(
                                     value: item.targetReps,
                                     onChanged: (v) => setState(() => item.targetReps = v),
@@ -331,7 +343,10 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
                               ),
                               TextButton(
                                 onPressed: () => _toggle(item.exercise),
-                                child: const Text('Kaldır'),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(l10n.programBuilderRemoveButton),
+                                ),
                               ),
                             ],
                           ),
@@ -347,10 +362,10 @@ class _DayExercisePickerScreenState extends State<_DayExercisePickerScreen> {
             padding: const EdgeInsets.all(12),
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Egzersiz ara',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.exerciseSearchLabel,
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (value) => setState(() => _query = value),
             ),
@@ -383,26 +398,42 @@ class _Stepper extends StatelessWidget {
 
   const _Stepper({required this.value, required this.onChanged});
 
+  Widget _button(BuildContext context, {required IconData icon, required VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: Icon(
+          icon,
+          size: 16,
+          color: onTap == null
+              ? Theme.of(context).disabledColor
+              : Theme.of(context).colorScheme.primary,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-          iconSize: 16,
-          onPressed: value > 1 ? () => onChanged(value - 1) : null,
-          icon: const Icon(Icons.remove_circle_outline),
+        _button(
+          context,
+          icon: Icons.remove_circle_outline,
+          onTap: value > 1 ? () => onChanged(value - 1) : null,
         ),
-        Text('$value'),
-        IconButton(
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-          iconSize: 16,
-          onPressed: () => onChanged(value + 1),
-          icon: const Icon(Icons.add_circle_outline),
+        SizedBox(
+          width: 18,
+          child: Text(
+            '$value',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
+        _button(context, icon: Icons.add_circle_outline, onTap: () => onChanged(value + 1)),
       ],
     );
   }

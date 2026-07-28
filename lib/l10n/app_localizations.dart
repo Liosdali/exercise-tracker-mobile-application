@@ -251,7 +251,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardTotalVolumeLabel.
   ///
   /// In en, this message translates to:
-  /// **'Total Volume'**
+  /// **'Total Weight Lifted'**
   String get dashboardTotalVolumeLabel;
 
   /// No description provided for @dashboardMaxStreakLabel.
@@ -493,6 +493,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log this exercise'**
   String get exerciseDetailLogButton;
+
+  /// No description provided for @exercisePickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an exercise'**
+  String get exercisePickerTitle;
+
+  /// No description provided for @exerciseSearchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search exercises'**
+  String get exerciseSearchLabel;
+
+  /// No description provided for @exercisePickerAllChip.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get exercisePickerAllChip;
+
+  /// No description provided for @exerciseSearchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises found.'**
+  String get exerciseSearchNoResults;
+
+  /// No description provided for @logEntryTitleAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Log workout'**
+  String get logEntryTitleAdd;
+
+  /// No description provided for @logEntryTitleEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit entry'**
+  String get logEntryTitleEdit;
+
+  /// No description provided for @logEntryDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get logEntryDateLabel;
+
+  /// No description provided for @logEntrySetsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get logEntrySetsLabel;
+
+  /// No description provided for @logEntryRepsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get logEntryRepsLabel;
+
+  /// No description provided for @logEntryWeightLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg, optional)'**
+  String get logEntryWeightLabel;
+
+  /// No description provided for @logEntryNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get logEntryNotesLabel;
+
+  /// No description provided for @logEntrySaveEntryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save entry'**
+  String get logEntrySaveEntryButton;
+
+  /// No description provided for @logEntrySaveChangesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get logEntrySaveChangesButton;
+
+  /// No description provided for @programBuilderPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select exercises'**
+  String get programBuilderPickerTitle;
+
+  /// No description provided for @programBuilderSetsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get programBuilderSetsLabel;
+
+  /// No description provided for @programBuilderRepsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get programBuilderRepsLabel;
+
+  /// No description provided for @programBuilderRemoveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get programBuilderRemoveButton;
 }
 
 class _AppLocalizationsDelegate

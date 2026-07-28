@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/exercise.dart';
 import '../models/workout_entry.dart';
 import '../providers/stats_provider.dart';
@@ -99,9 +100,10 @@ class _LogEntryScreenState extends State<LogEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isEditing = widget.existingEntry != null;
     return Scaffold(
-      appBar: AppBar(title: Text(isEditing ? 'Edit entry' : 'Log workout')),
+      appBar: AppBar(title: Text(isEditing ? l10n.logEntryTitleEdit : l10n.logEntryTitleAdd)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -112,8 +114,8 @@ class _LogEntryScreenState extends State<LogEntryScreen> {
               const SizedBox(height: 16),
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Date'),
-                subtitle: Text(DateFormat.yMMMMd().format(_date)),
+                title: Text(l10n.logEntryDateLabel),
+                subtitle: Text(DateFormat.yMMMMd(l10n.localeName).format(_date)),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: _pickDate,
               ),
@@ -121,30 +123,30 @@ class _LogEntryScreenState extends State<LogEntryScreen> {
               TextFormField(
                 controller: _setsController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Sets'),
+                decoration: InputDecoration(labelText: l10n.logEntrySetsLabel),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _repsController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Reps'),
+                decoration: InputDecoration(labelText: l10n.logEntryRepsLabel),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _weightController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Weight (kg, optional)'),
+                decoration: InputDecoration(labelText: l10n.logEntryWeightLabel),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _notesController,
-                decoration: const InputDecoration(labelText: 'Notes (optional)'),
+                decoration: InputDecoration(labelText: l10n.logEntryNotesLabel),
                 maxLines: 3,
               ),
               const SizedBox(height: 24),
               FilledButton(
                 onPressed: _save,
-                child: Text(isEditing ? 'Save changes' : 'Save entry'),
+                child: Text(isEditing ? l10n.logEntrySaveChangesButton : l10n.logEntrySaveEntryButton),
               ),
             ],
           ),

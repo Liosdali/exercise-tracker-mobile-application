@@ -37,17 +37,17 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
     final List<Exercise> results = exerciseProvider.search(_query, category: _category);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pick an exercise')),
+      appBar: AppBar(title: Text(l10n.exercisePickerTitle)),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search exercises',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.exerciseSearchLabel,
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (value) => setState(() => _query = value),
             ),
@@ -61,7 +61,7 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: ChoiceChip(
-                    label: const Text('All'),
+                    label: Text(l10n.exercisePickerAllChip),
                     selected: _category == null,
                     onSelected: (_) => setState(() => _category = null),
                   ),
@@ -81,7 +81,7 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
           ),
           Expanded(
             child: results.isEmpty
-                ? const Center(child: Text('No exercises found.'))
+                ? Center(child: Text(l10n.exerciseSearchNoResults))
                 : ListView.builder(
                     itemCount: results.length,
                     itemBuilder: (context, index) {
