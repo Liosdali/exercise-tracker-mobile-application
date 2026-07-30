@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Exercise App';
+  String get appTitle => 'Atlas Workout';
 
   @override
   String get navHome => 'Home';
@@ -201,7 +201,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsBackupImportInvalidFile =>
-      'This file isn\'t a valid Exercise App backup.';
+      'This file isn\'t a valid Atlas Workout backup.';
 
   @override
   String get settingsBackupImportError =>

@@ -49,13 +49,13 @@ class BackupService {
 
     final dir = await getTemporaryDirectory();
     final timestamp = DateTime.now().toIso8601String().replaceAll(RegExp(r'[:.]'), '-');
-    final file = File('${dir.path}/exercise_app_backup_$timestamp.json');
+    final file = File('${dir.path}/atlas_workout_backup_$timestamp.json');
     await file.writeAsString(jsonString);
 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(file.path, mimeType: 'application/json')],
-        text: 'Exercise App backup ($timestamp)',
+        text: 'Atlas Workout backup ($timestamp)',
       ),
     );
   }
@@ -67,7 +67,7 @@ class BackupService {
       tables[table] = await db.query(table);
     }
     final document = {
-      'app': 'exercise_app',
+      'app': 'atlas_workout',
       'formatVersion': _formatVersion,
       'exportedAt': DateTime.now().toIso8601String(),
       'tables': tables,
@@ -128,7 +128,7 @@ class BackupService {
       throw const BackupFormatException('Invalid JSON file.');
     }
     if (decoded is! Map<String, dynamic> || decoded['tables'] is! Map) {
-      throw const BackupFormatException('This file is not a valid Exercise App backup.');
+      throw const BackupFormatException('This file is not a valid Atlas Workout backup.');
     }
     final rawTables = decoded['tables'] as Map<String, dynamic>;
     final result = <String, List<Map<String, Object?>>>{};

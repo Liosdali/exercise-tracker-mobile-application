@@ -9,7 +9,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'Egzersiz Uygulaması';
+  String get appTitle => 'Atlas Workout';
 
   @override
   String get navHome => 'Ana Sayfa';
@@ -203,7 +203,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsBackupImportInvalidFile =>
-      'Bu dosya geçerli bir Exercise App yedeği değil.';
+      'Bu dosya geçerli bir Atlas Workout yedeği değil.';
 
   @override
   String get settingsBackupImportError =>

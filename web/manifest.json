@@ -1,11 +1,11 @@
 {
-    "name": "exercise_app",
-    "short_name": "exercise_app",
+    "name": "Atlas Workout",
+    "short_name": "Atlas Workout",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "exercise_app",
+    "description": "Atlas Workout",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

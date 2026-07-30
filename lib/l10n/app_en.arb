@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
 
-  "appTitle": "Exercise App",
+  "appTitle": "Atlas Workout",
   "@appTitle": {"description": "App title"},
 
   "navHome": "Home",
@@ -79,7 +79,7 @@
     "placeholders": {"counts": {"type": "String"}}
   },
   "settingsBackupImportSuccess": "Backup restored successfully.",
-  "settingsBackupImportInvalidFile": "This file isn't a valid Exercise App backup.",
+  "settingsBackupImportInvalidFile": "This file isn't a valid Atlas Workout backup.",
   "settingsBackupImportError": "Couldn't restore the backup. Please try again.",
 
   "settingsAboutTitle": "About",

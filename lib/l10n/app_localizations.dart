@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// App title
   ///
   /// In en, this message translates to:
-  /// **'Exercise App'**
+  /// **'Atlas Workout'**
   String get appTitle;
 
   /// No description provided for @navHome.
@@ -455,7 +455,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupImportInvalidFile.
   ///
   /// In en, this message translates to:
-  /// **'This file isn\'t a valid Exercise App backup.'**
+  /// **'This file isn\'t a valid Atlas Workout backup.'**
   String get settingsBackupImportInvalidFile;
 
   /// No description provided for @settingsBackupImportError.

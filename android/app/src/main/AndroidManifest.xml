@@ -10,7 +10,7 @@
          Remove this line if you don't want to fill out that form. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <application
-        android:label="exercise_app"
+        android:label="Atlas Workout"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
