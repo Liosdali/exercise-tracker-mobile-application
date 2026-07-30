@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../models/achievement.dart';
 import '../models/body_measurement.dart';
 import '../providers/stats_provider.dart';
+import '../services/achievement_localizer.dart';
 import 'body_measurement_form.dart';
 import 'settings_screen.dart';
 
@@ -250,6 +251,7 @@ class _AchievementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: 130,
       child: Card(
@@ -269,7 +271,7 @@ class _AchievementCard extends StatelessWidget {
               const SizedBox(height: 4),
               Flexible(
                 child: Text(
-                  achievement.title,
+                  AchievementLocalizer.title(l10n, achievement.id),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.labelLarge,
@@ -277,7 +279,7 @@ class _AchievementCard extends StatelessWidget {
               ),
               Flexible(
                 child: Text(
-                  achievement.description,
+                  AchievementLocalizer.description(l10n, achievement.id),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall,

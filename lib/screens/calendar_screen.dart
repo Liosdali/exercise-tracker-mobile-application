@@ -82,7 +82,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final l10n = AppLocalizations.of(context)!;
     final builtinPrograms = context.read<ProgramProvider>();
     final customPrograms = context.read<CustomProgramProvider>();
-    final options = allProgramOptions(builtinPrograms, customPrograms);
+    final options = allProgramOptions(builtinPrograms, customPrograms, l10n: l10n);
     if (options.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.calendarNoProgramsSnackbar)),
@@ -110,7 +110,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
     if (selectedOption == null || !mounted) return;
 
-    final dayNames = dayNamesFor(selectedOption.key, builtinPrograms, customPrograms);
+    final dayNames = dayNamesFor(selectedOption.key, builtinPrograms, customPrograms, l10n: l10n);
     if (dayNames.isEmpty) return;
 
     final selectedDayIndex = await showModalBottomSheet<int>(

@@ -12,6 +12,11 @@
 .swiftpm/
 migrate_working_dir/
 
+# Release signing (never commit real keystore/credentials)
+android/key.properties
+android/**/*.jks
+android/**/*.keystore
+
 # IntelliJ related
 *.iml
 *.ipr

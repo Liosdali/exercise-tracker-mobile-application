@@ -92,6 +92,23 @@ class StatsProvider extends ChangeNotifier {
         .length;
   }
 
+  /// Most recent logged workout date, or null if none logged yet.
+  DateTime? get lastWorkoutDate {
+    final dates = _entries.map((e) => e.date).toSet().toList()..sort();
+    if (dates.isEmpty) return null;
+    final d = _dateFmt.parse(dates.last);
+    return DateTime(d.year, d.month, d.day);
+  }
+
+  /// Days elapsed since [lastWorkoutDate] (0 if a workout was logged today,
+  /// or a large sentinel if nothing has ever been logged).
+  int get daysSinceLastWorkout {
+    final last = lastWorkoutDate;
+    if (last == null) return 999;
+    final today = DateTime.now();
+    return DateTime(today.year, today.month, today.day).difference(last).inDays;
+  }
+
   /// Current streak using the flexible "7-day grace" rule: the streak does
   /// NOT reset just because a day was skipped. It only resets to 0 once a
   /// full 7 days have passed since the most recent workout with no new

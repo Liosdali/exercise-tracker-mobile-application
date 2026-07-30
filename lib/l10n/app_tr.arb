@@ -17,7 +17,8 @@
   "commonConfirm": "Onayla",
   "commonClose": "Kapat",
 
-  "dashboardGreeting": "Merhaba! 👋",
+  "dashboardGreeting": "Merhaba",
+  "dashboardGreetingWithName": "Merhaba, {name}",
   "dashboardStreakActive": "{count} gün üst üste antrenman!",
   "dashboardStreakStart": "Bugün antrenman yaparak seriye başla!",
   "dashboardWeeklyGoalTitle": "Haftalık Hedef",
@@ -55,6 +56,53 @@
   "settingsResetDataConfirmTitle": "Emin misiniz?",
   "settingsResetDataConfirmMessage": "Bu işlem tüm antrenman geçmişini, özel program/rutinleri, vücut ölçümlerini ve başarımları kalıcı olarak siler. Bu işlem geri alınamaz.",
   "settingsResetDataSuccess": "Tüm veriler sıfırlandı.",
+
+  "settingsBackupSection": "Yedekleme & Geri Yükleme",
+  "settingsBackupPrivacyNote": "Verileriniz tamamen bu cihazda saklanmaktadır. Hesap veya bulut senkronizasyonu yoktur \u2014 telefonunuzu değiştirdiğinizde veya kaybettiğinizde geçmişinizi kaybetmemek için düzenli olarak yedek alın.",
+  "settingsBackupExportButton": "Verileri Dışa Aktar (JSON)",
+  "settingsBackupExportSuccess": "Yedek dosyası oluşturuldu \u2014 kaydetmek veya paylaşmak için bir konum seçin.",
+  "settingsBackupExportError": "Yedek dosyası oluşturulamadı. Lütfen tekrar deneyin.",
+  "settingsBackupImportButton": "Verileri İçe Aktar (JSON)",
+  "settingsBackupImportConfirmTitle": "Tüm yerel veriler değiştirilsin mi?",
+  "settingsBackupImportConfirmMessage": "Bu yedeği içe aktarmak, mevcut antrenman geçmişinizi, programlarınızı ve ölçümlerinizi kalıcı olarak yedekteki verilerle ({counts}) değiştirir. Bu işlem geri alınamaz.",
+  "settingsBackupImportSuccess": "Yedek başarıyla geri yüklendi.",
+  "settingsBackupImportInvalidFile": "Bu dosya geçerli bir Exercise App yedeği değil.",
+  "settingsBackupImportError": "Yedek geri yüklenemedi. Lütfen tekrar deneyin.",
+
+  "settingsAboutTitle": "Hakkında",
+
+  "settingsDisclaimerButton": "Sağlık & Sorumluluk Reddi",
+  "settingsDisclaimerTitle": "Sağlık & Sorumluluk Reddi",
+  "settingsDisclaimerBody": "Bu uygulama yalnızca genel fitness bilgisi ve antrenman takip araçları sunar; tıbbi tavsiye niteliği taşımaz. Herhangi bir yeni egzersiz programına başlamadan önce, özellikle mevcut bir sağlık probleminiz varsa, bir hekime danışın. Egzersiz doğası gereği yaralanma riski taşır \u2014 güvenli ve kendi sınırlarınız dahilinde egzersiz yapmaktan yalnızca siz sorumlusunuz. Geliştirici, bu uygulamanın kullanımından kaynaklanan herhangi bir yaralanma, kayıp veya zarardan sorumlu tutulamaz.",
+  "settingsDisclaimerClose": "Anladım",
+
+  "settingsNotificationsSection": "Bildirim Ayarları",
+  "settingsNotificationsMasterToggle": "Bildirimleri Etkinleştir",
+  "settingsNotificationsStreakToggle": "Seri kaybı uyarıları",
+  "settingsNotificationsStreakSubtitle": "Serin sıfırlanmadan 2 gün ve 1 gün önce seni uyarır",
+  "settingsNotificationsDailyToggle": "Günlük antrenman hatırlatıcısı",
+  "settingsNotificationsDailySubtitle": "Bugünün antrenmanı tamamlanmadıysa saat 07:00'de hatırlatır",
+
+  "notificationStreakWarning2DaysTitle": "Serin risk altında! \ud83d\udd25",
+  "notificationStreakWarning2DaysBody": "{count} günlük serin var. Serini kaybetmemek için 2 gün içinde antrenman yap!",
+  "@notificationStreakWarning2DaysBody": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "notificationStreakWarningLastDayTitle": "Serini kurtarmak için son şans! \u26a0\ufe0f",
+  "notificationStreakWarningLastDayBody": "{count} günlük serin, bugün antrenman yapmazsan yarın sıfırlanacak!",
+  "@notificationStreakWarningLastDayBody": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "notificationDailyReminderTitle": "Bugünün antrenmanı seni bekliyor",
+  "notificationDailyReminderBody": "{programTitle} - {dayName} bugün için planlandı. Hadi tamamlayalım!",
+  "@notificationDailyReminderBody": {
+    "placeholders": {
+      "programTitle": {"type": "String"},
+      "dayName": {"type": "String"}
+    }
+  },
+
+  "aboutBodyText": "Uygulama geliştirilme aşamasındadır. Düşünce ve fikirlerinizi [baykal246@gmail.com] mail adresine iletebilirsiniz. Geliştirici ve Yayınlayıcı Mete Baykal",
 
   "calendarScreenTitle": "Antrenman Takvimi",
   "calendarAssignProgramButton": "Program Ata",
@@ -108,5 +156,132 @@
   "programBuilderPickerTitle": "Egzersiz Seç",
   "programBuilderSetsLabel": "Set",
   "programBuilderRepsLabel": "Tekrar",
-  "programBuilderRemoveButton": "Kaldır"
+  "programBuilderRemoveButton": "Kaldır",
+
+  "achievementFirstWorkoutTitle": "İlk Adım",
+  "achievementFirstWorkoutDesc": "İlk antrenmanını kaydet.",
+  "achievementTenWorkoutsTitle": "Kararlılık",
+  "achievementTenWorkoutsDesc": "10 antrenman günü tamamla.",
+  "achievementFiftyWorkoutsTitle": "Alışkanlık",
+  "achievementFiftyWorkoutsDesc": "50 antrenman günü tamamla.",
+  "achievementHundredWorkoutsTitle": "Yüzler Kulübü",
+  "achievementHundredWorkoutsDesc": "100 antrenman günü tamamla.",
+  "achievementStreak3Title": "3 Gün Üst Üste!",
+  "achievementStreak3Desc": "3 gün üst üste antrenman yap.",
+  "achievementStreak7Title": "Haftalık Seri",
+  "achievementStreak7Desc": "7 gün üst üste antrenman yap.",
+  "achievementStreak30Title": "Demir İrade",
+  "achievementStreak30Desc": "30 gün üst üste antrenman yap.",
+  "achievementVolume10000Title": "İlk 10.000 kg",
+  "achievementVolume10000Desc": "Toplamda 10.000 kg hacim kaldır.",
+  "achievementVolume100000Title": "İlk 100.000 kg",
+  "achievementVolume100000Desc": "Toplamda 100.000 kg hacim kaldır.",
+  "achievementMinutes60Title": "İlk Saat",
+  "achievementMinutes60Desc": "Toplamda 60 dakika antrenman yap.",
+  "achievementMinutes600Title": "Zaman Ustası",
+  "achievementMinutes600Desc": "Toplamda 600 dakika antrenman yap.",
+  "achievementCalories1000Title": "İlk 1000 kalori",
+  "achievementCalories1000Desc": "Toplamda 1000 kalori yak.",
+  "achievementCalories10000Title": "10.000 Kalori Kulübü",
+  "achievementCalories10000Desc": "Toplamda 10.000 kalori yak.",
+  "achievementSets100Title": "Yüz Set",
+  "achievementSets100Desc": "Toplamda 100 set tamamla.",
+  "achievementSets1000Title": "Bin Set",
+  "achievementSets1000Desc": "Toplamda 1000 set tamamla.",
+
+  "programLevelBeginner": "Başlangıç",
+  "programLevelIntermediate": "Orta",
+  "programLevelAdvanced": "İleri",
+
+  "programFullBodyName": "Full Body (Başlangıç)",
+  "programFullBodyDescription": "Haftada 2-3 kez uygulanabilecek, tüm vücudu çalıştıran temel bir antrenman programı. Barbell ve dumbbell ekipmanı gerektirir.",
+  "programFullBodyDay1": "Tüm Vücut",
+
+  "programHomeBodyweightName": "Evde Ekipmansız (Orta)",
+  "programHomeBodyweightDescription": "Hiçbir ekipman gerektirmeyen, evde uygulanabilecek 3 günlük vücut ağırlığı antrenman programı.",
+  "programHomeBodyweightDay1": "Gün 1 - Üst Vücut",
+  "programHomeBodyweightDay2": "Gün 2 - Alt Vücut & Core",
+  "programHomeBodyweightDay3": "Gün 3 - Kardiyo & Tüm Vücut",
+
+  "programPplName": "Push-Pull-Legs (İleri)",
+  "programPplDescription": "Haftada 3-6 kez uygulanabilecek, itiş/çekiş/bacak olarak ayrılmış ileri seviye bir split antrenman programı.",
+  "programPplDay1": "Push (İtiş)",
+  "programPplDay2": "Pull (Çekiş)",
+  "programPplDay3": "Legs (Bacak)",
+
+  "workoutsAddedSnackbar": "\"{name}\" programı eklendi.",
+  "@workoutsAddedSnackbar": {
+    "placeholders": {"name": {"type": "String"}}
+  },
+  "workoutsDaysCountLabel": "{count} günlük program",
+  "@workoutsDaysCountLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "workoutsProgramsSectionTitle": "Programlar",
+  "workoutsMyProgramsSectionTitle": "Programlarım",
+  "workoutsMyRoutinesSectionTitle": "Rutinlerim",
+  "workoutsNewProgramButton": "Yeni Program",
+  "workoutsNewRoutineButton": "Yeni Rutin",
+  "workoutsImportCodeButton": "Kod ile Ekle",
+  "workoutsImportDialogTitle": "Kod ile Program Ekle",
+  "workoutsImportDialogHint": "Program kodunu buraya yapıştırın",
+  "workoutsImportConfirmButton": "İçe Aktar",
+  "workoutsNoCustomProgramsMessage": "Henüz çok günlü bir program oluşturmadınız.",
+  "workoutsNoCustomRoutinesMessage": "Henüz özel bir rutin oluşturmadınız.",
+  "workoutsActivateProgramMenuItem": "Aktif Program Yap",
+  "workoutsEditMenuItem": "Düzenle",
+  "workoutsDeleteMenuItem": "Sil",
+  "workoutsExerciseCountLabel": "{count} egzersiz",
+  "@workoutsExerciseCountLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "programDetailShareTooltip": "Programı Paylaş",
+  "programDetailActiveProgramChip": "Aktif Program",
+  "programDetailAlreadyActiveButton": "Bu program aktif",
+  "programDetailTodayDoneLabel": "Bugün tamamlandı",
+  "programDetailSuggestedSuffix": " (Sıradaki)",
+  "programDetailCustomDescription": "Kullanıcı tarafından oluşturulan {count} günlük program.",
+  "@programDetailCustomDescription": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "programDetailShareMessage": "Atlas Workout antrenman programımı deneyin: \"{name}\"",
+  "@programDetailShareMessage": {
+    "placeholders": {"name": {"type": "String"}}
+  },
+
+  "programBuilderDayDefaultName": "Gün {number}",
+  "@programBuilderDayDefaultName": {
+    "placeholders": {"number": {"type": "int"}}
+  },
+  "programBuilderValidationMessage": "Bir program adı girin ve en az bir güne egzersiz ekleyin.",
+  "programBuilderNewProgramTitle": "Yeni Program",
+  "programBuilderEditProgramTitle": "Programı Düzenle",
+  "programBuilderAddDayButton": "Gün Ekle",
+  "programBuilderProgramNameLabel": "Program adı",
+  "programBuilderDayNameLabel": "Gün adı",
+  "programBuilderExercisesSelectedLabel": "{count} egzersiz seçildi",
+  "@programBuilderExercisesSelectedLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "programBuilderEditExercisesButton": "Egzersizleri Düzenle",
+
+  "routineBuilderValidationMessage": "Bir isim girin ve en az bir egzersiz seçin.",
+  "routineBuilderNewRoutineTitle": "Yeni Rutin",
+  "routineBuilderEditRoutineTitle": "Rutini Düzenle",
+  "routineBuilderNameLabel": "Rutin adı",
+
+  "activeWorkoutExerciseCountLabel": "Egzersiz {current}/{total}",
+  "activeWorkoutSetProgressLabel": "Set {current}/{total} \u2022 Hedef: {reps} tekrar",
+  "activeWorkoutRepsLabel": "Tekrar",
+  "activeWorkoutWeightLabel": "Ağırlık (kg)",
+  "activeWorkoutFinishButton": "Antrenmanı Bitir",
+  "activeWorkoutCompleteSetButton": "Seti Tamamla",
+  "activeWorkoutNotesLabel": "Antrenman: {title}",
+  "workoutSummaryTitle": "Antrenman Tamamlandı",
+  "workoutSummaryDurationLabel": "Süre",
+  "workoutSummaryDurationValue": "{minutes} dk",
+  "workoutSummaryCaloriesLabel": "Tahmini kalori",
+  "workoutSummaryBackHomeButton": "Ana Sayfaya Dön"
 }

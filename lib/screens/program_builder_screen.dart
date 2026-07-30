@@ -73,7 +73,7 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
         });
       });
     } else {
-      _days.add(_DayDraft(name: 'Gün 1'));
+      _days.add(_DayDraft(name: AppLocalizations.of(context)!.programBuilderDayDefaultName(1)));
     }
   }
 
@@ -87,7 +87,8 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
   }
 
   void _addDay() {
-    setState(() => _days.add(_DayDraft(name: 'Gün ${_days.length + 1}')));
+    final l10n = AppLocalizations.of(context)!;
+    setState(() => _days.add(_DayDraft(name: l10n.programBuilderDayDefaultName(_days.length + 1))));
   }
 
   void _removeDay(int index) {
@@ -113,11 +114,12 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
     if (name.isEmpty || _days.isEmpty || _days.every((d) => d.exercises.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Bir program adı girin ve en az bir güne egzersiz ekleyin.'),
+        SnackBar(
+          content: Text(l10n.programBuilderValidationMessage),
         ),
       );
       return;
@@ -132,7 +134,7 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
           CustomProgramDay(
             id: _days[d].existingDayId,
             name: _days[d].nameController.text.trim().isEmpty
-                ? 'Gün ${d + 1}'
+                ? l10n.programBuilderDayDefaultName(d + 1)
                 : _days[d].nameController.text.trim(),
             position: d,
             exercises: [
@@ -161,9 +163,10 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.existingProgram == null ? 'Yeni Program' : 'Programı Düzenle'),
+        title: Text(widget.existingProgram == null ? l10n.programBuilderNewProgramTitle : l10n.programBuilderEditProgramTitle),
         actions: [
           IconButton(onPressed: _save, icon: const Icon(Icons.save)),
         ],
@@ -171,14 +174,14 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _addDay,
         icon: const Icon(Icons.add),
-        label: const Text('Gün Ekle'),
+        label: Text(l10n.programBuilderAddDayButton),
       ),
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Program adı', border: OutlineInputBorder()),
+            decoration: InputDecoration(labelText: l10n.programBuilderProgramNameLabel, border: const OutlineInputBorder()),
           ),
           const SizedBox(height: 16),
           for (var i = 0; i < _days.length; i++)
@@ -194,8 +197,8 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
                         Expanded(
                           child: TextField(
                             controller: _days[i].nameController,
-                            decoration: const InputDecoration(
-                              labelText: 'Gün adı',
+                            decoration: InputDecoration(
+                              labelText: l10n.programBuilderDayNameLabel,
                               isDense: true,
                             ),
                           ),
@@ -207,12 +210,12 @@ class _ProgramBuilderScreenState extends State<ProgramBuilderScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text('${_days[i].exercises.length} egzersiz seçildi'),
+                    Text(l10n.programBuilderExercisesSelectedLabel(_days[i].exercises.length)),
                     const SizedBox(height: 8),
                     OutlinedButton.icon(
                       onPressed: () => _editDayExercises(_days[i]),
                       icon: const Icon(Icons.fitness_center),
-                      label: const Text('Egzersizleri Düzenle'),
+                      label: Text(l10n.programBuilderEditExercisesButton),
                     ),
                   ],
                 ),

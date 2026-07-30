@@ -18,7 +18,11 @@
   "commonConfirm": "Confirm",
   "commonClose": "Close",
 
-  "dashboardGreeting": "Hello! 👋",
+  "dashboardGreeting": "Hello",
+  "dashboardGreetingWithName": "Hello, {name}",
+  "@dashboardGreetingWithName": {
+    "placeholders": {"name": {"type": "String"}}
+  },
   "dashboardStreakActive": "{count} day streak, keep it up!",
   "@dashboardStreakActive": {
     "placeholders": {"count": {"type": "int"}}
@@ -62,6 +66,56 @@
   "settingsResetDataConfirmTitle": "Are you sure?",
   "settingsResetDataConfirmMessage": "This will permanently delete all workout history, custom programs/routines, body measurements and achievements. This action cannot be undone.",
   "settingsResetDataSuccess": "All data has been reset.",
+
+  "settingsBackupSection": "Backup & Restore",
+  "settingsBackupPrivacyNote": "Your data is stored entirely on this device. There is no account or cloud sync \u2014 back up regularly so you don't lose your history if you lose or change your phone.",
+  "settingsBackupExportButton": "Export Data (JSON)",
+  "settingsBackupExportSuccess": "Backup file created \u2014 choose where to save or share it.",
+  "settingsBackupExportError": "Couldn't create the backup file. Please try again.",
+  "settingsBackupImportButton": "Import Data (JSON)",
+  "settingsBackupImportConfirmTitle": "Replace all local data?",
+  "settingsBackupImportConfirmMessage": "Importing this backup will permanently replace your current workout history, programs, and measurements with its contents ({counts}). This cannot be undone.",
+  "@settingsBackupImportConfirmMessage": {
+    "placeholders": {"counts": {"type": "String"}}
+  },
+  "settingsBackupImportSuccess": "Backup restored successfully.",
+  "settingsBackupImportInvalidFile": "This file isn't a valid Exercise App backup.",
+  "settingsBackupImportError": "Couldn't restore the backup. Please try again.",
+
+  "settingsAboutTitle": "About",
+
+  "settingsDisclaimerButton": "Health & Liability Disclaimer",
+  "settingsDisclaimerTitle": "Health & Liability Disclaimer",
+  "settingsDisclaimerBody": "This app provides general fitness information and workout tracking tools only; it is not medical advice. Consult a physician before starting any new exercise program, especially if you have a pre-existing health condition. Exercise carries an inherent risk of injury \u2014 you are solely responsible for exercising safely and within your own limits. The developer accepts no liability for any injury, loss, or damage arising from the use of this app.",
+  "settingsDisclaimerClose": "I Understand",
+
+  "settingsNotificationsSection": "Notification Settings",
+  "settingsNotificationsMasterToggle": "Enable notifications",
+  "settingsNotificationsStreakToggle": "Streak loss warnings",
+  "settingsNotificationsStreakSubtitle": "Warns you 2 days and 1 day before your streak resets",
+  "settingsNotificationsDailyToggle": "Daily workout reminder",
+  "settingsNotificationsDailySubtitle": "Reminds you at 07:00 if today's workout isn't done yet",
+
+  "notificationStreakWarning2DaysTitle": "Your streak is at risk! \ud83d\udd25",
+  "notificationStreakWarning2DaysBody": "You have {count} day streak. Work out within 2 days or you'll lose it!",
+  "@notificationStreakWarning2DaysBody": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "notificationStreakWarningLastDayTitle": "Last chance to save your streak! \u26a0\ufe0f",
+  "notificationStreakWarningLastDayBody": "Your {count} day streak resets tomorrow if you don't work out today!",
+  "@notificationStreakWarningLastDayBody": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "notificationDailyReminderTitle": "Today's workout is waiting",
+  "notificationDailyReminderBody": "{programTitle} - {dayName} is scheduled for today. Let's get it done!",
+  "@notificationDailyReminderBody": {
+    "placeholders": {
+      "programTitle": {"type": "String"},
+      "dayName": {"type": "String"}
+    }
+  },
+
+  "aboutBodyText": "The app is currently under development. You can send your thoughts and feedback to [baykal246@gmail.com]. Developer and Publisher: Mete Baykal",
 
   "calendarScreenTitle": "Workout Calendar",
   "calendarAssignProgramButton": "Assign a program",
@@ -115,5 +169,144 @@
   "programBuilderPickerTitle": "Select exercises",
   "programBuilderSetsLabel": "Sets",
   "programBuilderRepsLabel": "Reps",
-  "programBuilderRemoveButton": "Remove"
+  "programBuilderRemoveButton": "Remove",
+
+  "achievementFirstWorkoutTitle": "First Step",
+  "achievementFirstWorkoutDesc": "Log your first workout.",
+  "achievementTenWorkoutsTitle": "Consistency",
+  "achievementTenWorkoutsDesc": "Complete 10 workout days.",
+  "achievementFiftyWorkoutsTitle": "Habit",
+  "achievementFiftyWorkoutsDesc": "Complete 50 workout days.",
+  "achievementHundredWorkoutsTitle": "Century Club",
+  "achievementHundredWorkoutsDesc": "Complete 100 workout days.",
+  "achievementStreak3Title": "3 Days in a Row!",
+  "achievementStreak3Desc": "Work out 3 days in a row.",
+  "achievementStreak7Title": "Weekly Streak",
+  "achievementStreak7Desc": "Work out 7 days in a row.",
+  "achievementStreak30Title": "Iron Will",
+  "achievementStreak30Desc": "Work out 30 days in a row.",
+  "achievementVolume10000Title": "First 10,000 kg",
+  "achievementVolume10000Desc": "Lift a total of 10,000 kg.",
+  "achievementVolume100000Title": "First 100,000 kg",
+  "achievementVolume100000Desc": "Lift a total of 100,000 kg.",
+  "achievementMinutes60Title": "First Hour",
+  "achievementMinutes60Desc": "Complete a total of 60 minutes of training.",
+  "achievementMinutes600Title": "Time Master",
+  "achievementMinutes600Desc": "Complete a total of 600 minutes of training.",
+  "achievementCalories1000Title": "First 1000 Calories",
+  "achievementCalories1000Desc": "Burn a total of 1000 calories.",
+  "achievementCalories10000Title": "10,000 Calorie Club",
+  "achievementCalories10000Desc": "Burn a total of 10,000 calories.",
+  "achievementSets100Title": "One Hundred Sets",
+  "achievementSets100Desc": "Complete a total of 100 sets.",
+  "achievementSets1000Title": "One Thousand Sets",
+  "achievementSets1000Desc": "Complete a total of 1000 sets.",
+
+  "programLevelBeginner": "Beginner",
+  "programLevelIntermediate": "Intermediate",
+  "programLevelAdvanced": "Advanced",
+
+  "programFullBodyName": "Full Body (Beginner)",
+  "programFullBodyDescription": "A basic full-body workout program that can be done 2-3 times a week. Requires barbell and dumbbell equipment.",
+  "programFullBodyDay1": "Full Body",
+
+  "programHomeBodyweightName": "Home Bodyweight (Intermediate)",
+  "programHomeBodyweightDescription": "A 3-day bodyweight workout program requiring no equipment at all, done at home.",
+  "programHomeBodyweightDay1": "Day 1 - Upper Body",
+  "programHomeBodyweightDay2": "Day 2 - Lower Body & Core",
+  "programHomeBodyweightDay3": "Day 3 - Cardio & Full Body",
+
+  "programPplName": "Push-Pull-Legs (Advanced)",
+  "programPplDescription": "An advanced split workout program, divided into push/pull/legs, that can be done 3-6 times a week.",
+  "programPplDay1": "Push",
+  "programPplDay2": "Pull",
+  "programPplDay3": "Legs",
+
+  "workoutsAddedSnackbar": "\"{name}\" program added.",
+  "@workoutsAddedSnackbar": {
+    "placeholders": {"name": {"type": "String"}}
+  },
+  "workoutsDaysCountLabel": "{count}-day program",
+  "@workoutsDaysCountLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "workoutsProgramsSectionTitle": "Programs",
+  "workoutsMyProgramsSectionTitle": "My Programs",
+  "workoutsMyRoutinesSectionTitle": "My Routines",
+  "workoutsNewProgramButton": "New Program",
+  "workoutsNewRoutineButton": "New Routine",
+  "workoutsImportCodeButton": "Add with Code",
+  "workoutsImportDialogTitle": "Add Program with Code",
+  "workoutsImportDialogHint": "Paste the program code here",
+  "workoutsImportConfirmButton": "Import",
+  "workoutsNoCustomProgramsMessage": "You haven't created any multi-day program yet.",
+  "workoutsNoCustomRoutinesMessage": "You haven't created any custom routine yet.",
+  "workoutsActivateProgramMenuItem": "Set as Active Program",
+  "workoutsEditMenuItem": "Edit",
+  "workoutsDeleteMenuItem": "Delete",
+  "workoutsExerciseCountLabel": "{count} exercises",
+  "@workoutsExerciseCountLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+
+  "programDetailShareTooltip": "Share Program",
+  "programDetailActiveProgramChip": "Active Program",
+  "programDetailAlreadyActiveButton": "This program is active",
+  "programDetailTodayDoneLabel": "Completed today",
+  "programDetailSuggestedSuffix": " (Next up)",
+  "programDetailCustomDescription": "A user-created {count}-day program.",
+  "@programDetailCustomDescription": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "programDetailShareMessage": "Try my Atlas Workout training program: \"{name}\"",
+  "@programDetailShareMessage": {
+    "placeholders": {"name": {"type": "String"}}
+  },
+
+  "programBuilderDayDefaultName": "Day {number}",
+  "@programBuilderDayDefaultName": {
+    "placeholders": {"number": {"type": "int"}}
+  },
+  "programBuilderValidationMessage": "Enter a program name and add exercises to at least one day.",
+  "programBuilderNewProgramTitle": "New Program",
+  "programBuilderEditProgramTitle": "Edit Program",
+  "programBuilderAddDayButton": "Add Day",
+  "programBuilderProgramNameLabel": "Program name",
+  "programBuilderDayNameLabel": "Day name",
+  "programBuilderExercisesSelectedLabel": "{count} exercises selected",
+  "@programBuilderExercisesSelectedLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "programBuilderEditExercisesButton": "Edit Exercises",
+
+  "routineBuilderValidationMessage": "Enter a name and select at least one exercise.",
+  "routineBuilderNewRoutineTitle": "New Routine",
+  "routineBuilderEditRoutineTitle": "Edit Routine",
+  "routineBuilderNameLabel": "Routine name",
+
+  "activeWorkoutExerciseCountLabel": "Exercise {current}/{total}",
+  "@activeWorkoutExerciseCountLabel": {
+    "placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}
+  },
+  "activeWorkoutSetProgressLabel": "Set {current}/{total} \u2022 Target: {reps} reps",
+  "@activeWorkoutSetProgressLabel": {
+    "placeholders": {"current": {"type": "int"}, "total": {"type": "int"}, "reps": {"type": "int"}}
+  },
+  "activeWorkoutRepsLabel": "Reps",
+  "activeWorkoutWeightLabel": "Weight (kg)",
+  "activeWorkoutFinishButton": "Finish Workout",
+  "activeWorkoutCompleteSetButton": "Complete Set",
+  "activeWorkoutNotesLabel": "Workout: {title}",
+  "@activeWorkoutNotesLabel": {
+    "placeholders": {"title": {"type": "String"}}
+  },
+  "workoutSummaryTitle": "Workout Complete",
+  "workoutSummaryDurationLabel": "Duration",
+  "workoutSummaryDurationValue": "{minutes} min",
+  "@workoutSummaryDurationValue": {
+    "placeholders": {"minutes": {"type": "int"}}
+  },
+  "workoutSummaryCaloriesLabel": "Estimated calories",
+  "workoutSummaryBackHomeButton": "Back to Home"
 }

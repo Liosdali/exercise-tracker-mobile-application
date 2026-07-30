@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../data/database_helper.dart';
+import '../l10n/app_localizations.dart';
 import '../models/exercise.dart';
 import '../models/workout_entry.dart';
 import '../models/workout_session.dart';
@@ -123,6 +124,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
 
   Future<void> _finishWorkout() async {
     _stopwatch.stop();
+    final l10n = AppLocalizations.of(context)!;
     final workoutProvider = context.read<WorkoutProvider>();
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     double totalVolume = 0;
@@ -149,7 +151,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
           sets: setLogs.length,
           reps: avgReps,
           weight: avgWeight,
-          notes: 'Antrenman: ${widget.title}',
+          notes: l10n.activeWorkoutNotesLabel(widget.title),
           createdAt: DateTime.now().toIso8601String(),
         ),
       );
@@ -219,6 +221,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final step = _currentStep;
     return Scaffold(
       appBar: AppBar(
@@ -234,7 +237,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'Egzersiz ${_exerciseIndex + 1}/${widget.steps.length}',
+            l10n.activeWorkoutExerciseCountLabel(_exerciseIndex + 1, widget.steps.length),
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 4),
@@ -257,7 +260,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text('Set ${_setIndex + 1}/${step.targetSets} • Hedef: ${step.targetReps} tekrar'),
+          Text(l10n.activeWorkoutSetProgressLabel(_setIndex + 1, step.targetSets, step.targetReps)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -265,7 +268,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
                 child: TextField(
                   controller: _repsController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Tekrar', border: OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: l10n.activeWorkoutRepsLabel, border: const OutlineInputBorder()),
                 ),
               ),
               const SizedBox(width: 12),
@@ -273,7 +276,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
                 child: TextField(
                   controller: _weightController,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(labelText: 'Ağırlık (kg)', border: OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: l10n.activeWorkoutWeightLabel, border: const OutlineInputBorder()),
                 ),
               ),
             ],
@@ -283,7 +286,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
             onPressed: _completeSet,
             icon: const Icon(Icons.check),
             label: Text(
-              _isLastSetOfExercise && _isLastExercise ? 'Antrenmanı Bitir' : 'Seti Tamamla',
+              _isLastSetOfExercise && _isLastExercise ? l10n.activeWorkoutFinishButton : l10n.activeWorkoutCompleteSetButton,
             ),
           ),
         ],
@@ -307,8 +310,9 @@ class WorkoutSummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Antrenman Tamamlandı')),
+      appBar: AppBar(title: Text(l10n.workoutSummaryTitle)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -319,12 +323,12 @@ class WorkoutSummaryScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Text(title, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
               const SizedBox(height: 24),
-              _StatRow(label: 'Süre', value: '$durationMinutes dk'),
-              _StatRow(label: 'Tahmini kalori', value: '${calories.toStringAsFixed(0)} kcal'),
+              _StatRow(label: l10n.workoutSummaryDurationLabel, value: l10n.workoutSummaryDurationValue(durationMinutes)),
+              _StatRow(label: l10n.workoutSummaryCaloriesLabel, value: '${calories.toStringAsFixed(0)} kcal'),
               const SizedBox(height: 24),
               FilledButton(
                 onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-                child: const Text('Ana Sayfaya Dön'),
+                child: Text(l10n.workoutSummaryBackHomeButton),
               ),
             ],
           ),

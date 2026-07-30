@@ -3,12 +3,14 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/custom_program.dart';
 import '../models/workout_program.dart';
 import '../providers/exercise_provider.dart';
 import '../providers/program_progress_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/workout_provider.dart';
+import '../services/program_localizer.dart';
 import '../services/program_share_service.dart';
 import 'active_workout_screen.dart';
 
@@ -49,18 +51,20 @@ class ProgramDetailScreen extends StatefulWidget {
     this.sourceProgram,
   });
 
-  factory ProgramDetailScreen.builtin(WorkoutProgram program) {
+  factory ProgramDetailScreen.builtin(WorkoutProgram program, {AppLocalizations? l10n}) {
     return ProgramDetailScreen._(
       programKey: 'builtin:${program.id}',
-      title: program.name,
-      description: program.description,
-      levelLabel: program.level.label,
+      title: l10n != null ? ProgramLocalizer.name(l10n, program.id, program.name) : program.name,
+      description: l10n != null ? ProgramLocalizer.description(l10n, program.id, program.description) : program.description,
+      levelLabel: l10n != null ? ProgramLocalizer.levelLabel(l10n, program.level) : program.level.label,
       days: [
-        for (final day in program.days)
+        for (var i = 0; i < program.days.length; i++)
           _NormalizedDay(
-            name: day.name,
-            exerciseCount: day.exercises.length,
-            buildSteps: (exerciseProvider) => day.exercises
+            name: l10n != null
+                ? ProgramLocalizer.dayName(l10n, program.id, i, program.days[i].name)
+                : program.days[i].name,
+            exerciseCount: program.days[i].exercises.length,
+            buildSteps: (exerciseProvider) => program.days[i].exercises
                 .map((pe) {
                   final exercise = exerciseProvider.byId(pe.exerciseId);
                   if (exercise == null) return null;
@@ -78,11 +82,13 @@ class ProgramDetailScreen extends StatefulWidget {
     );
   }
 
-  factory ProgramDetailScreen.custom(CustomProgram program) {
+  factory ProgramDetailScreen.custom(CustomProgram program, {AppLocalizations? l10n}) {
     return ProgramDetailScreen._(
       programKey: program.key,
       title: program.name,
-      description: 'Kullanıcı tarafından oluşturulan ${program.days.length} günlük program.',
+      description: l10n != null
+          ? l10n.programDetailCustomDescription(program.days.length)
+          : 'Kullanıcı tarafından oluşturulan ${program.days.length} günlük program.',
       levelLabel: null,
       sourceProgram: program,
       days: [
@@ -107,7 +113,8 @@ class ProgramDetailScreen extends StatefulWidget {
     );
   }
 
-  String _dayTitle(String name, bool isSuggested) => isSuggested ? '$name (Sıradaki)' : name;
+  String _dayTitle(AppLocalizations l10n, String name, bool isSuggested) =>
+      isSuggested ? '$name${l10n.programDetailSuggestedSuffix}' : name;
 
   @override
   State<ProgramDetailScreen> createState() => _ProgramDetailScreenState();
@@ -126,18 +133,20 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   }
 
   Future<void> _shareProgram() async {
+    final l10n = AppLocalizations.of(context)!;
     final program = widget.sourceProgram;
     if (program == null) return;
     final code = ProgramShareService.encodeProgram(program);
     await SharePlus.instance.share(
       ShareParams(
-        text: 'Atlas Workout antrenman programımı deneyin: "${program.name}"\n\n$code',
+        text: '${l10n.programDetailShareMessage(program.name)}\n\n$code',
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final exerciseProvider = context.watch<ExerciseProvider>();
     final settings = context.watch<SettingsProvider>();
     final progress = context.watch<ProgramProgressProvider>();
@@ -159,7 +168,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
           if (widget.sourceProgram != null)
             IconButton(
               icon: const Icon(Icons.share),
-              tooltip: 'Programı Paylaş',
+              tooltip: l10n.programDetailShareTooltip,
               onPressed: _shareProgram,
             ),
         ],
@@ -174,9 +183,9 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
             children: [
               if (levelLabel != null) Chip(label: Text(levelLabel)),
               if (isActive)
-                const Chip(
-                  label: Text('Aktif Program'),
-                  avatar: Icon(Icons.check_circle, size: 18),
+                Chip(
+                  label: Text(l10n.programDetailActiveProgramChip),
+                  avatar: const Icon(Icons.check_circle, size: 18),
                 ),
             ],
           ),
@@ -185,7 +194,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
             OutlinedButton.icon(
               onPressed: isActive ? null : () => settings.setActiveProgramKey(programKey),
               icon: const Icon(Icons.flag_outlined),
-              label: Text(isActive ? 'Bu program aktif' : 'Aktif Program Yap'),
+              label: Text(isActive ? l10n.programDetailAlreadyActiveButton : l10n.workoutsActivateProgramMenuItem),
             ),
           const SizedBox(height: 16),
           for (var i = 0; i < days.length; i++) ...[
@@ -194,8 +203,8 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                   ? Theme.of(context).colorScheme.primaryContainer
                   : null,
               child: ListTile(
-                title: Text(widget._dayTitle(days[i].name, i == suggestedIndex && days.length > 1)),
-                subtitle: Text('${days[i].exerciseCount} egzersiz'),
+                title: Text(widget._dayTitle(l10n, days[i].name, i == suggestedIndex && days.length > 1)),
+                subtitle: Text(l10n.workoutsExerciseCountLabel(days[i].exerciseCount)),
                 trailing: FilledButton(
                   onPressed: () async {
                     final steps = days[i].buildSteps(exerciseProvider);
@@ -211,18 +220,18 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                       ),
                     );
                   },
-                  child: const Text('Başla'),
+                  child: Text(l10n.dashboardStartButton),
                 ),
               ),
             ),
             if (i == suggestedIndex && days.length > 1 && todayAlreadyDone)
-              const Padding(
-                padding: EdgeInsets.only(left: 8, bottom: 8),
+              Padding(
+                padding: const EdgeInsets.only(left: 8, bottom: 8),
                 child: Row(
                   children: [
-                    Icon(Icons.check_circle, color: Colors.green, size: 16),
-                    SizedBox(width: 4),
-                    Text('Bugün tamamlandı', style: TextStyle(color: Colors.green)),
+                    const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                    const SizedBox(width: 4),
+                    Text(l10n.programDetailTodayDoneLabel, style: const TextStyle(color: Colors.green)),
                   ],
                 ),
               ),

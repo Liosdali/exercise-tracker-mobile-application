@@ -1,4 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Declared for API 33+ users to grant exact-alarm scheduling if we
+         later switch NotificationService to AndroidScheduleMode.exact*.
+         NOTE: the current code uses inexactAllowWhileIdle (doesn't require
+         this permission at runtime), so this is a no-op today — but Google
+         Play requires apps that declare SCHEDULE_EXACT_ALARM to submit a
+         permission-declaration form in Play Console before publishing.
+         Remove this line if you don't want to fill out that form. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <application
         android:label="exercise_app"
         android:name="${applicationName}"
@@ -30,6 +40,14 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

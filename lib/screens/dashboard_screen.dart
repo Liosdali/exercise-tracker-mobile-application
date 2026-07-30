@@ -12,6 +12,7 @@ import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
 import '../utils/duration_formatter.dart';
 import '../utils/program_resolver.dart';
+import '../services/notification_scheduler.dart';
 import 'active_workout_screen.dart';
 
 /// "Ana Sayfa" tab: greeting, streak, weekly goal progress, suggested
@@ -34,11 +35,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final settings = context.read<SettingsProvider>();
     final progress = context.read<ProgramProgressProvider>();
     final workoutProvider = context.read<WorkoutProvider>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      stats.load();
-      settings.load();
-      progress.load();
-      workoutProvider.init();
+    final builtinPrograms = context.read<ProgramProvider>();
+    final customPrograms = context.read<CustomProgramProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await stats.load();
+      await settings.load();
+      await progress.load();
+      await workoutProvider.init();
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      await NotificationScheduler.reschedule(
+        l10n: l10n,
+        stats: stats,
+        settings: settings,
+        progress: progress,
+        builtinPrograms: builtinPrograms,
+        customPrograms: customPrograms,
+        workoutProvider: workoutProvider,
+      );
     });
   }
 
@@ -59,6 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final today = _fmt(DateTime.now());
     final planned = progress.plannedFor(today);
     final isManualAssignment = planned != null;
+    final l10n = AppLocalizations.of(context)!;
 
     ResolvedProgramDay? suggested;
     if (planned != null) {
@@ -67,6 +82,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         dayIndex: planned.dayIndex,
         builtinPrograms: builtinPrograms,
         customPrograms: customPrograms,
+        l10n: l10n,
       );
     } else {
       final activeKey = settings.activeProgramKey ??
@@ -81,6 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           dayIndex: nextIndex,
           builtinPrograms: builtinPrograms,
           customPrograms: customPrograms,
+          l10n: l10n,
         );
       }
     }
@@ -94,7 +111,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final weeklyProgress = settings.weeklyGoal == 0
         ? 0.0
         : (stats.thisWeekCount / settings.weeklyGoal).clamp(0.0, 1.0);
-    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navHome)),
@@ -103,8 +119,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           Text(
             settings.userName != null && settings.userName!.isNotEmpty
-                ? 'Merhaba, ${settings.userName}'
-                : 'Merhaba',
+                ? l10n.dashboardGreetingWithName(settings.userName!)
+                : l10n.dashboardGreeting,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 16),

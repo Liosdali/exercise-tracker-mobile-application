@@ -13,6 +13,7 @@ import 'providers/stats_provider.dart';
 import 'providers/workout_provider.dart';
 import 'screens/home_shell.dart';
 import 'screens/onboarding_name_screen.dart';
+import 'services/notification_service.dart';
 
 void main() {
   runApp(const ExerciseApp());
@@ -86,6 +87,7 @@ class _AppLoaderState extends State<AppLoader> {
     super.initState();
     context.read<ExerciseProvider>().load();
     context.read<SettingsProvider>().load();
+    NotificationService.instance.init();
   }
 
   @override

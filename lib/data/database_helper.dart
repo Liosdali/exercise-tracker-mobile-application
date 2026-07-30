@@ -43,7 +43,24 @@ class DatabaseHelper {
         await _createV3Tables(db);
         await _createV4Tables(db);
         await _createV5Migration(db);
+        // await _createV6Migration(db); // <- add new versions here too.
       },
+      // Standard safe-migration recipe for this project (no data loss):
+      // 1. Bump `_dbVersion` above by exactly 1.
+      // 2. Add a new `_createVN_Migration(db)` method containing ONLY the
+      //    new `CREATE TABLE IF NOT EXISTS ...` / additive
+      //    `ALTER TABLE ... ADD COLUMN ...` statements for that version.
+      //    NEVER `DROP TABLE`/`DROP COLUMN` or rewrite existing columns in
+      //    place — SQLite's ALTER TABLE can't remove/rename columns
+      //    without a full table rebuild, and existing users' rows must
+      //    survive the upgrade.
+      // 3. Wrap every `ADD COLUMN` in try/catch (see `_createV5Migration`)
+      //    so re-running an already-applied step (e.g. if onCreate and
+      //    onUpgrade both touch the same version during testing) is a
+      //    harmless no-op instead of throwing.
+      // 4. Add both a call in `onCreate` (so brand-new installs get the
+      //    latest schema in one pass) AND a guarded call in `onUpgrade`
+      //    below (so existing installs get only what they're missing).
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
           await _createV2Tables(db);
@@ -57,9 +74,28 @@ class DatabaseHelper {
         if (oldVersion < 5) {
           await _createV5Migration(db);
         }
+        // if (oldVersion < 6) {
+        //   await _createV6Migration(db);
+        // }
       },
     );
   }
+
+  // Template for the next migration (copy/rename when actually needed):
+  //
+  // Future<void> _createV6Migration(Database db) async {
+  //   await db.execute('''
+  //     CREATE TABLE IF NOT EXISTS some_new_table (
+  //       id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //       ...
+  //     )
+  //   ''');
+  //   try {
+  //     await db.execute('ALTER TABLE workout_entries ADD COLUMN some_new_col TEXT');
+  //   } on DatabaseException {
+  //     // Column already present — safe to ignore.
+  //   }
+  // }
 
   Future<void> _createV1Tables(Database db) async {
     await db.execute('''

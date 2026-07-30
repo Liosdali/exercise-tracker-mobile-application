@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/custom_program.dart';
 import '../models/custom_routine.dart';
-import '../models/workout_program.dart';
 import '../providers/custom_program_provider.dart';
 import '../providers/exercise_provider.dart';
 import '../providers/program_provider.dart';
 import '../providers/routine_provider.dart';
 import '../providers/settings_provider.dart';
+import '../services/program_localizer.dart';
 import '../services/program_share_service.dart';
 import 'active_workout_screen.dart';
 import 'program_builder_screen.dart';
@@ -89,27 +90,28 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
   }
 
   Future<void> _importProgramWithCode() async {
+    final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController();
     final code = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Kod ile Program Ekle'),
+        title: Text(l10n.workoutsImportDialogTitle),
         content: TextField(
           controller: controller,
           maxLines: 5,
-          decoration: const InputDecoration(
-            hintText: 'Program kodunu buraya yapıştırın',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: l10n.workoutsImportDialogHint,
+            border: const OutlineInputBorder(),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('İptal'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(controller.text),
-            child: const Text('İçe Aktar'),
+            child: Text(l10n.workoutsImportConfirmButton),
           ),
         ],
       ),
@@ -121,7 +123,7 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
       await context.read<CustomProgramProvider>().addProgram(program);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('"${program.name}" programı eklendi.')),
+        SnackBar(content: Text(l10n.workoutsAddedSnackbar(program.name))),
       );
     } on FormatException catch (e) {
       if (!mounted) return;
@@ -135,9 +137,10 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
     final routineProvider = context.watch<RoutineProvider>();
     final customProgramProvider = context.watch<CustomProgramProvider>();
     final settings = context.watch<SettingsProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Antrenmanlar')),
+      appBar: AppBar(title: Text(l10n.navWorkouts)),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -145,32 +148,36 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
             heroTag: 'newProgram',
             onPressed: _createProgram,
             icon: const Icon(Icons.calendar_view_month),
-            label: const Text('Yeni Program'),
+            label: Text(l10n.workoutsNewProgramButton),
           ),
           const SizedBox(width: 12),
           FloatingActionButton.extended(
             heroTag: 'newRoutine',
             onPressed: _createRoutine,
             icon: const Icon(Icons.add),
-            label: const Text('Yeni Rutin'),
+            label: Text(l10n.workoutsNewRoutineButton),
           ),
         ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('Programlar', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.workoutsProgramsSectionTitle, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
           for (final program in programProvider.programs)
             Card(
               child: ListTile(
-                title: Text(program.name),
-                subtitle: Text(program.description, maxLines: 2, overflow: TextOverflow.ellipsis),
-                trailing: Chip(label: Text(program.level.label)),
+                title: Text(ProgramLocalizer.name(l10n, program.id, program.name)),
+                subtitle: Text(
+                  ProgramLocalizer.description(l10n, program.id, program.description),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Chip(label: Text(ProgramLocalizer.levelLabel(l10n, program.level))),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => ProgramDetailScreen.builtin(program),
+                      builder: (_) => ProgramDetailScreen.builtin(program, l10n: l10n),
                     ),
                   );
                 },
@@ -180,11 +187,11 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Programlarım', style: Theme.of(context).textTheme.titleLarge),
+              Text(l10n.workoutsMyProgramsSectionTitle, style: Theme.of(context).textTheme.titleLarge),
               TextButton.icon(
                 onPressed: _importProgramWithCode,
                 icon: const Icon(Icons.qr_code),
-                label: const Text('Kod ile Ekle'),
+                label: Text(l10n.workoutsImportCodeButton),
               ),
             ],
           ),
@@ -192,16 +199,16 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
           if (!customProgramProvider.isLoaded)
             const Center(child: CircularProgressIndicator())
           else if (customProgramProvider.programs.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text('Henüz çok günlü bir program oluşturmadınız.'),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(l10n.workoutsNoCustomProgramsMessage),
             )
           else
             for (final program in customProgramProvider.programs)
               Card(
                 child: ListTile(
                   title: Text(program.name),
-                  subtitle: Text('${program.days.length} günlük program'),
+                  subtitle: Text(l10n.workoutsDaysCountLabel(program.days.length)),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -218,9 +225,9 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
                           }
                         },
                         itemBuilder: (context) => [
-                          const PopupMenuItem(value: 'activate', child: Text('Aktif Program Yap')),
-                          const PopupMenuItem(value: 'edit', child: Text('Düzenle')),
-                          const PopupMenuItem(value: 'delete', child: Text('Sil')),
+                          PopupMenuItem(value: 'activate', child: Text(l10n.workoutsActivateProgramMenuItem)),
+                          PopupMenuItem(value: 'edit', child: Text(l10n.workoutsEditMenuItem)),
+                          PopupMenuItem(value: 'delete', child: Text(l10n.workoutsDeleteMenuItem)),
                         ],
                       ),
                     ],
@@ -228,28 +235,28 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => ProgramDetailScreen.custom(program),
+                        builder: (_) => ProgramDetailScreen.custom(program, l10n: l10n),
                       ),
                     );
                   },
                 ),
               ),
           const SizedBox(height: 24),
-          Text('Rutinlerim', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.workoutsMyRoutinesSectionTitle, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
           if (!routineProvider.isLoaded)
             const Center(child: CircularProgressIndicator())
           else if (routineProvider.routines.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text('Henüz özel bir rutin oluşturmadınız.'),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(l10n.workoutsNoCustomRoutinesMessage),
             )
           else
             for (final routine in routineProvider.routines)
               Card(
                 child: ListTile(
                   title: Text(routine.name),
-                  subtitle: Text('${routine.exercises.length} egzersiz'),
+                  subtitle: Text(l10n.workoutsExerciseCountLabel(routine.exercises.length)),
                   onTap: () => _startRoutine(routine),
                   trailing: PopupMenuButton<String>(
                     onSelected: (value) async {
@@ -259,9 +266,9 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
                         await context.read<RoutineProvider>().deleteRoutine(routine.id!);
                       }
                     },
-                    itemBuilder: (context) => const [
-                      PopupMenuItem(value: 'edit', child: Text('Düzenle')),
-                      PopupMenuItem(value: 'delete', child: Text('Sil')),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(value: 'edit', child: Text(l10n.workoutsEditMenuItem)),
+                      PopupMenuItem(value: 'delete', child: Text(l10n.workoutsDeleteMenuItem)),
                     ],
                   ),
                 ),

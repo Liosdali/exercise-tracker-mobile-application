@@ -179,8 +179,14 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardGreeting.
   ///
   /// In en, this message translates to:
-  /// **'Hello! 👋'**
+  /// **'Hello'**
   String get dashboardGreeting;
+
+  /// No description provided for @dashboardGreetingWithName.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}'**
+  String dashboardGreetingWithName(String name);
 
   /// No description provided for @dashboardStreakActive.
   ///
@@ -392,6 +398,180 @@ abstract class AppLocalizations {
   /// **'All data has been reset.'**
   String get settingsResetDataSuccess;
 
+  /// No description provided for @settingsBackupSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get settingsBackupSection;
+
+  /// No description provided for @settingsBackupPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is stored entirely on this device. There is no account or cloud sync — back up regularly so you don\'t lose your history if you lose or change your phone.'**
+  String get settingsBackupPrivacyNote;
+
+  /// No description provided for @settingsBackupExportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data (JSON)'**
+  String get settingsBackupExportButton;
+
+  /// No description provided for @settingsBackupExportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup file created — choose where to save or share it.'**
+  String get settingsBackupExportSuccess;
+
+  /// No description provided for @settingsBackupExportError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t create the backup file. Please try again.'**
+  String get settingsBackupExportError;
+
+  /// No description provided for @settingsBackupImportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data (JSON)'**
+  String get settingsBackupImportButton;
+
+  /// No description provided for @settingsBackupImportConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace all local data?'**
+  String get settingsBackupImportConfirmTitle;
+
+  /// No description provided for @settingsBackupImportConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing this backup will permanently replace your current workout history, programs, and measurements with its contents ({counts}). This cannot be undone.'**
+  String settingsBackupImportConfirmMessage(String counts);
+
+  /// No description provided for @settingsBackupImportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored successfully.'**
+  String get settingsBackupImportSuccess;
+
+  /// No description provided for @settingsBackupImportInvalidFile.
+  ///
+  /// In en, this message translates to:
+  /// **'This file isn\'t a valid Exercise App backup.'**
+  String get settingsBackupImportInvalidFile;
+
+  /// No description provided for @settingsBackupImportError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t restore the backup. Please try again.'**
+  String get settingsBackupImportError;
+
+  /// No description provided for @settingsAboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAboutTitle;
+
+  /// No description provided for @settingsDisclaimerButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Health & Liability Disclaimer'**
+  String get settingsDisclaimerButton;
+
+  /// No description provided for @settingsDisclaimerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health & Liability Disclaimer'**
+  String get settingsDisclaimerTitle;
+
+  /// No description provided for @settingsDisclaimerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This app provides general fitness information and workout tracking tools only; it is not medical advice. Consult a physician before starting any new exercise program, especially if you have a pre-existing health condition. Exercise carries an inherent risk of injury — you are solely responsible for exercising safely and within your own limits. The developer accepts no liability for any injury, loss, or damage arising from the use of this app.'**
+  String get settingsDisclaimerBody;
+
+  /// No description provided for @settingsDisclaimerClose.
+  ///
+  /// In en, this message translates to:
+  /// **'I Understand'**
+  String get settingsDisclaimerClose;
+
+  /// No description provided for @settingsNotificationsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get settingsNotificationsSection;
+
+  /// No description provided for @settingsNotificationsMasterToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notifications'**
+  String get settingsNotificationsMasterToggle;
+
+  /// No description provided for @settingsNotificationsStreakToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak loss warnings'**
+  String get settingsNotificationsStreakToggle;
+
+  /// No description provided for @settingsNotificationsStreakSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warns you 2 days and 1 day before your streak resets'**
+  String get settingsNotificationsStreakSubtitle;
+
+  /// No description provided for @settingsNotificationsDailyToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily workout reminder'**
+  String get settingsNotificationsDailyToggle;
+
+  /// No description provided for @settingsNotificationsDailySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminds you at 07:00 if today\'s workout isn\'t done yet'**
+  String get settingsNotificationsDailySubtitle;
+
+  /// No description provided for @notificationStreakWarning2DaysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your streak is at risk! 🔥'**
+  String get notificationStreakWarning2DaysTitle;
+
+  /// No description provided for @notificationStreakWarning2DaysBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} day streak. Work out within 2 days or you\'ll lose it!'**
+  String notificationStreakWarning2DaysBody(int count);
+
+  /// No description provided for @notificationStreakWarningLastDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Last chance to save your streak! ⚠️'**
+  String get notificationStreakWarningLastDayTitle;
+
+  /// No description provided for @notificationStreakWarningLastDayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {count} day streak resets tomorrow if you don\'t work out today!'**
+  String notificationStreakWarningLastDayBody(int count);
+
+  /// No description provided for @notificationDailyReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s workout is waiting'**
+  String get notificationDailyReminderTitle;
+
+  /// No description provided for @notificationDailyReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{programTitle} - {dayName} is scheduled for today. Let\'s get it done!'**
+  String notificationDailyReminderBody(String programTitle, String dayName);
+
+  /// No description provided for @aboutBodyText.
+  ///
+  /// In en, this message translates to:
+  /// **'The app is currently under development. You can send your thoughts and feedback to [baykal246@gmail.com]. Developer and Publisher: Mete Baykal'**
+  String get aboutBodyText;
+
   /// No description provided for @calendarScreenTitle.
   ///
   /// In en, this message translates to:
@@ -595,6 +775,576 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get programBuilderRemoveButton;
+
+  /// No description provided for @achievementFirstWorkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Step'**
+  String get achievementFirstWorkoutTitle;
+
+  /// No description provided for @achievementFirstWorkoutDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Log your first workout.'**
+  String get achievementFirstWorkoutDesc;
+
+  /// No description provided for @achievementTenWorkoutsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency'**
+  String get achievementTenWorkoutsTitle;
+
+  /// No description provided for @achievementTenWorkoutsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 10 workout days.'**
+  String get achievementTenWorkoutsDesc;
+
+  /// No description provided for @achievementFiftyWorkoutsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit'**
+  String get achievementFiftyWorkoutsTitle;
+
+  /// No description provided for @achievementFiftyWorkoutsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 50 workout days.'**
+  String get achievementFiftyWorkoutsDesc;
+
+  /// No description provided for @achievementHundredWorkoutsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Century Club'**
+  String get achievementHundredWorkoutsTitle;
+
+  /// No description provided for @achievementHundredWorkoutsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 workout days.'**
+  String get achievementHundredWorkoutsDesc;
+
+  /// No description provided for @achievementStreak3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Days in a Row!'**
+  String get achievementStreak3Title;
+
+  /// No description provided for @achievementStreak3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Work out 3 days in a row.'**
+  String get achievementStreak3Desc;
+
+  /// No description provided for @achievementStreak7Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Streak'**
+  String get achievementStreak7Title;
+
+  /// No description provided for @achievementStreak7Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Work out 7 days in a row.'**
+  String get achievementStreak7Desc;
+
+  /// No description provided for @achievementStreak30Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Iron Will'**
+  String get achievementStreak30Title;
+
+  /// No description provided for @achievementStreak30Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Work out 30 days in a row.'**
+  String get achievementStreak30Desc;
+
+  /// No description provided for @achievementVolume10000Title.
+  ///
+  /// In en, this message translates to:
+  /// **'First 10,000 kg'**
+  String get achievementVolume10000Title;
+
+  /// No description provided for @achievementVolume10000Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 10,000 kg.'**
+  String get achievementVolume10000Desc;
+
+  /// No description provided for @achievementVolume100000Title.
+  ///
+  /// In en, this message translates to:
+  /// **'First 100,000 kg'**
+  String get achievementVolume100000Title;
+
+  /// No description provided for @achievementVolume100000Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 100,000 kg.'**
+  String get achievementVolume100000Desc;
+
+  /// No description provided for @achievementMinutes60Title.
+  ///
+  /// In en, this message translates to:
+  /// **'First Hour'**
+  String get achievementMinutes60Title;
+
+  /// No description provided for @achievementMinutes60Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a total of 60 minutes of training.'**
+  String get achievementMinutes60Desc;
+
+  /// No description provided for @achievementMinutes600Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Master'**
+  String get achievementMinutes600Title;
+
+  /// No description provided for @achievementMinutes600Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a total of 600 minutes of training.'**
+  String get achievementMinutes600Desc;
+
+  /// No description provided for @achievementCalories1000Title.
+  ///
+  /// In en, this message translates to:
+  /// **'First 1000 Calories'**
+  String get achievementCalories1000Title;
+
+  /// No description provided for @achievementCalories1000Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Burn a total of 1000 calories.'**
+  String get achievementCalories1000Desc;
+
+  /// No description provided for @achievementCalories10000Title.
+  ///
+  /// In en, this message translates to:
+  /// **'10,000 Calorie Club'**
+  String get achievementCalories10000Title;
+
+  /// No description provided for @achievementCalories10000Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Burn a total of 10,000 calories.'**
+  String get achievementCalories10000Desc;
+
+  /// No description provided for @achievementSets100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'One Hundred Sets'**
+  String get achievementSets100Title;
+
+  /// No description provided for @achievementSets100Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a total of 100 sets.'**
+  String get achievementSets100Desc;
+
+  /// No description provided for @achievementSets1000Title.
+  ///
+  /// In en, this message translates to:
+  /// **'One Thousand Sets'**
+  String get achievementSets1000Title;
+
+  /// No description provided for @achievementSets1000Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a total of 1000 sets.'**
+  String get achievementSets1000Desc;
+
+  /// No description provided for @programLevelBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get programLevelBeginner;
+
+  /// No description provided for @programLevelIntermediate.
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get programLevelIntermediate;
+
+  /// No description provided for @programLevelAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get programLevelAdvanced;
+
+  /// No description provided for @programFullBodyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Body (Beginner)'**
+  String get programFullBodyName;
+
+  /// No description provided for @programFullBodyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A basic full-body workout program that can be done 2-3 times a week. Requires barbell and dumbbell equipment.'**
+  String get programFullBodyDescription;
+
+  /// No description provided for @programFullBodyDay1.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Body'**
+  String get programFullBodyDay1;
+
+  /// No description provided for @programHomeBodyweightName.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Bodyweight (Intermediate)'**
+  String get programHomeBodyweightName;
+
+  /// No description provided for @programHomeBodyweightDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A 3-day bodyweight workout program requiring no equipment at all, done at home.'**
+  String get programHomeBodyweightDescription;
+
+  /// No description provided for @programHomeBodyweightDay1.
+  ///
+  /// In en, this message translates to:
+  /// **'Day 1 - Upper Body'**
+  String get programHomeBodyweightDay1;
+
+  /// No description provided for @programHomeBodyweightDay2.
+  ///
+  /// In en, this message translates to:
+  /// **'Day 2 - Lower Body & Core'**
+  String get programHomeBodyweightDay2;
+
+  /// No description provided for @programHomeBodyweightDay3.
+  ///
+  /// In en, this message translates to:
+  /// **'Day 3 - Cardio & Full Body'**
+  String get programHomeBodyweightDay3;
+
+  /// No description provided for @programPplName.
+  ///
+  /// In en, this message translates to:
+  /// **'Push-Pull-Legs (Advanced)'**
+  String get programPplName;
+
+  /// No description provided for @programPplDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'An advanced split workout program, divided into push/pull/legs, that can be done 3-6 times a week.'**
+  String get programPplDescription;
+
+  /// No description provided for @programPplDay1.
+  ///
+  /// In en, this message translates to:
+  /// **'Push'**
+  String get programPplDay1;
+
+  /// No description provided for @programPplDay2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull'**
+  String get programPplDay2;
+
+  /// No description provided for @programPplDay3.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get programPplDay3;
+
+  /// No description provided for @workoutsAddedSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" program added.'**
+  String workoutsAddedSnackbar(String name);
+
+  /// No description provided for @workoutsDaysCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}-day program'**
+  String workoutsDaysCountLabel(int count);
+
+  /// No description provided for @workoutsProgramsSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Programs'**
+  String get workoutsProgramsSectionTitle;
+
+  /// No description provided for @workoutsMyProgramsSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Programs'**
+  String get workoutsMyProgramsSectionTitle;
+
+  /// No description provided for @workoutsMyRoutinesSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Routines'**
+  String get workoutsMyRoutinesSectionTitle;
+
+  /// No description provided for @workoutsNewProgramButton.
+  ///
+  /// In en, this message translates to:
+  /// **'New Program'**
+  String get workoutsNewProgramButton;
+
+  /// No description provided for @workoutsNewRoutineButton.
+  ///
+  /// In en, this message translates to:
+  /// **'New Routine'**
+  String get workoutsNewRoutineButton;
+
+  /// No description provided for @workoutsImportCodeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add with Code'**
+  String get workoutsImportCodeButton;
+
+  /// No description provided for @workoutsImportDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Program with Code'**
+  String get workoutsImportDialogTitle;
+
+  /// No description provided for @workoutsImportDialogHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the program code here'**
+  String get workoutsImportDialogHint;
+
+  /// No description provided for @workoutsImportConfirmButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get workoutsImportConfirmButton;
+
+  /// No description provided for @workoutsNoCustomProgramsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t created any multi-day program yet.'**
+  String get workoutsNoCustomProgramsMessage;
+
+  /// No description provided for @workoutsNoCustomRoutinesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t created any custom routine yet.'**
+  String get workoutsNoCustomRoutinesMessage;
+
+  /// No description provided for @workoutsActivateProgramMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as Active Program'**
+  String get workoutsActivateProgramMenuItem;
+
+  /// No description provided for @workoutsEditMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get workoutsEditMenuItem;
+
+  /// No description provided for @workoutsDeleteMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get workoutsDeleteMenuItem;
+
+  /// No description provided for @workoutsExerciseCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises'**
+  String workoutsExerciseCountLabel(int count);
+
+  /// No description provided for @programDetailShareTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Program'**
+  String get programDetailShareTooltip;
+
+  /// No description provided for @programDetailActiveProgramChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Program'**
+  String get programDetailActiveProgramChip;
+
+  /// No description provided for @programDetailAlreadyActiveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'This program is active'**
+  String get programDetailAlreadyActiveButton;
+
+  /// No description provided for @programDetailTodayDoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed today'**
+  String get programDetailTodayDoneLabel;
+
+  /// No description provided for @programDetailSuggestedSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **' (Next up)'**
+  String get programDetailSuggestedSuffix;
+
+  /// No description provided for @programDetailCustomDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A user-created {count}-day program.'**
+  String programDetailCustomDescription(int count);
+
+  /// No description provided for @programDetailShareMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try my Atlas Workout training program: \"{name}\"'**
+  String programDetailShareMessage(String name);
+
+  /// No description provided for @programBuilderDayDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {number}'**
+  String programBuilderDayDefaultName(int number);
+
+  /// No description provided for @programBuilderValidationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a program name and add exercises to at least one day.'**
+  String get programBuilderValidationMessage;
+
+  /// No description provided for @programBuilderNewProgramTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Program'**
+  String get programBuilderNewProgramTitle;
+
+  /// No description provided for @programBuilderEditProgramTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Program'**
+  String get programBuilderEditProgramTitle;
+
+  /// No description provided for @programBuilderAddDayButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Day'**
+  String get programBuilderAddDayButton;
+
+  /// No description provided for @programBuilderProgramNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Program name'**
+  String get programBuilderProgramNameLabel;
+
+  /// No description provided for @programBuilderDayNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Day name'**
+  String get programBuilderDayNameLabel;
+
+  /// No description provided for @programBuilderExercisesSelectedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises selected'**
+  String programBuilderExercisesSelectedLabel(int count);
+
+  /// No description provided for @programBuilderEditExercisesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Exercises'**
+  String get programBuilderEditExercisesButton;
+
+  /// No description provided for @routineBuilderValidationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name and select at least one exercise.'**
+  String get routineBuilderValidationMessage;
+
+  /// No description provided for @routineBuilderNewRoutineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Routine'**
+  String get routineBuilderNewRoutineTitle;
+
+  /// No description provided for @routineBuilderEditRoutineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Routine'**
+  String get routineBuilderEditRoutineTitle;
+
+  /// No description provided for @routineBuilderNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine name'**
+  String get routineBuilderNameLabel;
+
+  /// No description provided for @activeWorkoutExerciseCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise {current}/{total}'**
+  String activeWorkoutExerciseCountLabel(int current, int total);
+
+  /// No description provided for @activeWorkoutSetProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Set {current}/{total} • Target: {reps} reps'**
+  String activeWorkoutSetProgressLabel(int current, int total, int reps);
+
+  /// No description provided for @activeWorkoutRepsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get activeWorkoutRepsLabel;
+
+  /// No description provided for @activeWorkoutWeightLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get activeWorkoutWeightLabel;
+
+  /// No description provided for @activeWorkoutFinishButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Workout'**
+  String get activeWorkoutFinishButton;
+
+  /// No description provided for @activeWorkoutCompleteSetButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Set'**
+  String get activeWorkoutCompleteSetButton;
+
+  /// No description provided for @activeWorkoutNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout: {title}'**
+  String activeWorkoutNotesLabel(String title);
+
+  /// No description provided for @workoutSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Complete'**
+  String get workoutSummaryTitle;
+
+  /// No description provided for @workoutSummaryDurationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get workoutSummaryDurationLabel;
+
+  /// No description provided for @workoutSummaryDurationValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String workoutSummaryDurationValue(int minutes);
+
+  /// No description provided for @workoutSummaryCaloriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated calories'**
+  String get workoutSummaryCaloriesLabel;
+
+  /// No description provided for @workoutSummaryBackHomeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get workoutSummaryBackHomeButton;
 }
 
 class _AppLocalizationsDelegate

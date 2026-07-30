@@ -1,9 +1,11 @@
+import '../l10n/app_localizations.dart';
 import '../models/custom_program.dart';
 import '../models/workout_program.dart';
 import '../providers/custom_program_provider.dart';
 import '../providers/exercise_provider.dart';
 import '../providers/program_provider.dart';
 import '../screens/active_workout_screen.dart';
+import '../services/program_localizer.dart';
 
 /// A training day resolved from either a built-in [WorkoutProgram] or a
 /// user-created [CustomProgram], used by the Dashboard/Calendar to build a
@@ -35,6 +37,7 @@ ResolvedProgramDay? resolveProgramDay({
   required int dayIndex,
   required ProgramProvider builtinPrograms,
   required CustomProgramProvider customPrograms,
+  AppLocalizations? l10n,
 }) {
   if (programKey.startsWith('builtin:')) {
     final id = programKey.substring('builtin:'.length);
@@ -44,8 +47,8 @@ ResolvedProgramDay? resolveProgramDay({
     final day = program.days[index];
     return ResolvedProgramDay(
       programKey: programKey,
-      programTitle: program.name,
-      dayName: day.name,
+      programTitle: l10n != null ? ProgramLocalizer.name(l10n, program.id, program.name) : program.name,
+      dayName: l10n != null ? ProgramLocalizer.dayName(l10n, program.id, index, day.name) : day.name,
       dayIndex: index,
       totalDays: program.days.length,
       buildSteps: (exerciseProvider) => day.exercises
@@ -99,11 +102,16 @@ ResolvedProgramDay? resolveProgramDay({
 /// (calendar assignment, active-program selection).
 List<({String key, String name, int totalDays})> allProgramOptions(
   ProgramProvider builtinPrograms,
-  CustomProgramProvider customPrograms,
-) {
+  CustomProgramProvider customPrograms, {
+  AppLocalizations? l10n,
+}) {
   return [
     for (final p in builtinPrograms.programs)
-      (key: 'builtin:${p.id}', name: p.name, totalDays: p.days.length),
+      (
+        key: 'builtin:${p.id}',
+        name: l10n != null ? ProgramLocalizer.name(l10n, p.id, p.name) : p.name,
+        totalDays: p.days.length,
+      ),
     for (final p in customPrograms.programs)
       (key: p.key, name: p.name, totalDays: p.days.length),
   ];
@@ -113,11 +121,17 @@ List<({String key, String name, int totalDays})> allProgramOptions(
 List<String> dayNamesFor(
   String programKey,
   ProgramProvider builtinPrograms,
-  CustomProgramProvider customPrograms,
-) {
+  CustomProgramProvider customPrograms, {
+  AppLocalizations? l10n,
+}) {
   if (programKey.startsWith('builtin:')) {
     final id = programKey.substring('builtin:'.length);
-    return builtinPrograms.byId(id)?.days.map((d) => d.name).toList() ?? [];
+    final program = builtinPrograms.byId(id);
+    if (program == null) return [];
+    return [
+      for (var i = 0; i < program.days.length; i++)
+        l10n != null ? ProgramLocalizer.dayName(l10n, program.id, i, program.days[i].name) : program.days[i].name,
+    ];
   }
   if (programKey.startsWith('custom:')) {
     final id = int.tryParse(programKey.substring('custom:'.length));
