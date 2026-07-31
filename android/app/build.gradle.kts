@@ -8,7 +8,7 @@ plugins {
 }
 
 // Release signing config is loaded from android/key.properties (gitignored,
-// see key.properties.example). Falls back to debug signing when the file
+// see key.properties). Falls back to debug signing when the file
 // is absent (e.g. local `flutter run --release` without a real keystore),
 // so this doesn't break CI/dev builds — but the Play Store upload build
 // MUST be produced with a real key.properties in place.
