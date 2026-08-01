@@ -1,4 +1,4 @@
-package com.exercise_app.exercise_app;
+package com.MythosForgeLabs.AtlasWorkout;
 
 import io.flutter.embedding.android.FlutterActivity;
 
