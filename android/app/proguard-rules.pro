@@ -28,3 +28,5 @@
 # flutter_local_notifications) — keep generic signatures.
 -keepattributes Signature
 -keepattributes *Annotation*
+
+-keep class com.MythosForgeLabs.AtlasWorkout.MainActivity { *; }
