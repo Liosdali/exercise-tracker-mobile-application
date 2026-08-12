@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// App-wide user settings (weekly goal, sound/vibration toggles for the
@@ -9,6 +9,7 @@ class SettingsProvider extends ChangeNotifier {
   static const _keyVibrationEnabled = 'vibration_enabled';
   static const _keyActiveProgramKey = 'active_program_key';
   static const _keyLanguageCode = 'app_language';
+  static const _keyThemeMode = 'app_theme_mode';
   static const _keyUserName = 'user_name';
   static const _keyHasCompletedOnboarding = 'has_completed_onboarding';
   static const _keyNotificationsEnabled = 'notifications_enabled';
@@ -20,6 +21,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _vibrationEnabled = true;
   String? _activeProgramKey;
   String? _languageCode;
+  ThemeMode _themeMode = ThemeMode.system;
   String? _userName;
   bool _hasCompletedOnboarding = false;
   bool _notificationsEnabled = true;
@@ -56,6 +58,10 @@ class SettingsProvider extends ChangeNotifier {
   /// device's system locale (with English as the ultimate fallback).
   String? get languageCode => _languageCode;
 
+  /// Manually-selected UI theme (light/dark), or [ThemeMode.system] to
+  /// follow the device's system theme.
+  ThemeMode get themeMode => _themeMode;
+
   /// Key of the program (e.g. `builtin:full_body_beginner` or `custom:3`)
   /// used for the Dashboard's sequential "next day" auto-suggestion.
   String? get activeProgramKey => _activeProgramKey;
@@ -68,6 +74,10 @@ class SettingsProvider extends ChangeNotifier {
     _vibrationEnabled = prefs.getBool(_keyVibrationEnabled) ?? true;
     _activeProgramKey = prefs.getString(_keyActiveProgramKey);
     _languageCode = prefs.getString(_keyLanguageCode);
+    _themeMode = ThemeMode.values.firstWhere(
+      (m) => m.name == prefs.getString(_keyThemeMode),
+      orElse: () => ThemeMode.system,
+    );
     _userName = prefs.getString(_keyUserName);
     _hasCompletedOnboarding = prefs.getBool(_keyHasCompletedOnboarding) ?? false;
     _notificationsEnabled = prefs.getBool(_keyNotificationsEnabled) ?? true;
@@ -102,6 +112,13 @@ class SettingsProvider extends ChangeNotifier {
     } else {
       await prefs.setString(_keyLanguageCode, code);
     }
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    _themeMode = mode;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyThemeMode, mode.name);
   }
 
   Future<void> setActiveProgramKey(String? key) async {

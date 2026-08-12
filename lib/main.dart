@@ -44,6 +44,14 @@ class ExerciseApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
+            darkTheme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.deepPurple,
+                brightness: Brightness.dark,
+              ),
+              useMaterial3: true,
+            ),
+            themeMode: settings.themeMode,
             // A manual language override takes precedence; otherwise fall
             // back to the device's system locale (resolved below), with
             // English as the ultimate fallback for unsupported languages.

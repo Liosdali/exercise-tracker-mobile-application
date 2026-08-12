@@ -193,6 +193,35 @@ class SettingsScreen extends StatelessWidget {
             onChanged: (v) => settings.setLanguageCode(v),
           ),
           const Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+            child: Text(l10n.settingsThemeSection, style: Theme.of(context).textTheme.titleMedium),
+          ),
+          RadioListTile<ThemeMode>(
+            title: Text(l10n.settingsThemeSystem),
+            value: ThemeMode.system,
+            // ignore: deprecated_member_use
+            groupValue: settings.themeMode,
+            // ignore: deprecated_member_use
+            onChanged: (v) => settings.setThemeMode(v!),
+          ),
+          RadioListTile<ThemeMode>(
+            title: Text(l10n.settingsThemeLight),
+            value: ThemeMode.light,
+            // ignore: deprecated_member_use
+            groupValue: settings.themeMode,
+            // ignore: deprecated_member_use
+            onChanged: (v) => settings.setThemeMode(v!),
+          ),
+          RadioListTile<ThemeMode>(
+            title: Text(l10n.settingsThemeDark),
+            value: ThemeMode.dark,
+            // ignore: deprecated_member_use
+            groupValue: settings.themeMode,
+            // ignore: deprecated_member_use
+            onChanged: (v) => settings.setThemeMode(v!),
+          ),
+          const Divider(),
           ListTile(
             title: Text(l10n.settingsWeeklyGoalLabel),
             trailing: _Stepper(
