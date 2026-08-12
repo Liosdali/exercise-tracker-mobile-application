@@ -15,6 +15,7 @@ class SettingsProvider extends ChangeNotifier {
   static const _keyNotificationsEnabled = 'notifications_enabled';
   static const _keyStreakWarningsEnabled = 'streak_warnings_enabled';
   static const _keyDailyReminderEnabled = 'daily_reminder_enabled';
+  static const _keyHasSeenTutorial = 'has_seen_tutorial';
 
   int _weeklyGoal = 3;
   bool _soundEnabled = true;
@@ -27,6 +28,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _notificationsEnabled = true;
   bool _streakWarningsEnabled = true;
   bool _dailyReminderEnabled = true;
+  bool _hasSeenTutorial = false;
   bool _loaded = false;
 
   int get weeklyGoal => _weeklyGoal;
@@ -45,6 +47,11 @@ class SettingsProvider extends ChangeNotifier {
   /// Whether the 07:00 "today's scheduled workout" reminder is enabled.
   /// Only takes effect if [notificationsEnabled] is also true.
   bool get dailyReminderEnabled => _dailyReminderEnabled;
+
+  /// Whether the first-launch interactive feature tour (Home tab, tab bar,
+  /// etc.) has already been shown (or skipped). Used to show it only once,
+  /// right after onboarding completes.
+  bool get hasSeenTutorial => _hasSeenTutorial;
 
   /// Optional display name captured during first-launch onboarding, shown
   /// in the Dashboard greeting ("Merhaba, [İsim]"). Null/empty if skipped.
@@ -83,6 +90,7 @@ class SettingsProvider extends ChangeNotifier {
     _notificationsEnabled = prefs.getBool(_keyNotificationsEnabled) ?? true;
     _streakWarningsEnabled = prefs.getBool(_keyStreakWarningsEnabled) ?? true;
     _dailyReminderEnabled = prefs.getBool(_keyDailyReminderEnabled) ?? true;
+    _hasSeenTutorial = prefs.getBool(_keyHasSeenTutorial) ?? false;
     _loaded = true;
     notifyListeners();
   }
@@ -172,6 +180,15 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyDailyReminderEnabled, enabled);
+  }
+
+  /// Marks the first-launch feature tour as seen (or unseen, to let the
+  /// user replay it from Settings) and persists the flag.
+  Future<void> setHasSeenTutorial(bool seen) async {
+    _hasSeenTutorial = seen;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyHasSeenTutorial, seen);
   }
 
   /// Resets weekly goal / rest-timer / active-program preferences to their

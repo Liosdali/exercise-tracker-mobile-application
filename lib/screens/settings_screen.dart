@@ -154,6 +154,12 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _replayTutorial(BuildContext context) async {
+    final settings = context.read<SettingsProvider>();
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    await settings.setHasSeenTutorial(false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -311,6 +317,16 @@ class SettingsScreen extends StatelessWidget {
               icon: const Icon(Icons.delete_forever),
               label: Text(l10n.settingsResetDataButton),
             ),
+          ),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+            child: Text(l10n.settingsTutorialSection, style: Theme.of(context).textTheme.titleMedium),
+          ),
+          ListTile(
+            leading: const Icon(Icons.explore_outlined),
+            title: Text(l10n.settingsReplayTutorialButton),
+            onTap: () => _replayTutorial(context),
           ),
           const Divider(),
           ListTile(

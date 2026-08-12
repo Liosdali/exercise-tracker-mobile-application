@@ -554,6 +554,84 @@ abstract class AppLocalizations {
   /// **'Reminds you at 07:00 if today\'s workout isn\'t done yet'**
   String get settingsNotificationsDailySubtitle;
 
+  /// No description provided for @settingsTutorialSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get settingsTutorialSection;
+
+  /// No description provided for @settingsReplayTutorialButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Feature Tour Again'**
+  String get settingsReplayTutorialButton;
+
+  /// No description provided for @tutorialStartWorkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a Workout'**
+  String get tutorialStartWorkoutTitle;
+
+  /// No description provided for @tutorialStartWorkoutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Start today\'s suggested workout here and log your sets as you go.'**
+  String get tutorialStartWorkoutDescription;
+
+  /// No description provided for @tutorialWorkoutsTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get tutorialWorkoutsTabTitle;
+
+  /// No description provided for @tutorialWorkoutsTabDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse ready-made programs, or build your own custom routines and multi-day programs.'**
+  String get tutorialWorkoutsTabDescription;
+
+  /// No description provided for @tutorialCalendarTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get tutorialCalendarTabTitle;
+
+  /// No description provided for @tutorialCalendarTabDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'See your workout history and plan upcoming sessions on the calendar.'**
+  String get tutorialCalendarTabDescription;
+
+  /// No description provided for @tutorialExercisesTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises'**
+  String get tutorialExercisesTabTitle;
+
+  /// No description provided for @tutorialExercisesTabDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore the exercise library, grouped by muscle category.'**
+  String get tutorialExercisesTabDescription;
+
+  /// No description provided for @tutorialProfileTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile & Stats'**
+  String get tutorialProfileTabTitle;
+
+  /// No description provided for @tutorialProfileTabDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your streaks, badges, and overall progress here.'**
+  String get tutorialProfileTabDescription;
+
+  /// No description provided for @tutorialSkipButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Tour'**
+  String get tutorialSkipButton;
+
   /// No description provided for @notificationStreakWarning2DaysTitle.
   ///
   /// In en, this message translates to:

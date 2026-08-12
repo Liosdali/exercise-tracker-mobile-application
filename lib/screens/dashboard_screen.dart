@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/custom_program_provider.dart';
@@ -12,6 +13,7 @@ import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
 import '../utils/duration_formatter.dart';
 import '../utils/program_resolver.dart';
+import '../utils/tutorial_keys.dart';
 import '../services/notification_scheduler.dart';
 import 'active_workout_screen.dart';
 
@@ -173,43 +175,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          if (suggested == null)
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(l10n.dashboardNoProgramSelected),
-              ),
-            )
-          else
-            Card(
-              child: ListTile(
-                title: Text('${suggested.programTitle} - ${suggested.dayName}'),
-                subtitle: Text(
-                  isManualAssignment
-                      ? l10n.dashboardManualAssignmentSubtitle
-                      : l10n.dashboardNextWorkoutSubtitle,
-                ),
-                trailing: FilledButton(
-                  onPressed: todayCompleted
-                      ? null
-                      : () {
-                          final steps = suggested!.buildSteps(exerciseProvider);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ActiveWorkoutScreen(
-                                title: '${suggested!.programTitle} - ${suggested.dayName}',
-                                steps: steps,
-                                programKey: isManualAssignment ? null : suggested.programKey,
-                                dayIndex: isManualAssignment ? null : suggested.dayIndex,
-                                totalDays: isManualAssignment ? null : suggested.totalDays,
-                              ),
-                            ),
-                          );
-                        },
-                  child: Text(l10n.dashboardStartButton),
-                ),
-              ),
-            ),
+          Showcase(
+            key: TutorialKeys.dashboardStartWorkout,
+            title: l10n.tutorialStartWorkoutTitle,
+            description: l10n.tutorialStartWorkoutDescription,
+            targetBorderRadius: const BorderRadius.all(Radius.circular(12)),
+            child: suggested == null
+                ? Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(l10n.dashboardNoProgramSelected),
+                    ),
+                  )
+                : Card(
+                    child: ListTile(
+                      title: Text('${suggested.programTitle} - ${suggested.dayName}'),
+                      subtitle: Text(
+                        isManualAssignment
+                            ? l10n.dashboardManualAssignmentSubtitle
+                            : l10n.dashboardNextWorkoutSubtitle,
+                      ),
+                      trailing: FilledButton(
+                        onPressed: todayCompleted
+                            ? null
+                            : () {
+                                final steps = suggested!.buildSteps(exerciseProvider);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => ActiveWorkoutScreen(
+                                      title: '${suggested!.programTitle} - ${suggested.dayName}',
+                                      steps: steps,
+                                      programKey: isManualAssignment ? null : suggested.programKey,
+                                      dayIndex: isManualAssignment ? null : suggested.dayIndex,
+                                      totalDays: isManualAssignment ? null : suggested.totalDays,
+                                    ),
+                                  ),
+                                );
+                              },
+                        child: Text(l10n.dashboardStartButton),
+                      ),
+                    ),
+                  ),
+          ),
           const SizedBox(height: 24),
           Row(
             children: [

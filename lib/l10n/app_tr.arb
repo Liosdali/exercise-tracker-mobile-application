@@ -87,6 +87,21 @@
   "settingsNotificationsDailyToggle": "Günlük antrenman hatırlatıcısı",
   "settingsNotificationsDailySubtitle": "Bugünün antrenmanı tamamlanmadıysa saat 07:00'de hatırlatır",
 
+  "settingsTutorialSection": "Yardım",
+  "settingsReplayTutorialButton": "Tanıtım Turunu Tekrar Göster",
+
+  "tutorialStartWorkoutTitle": "Antrenman Başlat",
+  "tutorialStartWorkoutDescription": "Günün önerilen antrenmanını buradan başlatıp setlerini kaydedebilirsin.",
+  "tutorialWorkoutsTabTitle": "Antrenmanlar",
+  "tutorialWorkoutsTabDescription": "Hazır programlara göz atabilir, kendi rutinini veya çok günlük programını oluşturabilirsin.",
+  "tutorialCalendarTabTitle": "Takvim",
+  "tutorialCalendarTabDescription": "Antrenman geçmişini görebilir, gelecek antrenmanlarını takvimde planlayabilirsin.",
+  "tutorialExercisesTabTitle": "Egzersizler",
+  "tutorialExercisesTabDescription": "Kas gruplarına göre ayrılmış egzersiz kütüphanesine buradan ulaşabilirsin.",
+  "tutorialProfileTabTitle": "Profil ve İstatistikler",
+  "tutorialProfileTabDescription": "Serilerini, rozetlerini ve genel ilerlemeni burada takip edebilirsin.",
+  "tutorialSkipButton": "Turu Atla",
+
   "notificationStreakWarning2DaysTitle": "Serin risk altında! \ud83d\udd25",
   "notificationStreakWarning2DaysBody": "{count} günlük serin var. Serini kaybetmemek için 2 gün içinde antrenman yap!",
   "@notificationStreakWarning2DaysBody": {

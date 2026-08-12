@@ -259,6 +259,50 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bugünün antrenmanı tamamlanmadıysa saat 07:00\'de hatırlatır';
 
   @override
+  String get settingsTutorialSection => 'Yardım';
+
+  @override
+  String get settingsReplayTutorialButton => 'Tanıtım Turunu Tekrar Göster';
+
+  @override
+  String get tutorialStartWorkoutTitle => 'Antrenman Başlat';
+
+  @override
+  String get tutorialStartWorkoutDescription =>
+      'Günün önerilen antrenmanını buradan başlatıp setlerini kaydedebilirsin.';
+
+  @override
+  String get tutorialWorkoutsTabTitle => 'Antrenmanlar';
+
+  @override
+  String get tutorialWorkoutsTabDescription =>
+      'Hazır programlara göz atabilir, kendi rutinini veya çok günlük programını oluşturabilirsin.';
+
+  @override
+  String get tutorialCalendarTabTitle => 'Takvim';
+
+  @override
+  String get tutorialCalendarTabDescription =>
+      'Antrenman geçmişini görebilir, gelecek antrenmanlarını takvimde planlayabilirsin.';
+
+  @override
+  String get tutorialExercisesTabTitle => 'Egzersizler';
+
+  @override
+  String get tutorialExercisesTabDescription =>
+      'Kas gruplarına göre ayrılmış egzersiz kütüphanesine buradan ulaşabilirsin.';
+
+  @override
+  String get tutorialProfileTabTitle => 'Profil ve İstatistikler';
+
+  @override
+  String get tutorialProfileTabDescription =>
+      'Serilerini, rozetlerini ve genel ilerlemeni burada takip edebilirsin.';
+
+  @override
+  String get tutorialSkipButton => 'Turu Atla';
+
+  @override
   String get notificationStreakWarning2DaysTitle => 'Serin risk altında! 🔥';
 
   @override

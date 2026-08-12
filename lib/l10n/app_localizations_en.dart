@@ -256,6 +256,50 @@ class AppLocalizationsEn extends AppLocalizations {
       'Reminds you at 07:00 if today\'s workout isn\'t done yet';
 
   @override
+  String get settingsTutorialSection => 'Help';
+
+  @override
+  String get settingsReplayTutorialButton => 'Show Feature Tour Again';
+
+  @override
+  String get tutorialStartWorkoutTitle => 'Start a Workout';
+
+  @override
+  String get tutorialStartWorkoutDescription =>
+      'Start today\'s suggested workout here and log your sets as you go.';
+
+  @override
+  String get tutorialWorkoutsTabTitle => 'Workouts';
+
+  @override
+  String get tutorialWorkoutsTabDescription =>
+      'Browse ready-made programs, or build your own custom routines and multi-day programs.';
+
+  @override
+  String get tutorialCalendarTabTitle => 'Calendar';
+
+  @override
+  String get tutorialCalendarTabDescription =>
+      'See your workout history and plan upcoming sessions on the calendar.';
+
+  @override
+  String get tutorialExercisesTabTitle => 'Exercises';
+
+  @override
+  String get tutorialExercisesTabDescription =>
+      'Explore the exercise library, grouped by muscle category.';
+
+  @override
+  String get tutorialProfileTabTitle => 'Profile & Stats';
+
+  @override
+  String get tutorialProfileTabDescription =>
+      'Track your streaks, badges, and overall progress here.';
+
+  @override
+  String get tutorialSkipButton => 'Skip Tour';
+
+  @override
   String get notificationStreakWarning2DaysTitle =>
       'Your streak is at risk! 🔥';
 

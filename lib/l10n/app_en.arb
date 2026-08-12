@@ -100,6 +100,21 @@
   "settingsNotificationsDailyToggle": "Daily workout reminder",
   "settingsNotificationsDailySubtitle": "Reminds you at 07:00 if today's workout isn't done yet",
 
+  "settingsTutorialSection": "Help",
+  "settingsReplayTutorialButton": "Show Feature Tour Again",
+
+  "tutorialStartWorkoutTitle": "Start a Workout",
+  "tutorialStartWorkoutDescription": "Start today's suggested workout here and log your sets as you go.",
+  "tutorialWorkoutsTabTitle": "Workouts",
+  "tutorialWorkoutsTabDescription": "Browse ready-made programs, or build your own custom routines and multi-day programs.",
+  "tutorialCalendarTabTitle": "Calendar",
+  "tutorialCalendarTabDescription": "See your workout history and plan upcoming sessions on the calendar.",
+  "tutorialExercisesTabTitle": "Exercises",
+  "tutorialExercisesTabDescription": "Explore the exercise library, grouped by muscle category.",
+  "tutorialProfileTabTitle": "Profile & Stats",
+  "tutorialProfileTabDescription": "Track your streaks, badges, and overall progress here.",
+  "tutorialSkipButton": "Skip Tour",
+
   "notificationStreakWarning2DaysTitle": "Your streak is at risk! \ud83d\udd25",
   "notificationStreakWarning2DaysBody": "You have {count} day streak. Work out within 2 days or you'll lose it!",
   "@notificationStreakWarning2DaysBody": {
