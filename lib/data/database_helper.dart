@@ -14,7 +14,7 @@ class DatabaseHelper {
   DatabaseHelper._internal();
   static final DatabaseHelper instance = DatabaseHelper._internal();
 
-  static const int _dbVersion = 5;
+  static const int _dbVersion = 6;
 
   Database? _db;
   Future<Database>? _dbOpening;

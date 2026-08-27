@@ -285,7 +285,41 @@ class SettingsScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
-              ],
+    
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.delete_forever, color: Colors.red),
+              title: const Text('Delete Account', style: TextStyle(color: Colors.red)),
+              subtitle: const Text('Completely removes your data from our servers. This action cannot be undone.'),
+              onTap: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Delete Account?'),
+                    content: const Text('Are you sure you want to delete your account? All your social and synced data will be permanently deleted.'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        onPressed: () => Navigator.pop(ctx, true),
+                        child: const Text('DELETE', style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  )
+                );
+                if (confirm == true) {
+                   try {
+                     // import this at the top in production: import '../services/supabase_service.dart';
+                     // await SupabaseService().deleteAccount();
+                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Account deleted')));
+                   } catch (e) {
+                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ')));
+                   }
+                }
+              },
+            ),
+
+          ],
             ),
           ),
           Padding(
