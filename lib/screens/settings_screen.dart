@@ -1,16 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/custom_program_provider.dart';
+import '../providers/auth_provider.dart';
 import '../providers/program_progress_provider.dart';
 import '../providers/routine_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
 import '../services/backup_service.dart';
+import '../services/supabase_service.dart';
 import 'about_screen.dart';
+import 'account_section.dart';
 
 /// Settings screen: manual language override, rest-timer/weekly-goal
 /// preferences, and a "reset all data" factory-reset action.
@@ -23,7 +28,9 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.settingsResetDataConfirmTitle),
-        content: Text(l10n.settingsResetDataConfirmMessage),
+        content: Text(
+          '${l10n.settingsResetDataConfirmMessage}\n\n${context.read<AuthProvider>().signedIn ? l10n.accountCloudResetWarning : l10n.accountGuestResetWarning}',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -39,22 +46,30 @@ class SettingsScreen extends StatelessWidget {
     );
     if (confirmed != true || !context.mounted) return;
 
-    await DatabaseHelper.instance.resetAllData();
-    if (!context.mounted) return;
+    try {
+      await DatabaseHelper.instance.resetAllData();
+      if (!context.mounted) return;
 
-    await Future.wait([
-      context.read<StatsProvider>().load(),
-      context.read<WorkoutProvider>().init(),
-      context.read<CustomProgramProvider>().load(),
-      context.read<RoutineProvider>().load(),
-      context.read<ProgramProgressProvider>().load(),
-      context.read<SettingsProvider>().resetToDefaults(),
-    ]);
-    if (!context.mounted) return;
+      await Future.wait([
+        context.read<StatsProvider>().load(),
+        context.read<WorkoutProvider>().init(),
+        context.read<CustomProgramProvider>().load(),
+        context.read<RoutineProvider>().load(),
+        context.read<ProgramProgressProvider>().load(),
+        context.read<SettingsProvider>().resetToDefaults(),
+      ]);
+      if (!context.mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.settingsResetDataSuccess)),
-    );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsResetDataSuccess)));
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.accountOperationError)));
+      }
+    }
   }
 
   Future<void> _exportData(BuildContext context) async {
@@ -62,26 +77,34 @@ class SettingsScreen extends StatelessWidget {
     try {
       await BackupService.exportAndShare();
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsBackupExportSuccess)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsBackupExportSuccess)));
     } catch (_) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsBackupExportError)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsBackupExportError)));
     }
   }
 
   Future<void> _importData(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
-    final file = await BackupService.pickBackupFile();
+    final file = await BackupService.pickBackupFile().catchError((Object _) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.settingsBackupImportError)));
+      }
+      return null;
+    });
     if (file == null || file.bytes == null) return;
     if (!context.mounted) return;
 
-    final jsonString = String.fromCharCodes(file.bytes!);
+    late final String jsonString;
     Map<String, int> counts;
     try {
+      jsonString = utf8.decode(file.bytes!);
       counts = BackupService.previewCounts(jsonString);
     } catch (_) {
       if (!context.mounted) return;
@@ -97,7 +120,9 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.settingsBackupImportConfirmTitle),
-        content: Text(l10n.settingsBackupImportConfirmMessage('$totalRows')),
+        content: Text(
+          '${l10n.settingsBackupImportConfirmMessage('$totalRows')}\n\n${context.read<AuthProvider>().signedIn ? l10n.accountCloudImportWarning : l10n.accountGuestResetWarning}',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -123,17 +148,18 @@ class SettingsScreen extends StatelessWidget {
         context.read<CustomProgramProvider>().load(),
         context.read<RoutineProvider>().load(),
         context.read<ProgramProgressProvider>().load(),
+        context.read<SettingsProvider>().load(),
       ]);
       if (!context.mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsBackupImportSuccess)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsBackupImportSuccess)));
     } catch (_) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsBackupImportError)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsBackupImportError)));
     }
   }
 
@@ -143,7 +169,9 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.settingsDisclaimerTitle),
-        content: SingleChildScrollView(child: Text(l10n.settingsDisclaimerBody)),
+        content: SingleChildScrollView(
+          child: Text(l10n.settingsDisclaimerBody),
+        ),
         actions: [
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
@@ -160,19 +188,70 @@ class SettingsScreen extends StatelessWidget {
     await settings.setHasSeenTutorial(false);
   }
 
+  Future<void> _deleteAccount(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final auth = context.read<AuthProvider>();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.accountDelete),
+        content: Text(l10n.accountDeleteWarning),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.commonCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.accountDelete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    final success = await auth.deleteAccount();
+    // Successful deletion resets the entire account navigator to guest mode.
+    if (!success && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            auth.error != null && auth.error != AccountAuthError.operation
+                ? accountErrorText(l10n, auth.error!)
+                : l10n.accountDeleteError,
+          ),
+          action:
+              (auth.error == AccountAuthError.appleReauthentication ||
+                      auth.error == AccountAuthError.appleAccountMismatch) &&
+                  auth.canSignIn
+              ? SnackBarAction(
+                  label: l10n.accountAppleReauthenticateButton,
+                  onPressed: () => auth.signIn(AccountLoginProvider.apple),
+                )
+              : null,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final settings = context.watch<SettingsProvider>();
+    final auth = context.watch<AuthProvider>();
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
+          const AccountSection(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text(l10n.settingsLanguageSection, style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              l10n.settingsLanguageSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           RadioListTile<String?>(
             title: Text(l10n.settingsLanguageSystem),
@@ -201,7 +280,10 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text(l10n.settingsThemeSection, style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              l10n.settingsThemeSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           RadioListTile<ThemeMode>(
             title: Text(l10n.settingsThemeSystem),
@@ -248,7 +330,10 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text(l10n.settingsNotificationsSection, style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              l10n.settingsNotificationsSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           SwitchListTile(
             title: Text(l10n.settingsNotificationsMasterToggle),
@@ -259,67 +344,44 @@ class SettingsScreen extends StatelessWidget {
             title: Text(l10n.settingsNotificationsStreakToggle),
             subtitle: Text(l10n.settingsNotificationsStreakSubtitle),
             value: settings.streakWarningsEnabled,
-            onChanged: settings.notificationsEnabled ? (v) => settings.setStreakWarningsEnabled(v) : null,
+            onChanged: settings.notificationsEnabled
+                ? (v) => settings.setStreakWarningsEnabled(v)
+                : null,
           ),
           SwitchListTile(
             title: Text(l10n.settingsNotificationsDailyToggle),
             subtitle: Text(l10n.settingsNotificationsDailySubtitle),
             value: settings.dailyReminderEnabled,
-            onChanged: settings.notificationsEnabled ? (v) => settings.setDailyReminderEnabled(v) : null,
+            onChanged: settings.notificationsEnabled
+                ? (v) => settings.setDailyReminderEnabled(v)
+                : null,
           ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text(l10n.settingsBackupSection, style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              l10n.settingsBackupSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.privacy_tip_outlined, size: 18, color: Theme.of(context).colorScheme.secondary),
+                Icon(
+                  Icons.privacy_tip_outlined,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    l10n.settingsBackupPrivacyNote,
+                    '${l10n.settingsBackupPrivacyNote}\n${l10n.accountBackupScope}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
-    
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.delete_forever, color: Colors.red),
-              title: const Text('Delete Account', style: TextStyle(color: Colors.red)),
-              subtitle: const Text('Completely removes your data from our servers. This action cannot be undone.'),
-              onTap: () async {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Delete Account?'),
-                    content: const Text('Are you sure you want to delete your account? All your social and synced data will be permanently deleted.'),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                        onPressed: () => Navigator.pop(ctx, true),
-                        child: const Text('DELETE', style: TextStyle(color: Colors.white)),
-                      ),
-                    ],
-                  )
-                );
-                if (confirm == true) {
-                   try {
-                     // import this at the top in production: import '../services/supabase_service.dart';
-                     // await SupabaseService().deleteAccount();
-                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Account deleted')));
-                   } catch (e) {
-                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ')));
-                   }
-                }
-              },
-            ),
-
-          ],
+              ],
             ),
           ),
           Padding(
@@ -339,9 +401,22 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           const Divider(),
+          if (auth.signedIn)
+            ListTile(
+              leading: const Icon(Icons.delete_forever, color: Colors.red),
+              title: Text(
+                l10n.accountDelete,
+                style: const TextStyle(color: Colors.red),
+              ),
+              subtitle: Text(l10n.accountDeleteSummary),
+              onTap: auth.busy ? null : () => _deleteAccount(context),
+            ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text(l10n.settingsResetDataSection, style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              l10n.settingsResetDataSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -355,7 +430,10 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text(l10n.settingsTutorialSection, style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              l10n.settingsTutorialSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.explore_outlined),
@@ -368,9 +446,9 @@ class SettingsScreen extends StatelessWidget {
             title: Text(l10n.settingsAboutTitle),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const AboutScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const AboutScreen()));
             },
           ),
           ListTile(

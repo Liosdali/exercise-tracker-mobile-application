@@ -754,4 +754,243 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get workoutSummaryBackHomeButton => 'Ana Sayfaya Dön';
+
+  @override
+  String get accountTitle => 'Hesap';
+
+  @override
+  String get accountGuest => 'Misafir';
+
+  @override
+  String get accountGuestDescription =>
+      'Misafir verileriniz bu cihazda kalır. Cihazlar arasında özel eşitleme için giriş yapın.';
+
+  @override
+  String get accountSignedIn => 'Giriş yapıldı';
+
+  @override
+  String get accountEditProfile => 'Kişisel profili düzenle';
+
+  @override
+  String get accountGoogle => 'Google ile devam et';
+
+  @override
+  String get accountApple => 'Apple ile devam et';
+
+  @override
+  String get accountConfigurationError =>
+      'Hesap özelliği kullanılamıyor: SUPABASE_URL ve SUPABASE_ANON_KEY doğru yapılandırılmalıdır. Misafir modunu çevrimdışı kullanabilirsiniz.';
+
+  @override
+  String get accountMobileOnly =>
+      'Google ve Apple ile giriş Android ve iOS\'ta kullanılabilir.';
+
+  @override
+  String get accountLoginError =>
+      'Giriş başarısız. Bağlantınızı kontrol edip tekrar deneyin.';
+
+  @override
+  String get accountLoginCancelled =>
+      'Giriş iptal edildi veya zaman aşımına uğradı. Yerel verileriniz değişmedi.';
+
+  @override
+  String get accountSessionExpired =>
+      'Oturumunuz yenilenmeli. Eşitlemek için tekrar giriş yapın; kayıtlı verileriniz çevrimdışı kullanılabilir.';
+
+  @override
+  String get accountOperationError =>
+      'İşlem tamamlanamadı. Kayıtlı verileriniz korunuyor. Lütfen tekrar deneyin.';
+
+  @override
+  String get accountWorkspaceError =>
+      'Yerel çalışma alanınız açılamadı. Verilerinizi güvenle yüklemek için tekrar deneyin.';
+
+  @override
+  String get accountRetry => 'Tekrar dene';
+
+  @override
+  String get accountBrowserWaiting =>
+      'Girişi tarayıcınızda tamamlayın. Tarayıcıyı kapattıysanız tekrar denemek için buradan iptal edin.';
+
+  @override
+  String get accountGuestImportTitle => 'Misafir verileri aktarılsın mı?';
+
+  @override
+  String get accountGuestImportMessage =>
+      'Bu cihazdaki misafir antrenmanları, programları, profili ve geçmişi bu hesaba kopyalansın mı? Yalnızca size ait verileri aktarın. Misafir verileri ayrı tutulur; aktarılan veriler özel hesabınıza yüklenebilir.';
+
+  @override
+  String get accountGuestImportAccept => 'Misafir verilerimi aktar';
+
+  @override
+  String get accountGuestImportDecline => 'Misafir verilerini ayrı tut';
+
+  @override
+  String get accountSyncing => 'Özel hesap verileri eşitleniyor…';
+
+  @override
+  String accountPending(int count) {
+    return '$count bekleyen değişiklik';
+  }
+
+  @override
+  String get accountSyncError =>
+      'Eşitleme başarısız. Değişiklikleriniz bu cihazda kayıtlı. Bağlantınızı kontrol edip tekrar deneyin.';
+
+  @override
+  String get accountSyncNow => 'Eşitle / tekrar dene';
+
+  @override
+  String accountConflicts(int count) {
+    return 'Çakışmaları çöz ($count)';
+  }
+
+  @override
+  String get accountSignOut => 'Çıkış yap';
+
+  @override
+  String accountSignOutWarning(int count, int conflicts) {
+    return '$count bekleyen değişiklik ve $conflicts çözülmemiş çakışma var. Eşitlenmemiş veriler ve çakışmaların her iki sürümü bu cihazdaki hesabınıza ait alanda kalır, ancak henüz diğer cihazlarda bulunmayabilir. Çıkış yapıp ayrı misafir alanına dönmek istiyor musunuz?';
+  }
+
+  @override
+  String get accountProfileOptional =>
+      'Tüm alanlar isteğe bağlıdır. Giriş için yaş ve ölçüler gerekli değildir. Değişiklikler geçerli çalışma alanınıza kaydedilir.';
+
+  @override
+  String get accountName => 'İsim';
+
+  @override
+  String get accountAge => 'Yaş (isteğe bağlı)';
+
+  @override
+  String get accountWeight => 'Kilo (kg, isteğe bağlı)';
+
+  @override
+  String get accountHeight => 'Boy (cm, isteğe bağlı)';
+
+  @override
+  String get accountGender => 'Cinsiyet (isteğe bağlı)';
+
+  @override
+  String get accountGenderUnspecified => 'Belirtmek istemiyorum';
+
+  @override
+  String get accountGenderFemale => 'Kadın';
+
+  @override
+  String get accountGenderMale => 'Erkek';
+
+  @override
+  String get accountGenderOther => 'Diğer';
+
+  @override
+  String get accountAgeInvalid =>
+      'Negatif olmayan bir tam sayı girin veya boş bırakın.';
+
+  @override
+  String get accountMeasurementInvalid =>
+      'Sıfırdan büyük, sonlu bir sayı girin veya boş bırakın.';
+
+  @override
+  String get accountDelete => 'Hesabı sil';
+
+  @override
+  String get accountDeleteSummary =>
+      'Hesabınızı ve sunucudaki verilerinizi kalıcı olarak silin.';
+
+  @override
+  String get accountDeleteWarning =>
+      'Bu hesap ve sunucudaki tüm özel ve sosyal verileri kalıcı olarak silinsin mi? Bekleyen yerel değişiklikler de silinir. Misafir verileri ayrıdır. Bu işlem geri alınamaz ve bağlantı gerektirir. Apple\'a bağlıysa silme tamamlanmadan önce Apple yetkisinin sunucuda iptal edilmesi gerekir.';
+
+  @override
+  String get accountDeleteError =>
+      'Hesap silme tamamlanamadı. Başarı onaylanmadı. Bağlanıp tekrar deneyin; Apple yetkisi iptal edilemiyorsa destekle iletişime geçin.';
+
+  @override
+  String get accountCloudResetWarning =>
+      'Yalnızca giriş yapılan hesabın çalışma alanı sıfırlanır. Silme işlemleri bu hesabın diğer cihazlarına eşitlenir. Misafir verileri ve diğer hesaplar etkilenmez.';
+
+  @override
+  String get accountCloudImportWarning =>
+      'Giriş yapılan hesabın çalışma alanındaki veriler değiştirilir. Aktarılan değişiklikler ve silmeler bu hesabın diğer cihazlarına eşitlenir. Misafir verileri ve diğer hesaplar etkilenmez.';
+
+  @override
+  String get accountGuestResetWarning =>
+      'Yalnızca bu cihazın misafir çalışma alanı etkilenir. Giriş yapılan hesapların alanları değişmez.';
+
+  @override
+  String get accountBackupScope =>
+      'Dışa aktarma yalnızca geçerli çalışma alanını içerir; giriş belirteçlerini veya kimlik bilgilerini içermez. Yedekleri gizli tutun: kişisel profil ve sağlık verileri içerebilir.';
+
+  @override
+  String get accountWelcome => 'Hoş geldin!';
+
+  @override
+  String get accountOnboardingName => 'Sana nasıl hitap edelim? (İsteğe bağlı)';
+
+  @override
+  String get accountContinue => 'Devam et';
+
+  @override
+  String get accountSkip => 'Atla';
+
+  @override
+  String get accountDeletionCleanupError =>
+      'Sunucudaki hesabınız silindi, ancak cihaz temizliği tamamlanamadı. Yerel verilerini ve giriş bilgilerini güvenle kaldırmak için tekrar deneyin.';
+
+  @override
+  String get syncConflictsTitle => 'Eşitleme çakışmalarını çöz';
+
+  @override
+  String get syncConflictResolveError =>
+      'Çakışma çözülemedi. Her iki sürüm de korunuyor; bağlanıp tekrar deneyin.';
+
+  @override
+  String get syncNoConflicts => 'Çözülmemiş çakışma yok.';
+
+  @override
+  String get syncConflictDeleted => 'Silinen kayıt';
+
+  @override
+  String get syncLocalVersion => 'Bu cihazdaki sürüm';
+
+  @override
+  String get syncRemoteVersion => 'Hesabın sunucudaki sürümü';
+
+  @override
+  String get syncKeepLocal => 'Cihaz sürümünü kullan';
+
+  @override
+  String get syncKeepRemote => 'Sunucu sürümünü kullan';
+
+  @override
+  String get accountDeletedSuccess =>
+      'Hesabınız sunucudan silindi ve yerel verileri kaldırıldı. Ayrı misafir verileriniz değişmedi.';
+
+  @override
+  String get accountContinueAsGuest => 'Misafir olarak devam et';
+
+  @override
+  String get accountAppleReauthentication =>
+      'Silmeden önce Apple yetkisi iptal edilmelidir. Android\'de tekrar Apple ile giriş yapın, ardından hesabı silmeyi tekrar deneyin. Apple yenileme belirteci sağlamazsa iOS cihazı kullanın veya destekle iletişime geçin. Hesap verileri silinmedi.';
+
+  @override
+  String get accountAppleReauthenticateButton => 'Apple ile yeniden doğrula';
+
+  @override
+  String get accountDeletionCancelled =>
+      'Hesap silme iptal edildi. Hesabınız ve verileriniz değişmedi.';
+
+  @override
+  String get accountDeletionUnavailable =>
+      'Sunucuda hesap silme yapılandırılmamış. Silmeyi tamamlamak için destekle iletişime geçin. Hesabınız ve verileriniz silinmedi.';
+
+  @override
+  String get accountAppleMismatch =>
+      'Bu Apple hesabı, geçerli hesabınıza bağlı Apple kimliğiyle eşleşmiyor. Doğru Apple hesabıyla yeniden doğrulayıp tekrar deneyin. Hiçbir veri silinmedi.';
+
+  @override
+  String get syncRelatedRecordsNotice =>
+      'Bu çakışma, ilişkili antrenman kayıtlarını da içerir. Seçtiğiniz sürüm grubun tamamına uygulanır.';
 }

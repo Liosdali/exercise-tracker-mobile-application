@@ -753,4 +753,243 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workoutSummaryBackHomeButton => 'Back to Home';
+
+  @override
+  String get accountTitle => 'Account';
+
+  @override
+  String get accountGuest => 'Guest';
+
+  @override
+  String get accountGuestDescription =>
+      'Your guest data stays on this device. Sign in to privately sync across devices.';
+
+  @override
+  String get accountSignedIn => 'Signed in';
+
+  @override
+  String get accountEditProfile => 'Edit personal profile';
+
+  @override
+  String get accountGoogle => 'Continue with Google';
+
+  @override
+  String get accountApple => 'Continue with Apple';
+
+  @override
+  String get accountConfigurationError =>
+      'Accounts are unavailable: SUPABASE_URL and SUPABASE_ANON_KEY must be configured correctly. You can still use guest mode offline.';
+
+  @override
+  String get accountMobileOnly =>
+      'Google and Apple sign-in is available on Android and iOS.';
+
+  @override
+  String get accountLoginError =>
+      'Sign-in failed. Check your connection and try again.';
+
+  @override
+  String get accountLoginCancelled =>
+      'Sign-in was cancelled or timed out. Your local data is unchanged.';
+
+  @override
+  String get accountSessionExpired =>
+      'Your session needs renewal. Sign in again to sync; your saved data remains available offline.';
+
+  @override
+  String get accountOperationError =>
+      'The operation could not be completed. Your saved data is retained. Please try again.';
+
+  @override
+  String get accountWorkspaceError =>
+      'Your local workspace could not be opened. Retry to safely load your data.';
+
+  @override
+  String get accountRetry => 'Retry';
+
+  @override
+  String get accountBrowserWaiting =>
+      'Complete sign-in in your browser. If you closed it, cancel here to try again.';
+
+  @override
+  String get accountGuestImportTitle => 'Import guest data?';
+
+  @override
+  String get accountGuestImportMessage =>
+      'Copy this device\'s guest workouts, programs, profile and history into this account? Only import data that belongs to you. Guest data is kept separately, and importing may upload it to your private account.';
+
+  @override
+  String get accountGuestImportAccept => 'Import my guest data';
+
+  @override
+  String get accountGuestImportDecline => 'Keep guest data separate';
+
+  @override
+  String get accountSyncing => 'Syncing private account data…';
+
+  @override
+  String accountPending(int count) {
+    return '$count pending changes';
+  }
+
+  @override
+  String get accountSyncError =>
+      'Sync failed. Your changes are saved on this device. Check your connection and retry.';
+
+  @override
+  String get accountSyncNow => 'Sync / retry';
+
+  @override
+  String accountConflicts(int count) {
+    return 'Resolve conflicts ($count)';
+  }
+
+  @override
+  String get accountSignOut => 'Sign out';
+
+  @override
+  String accountSignOutWarning(int count, int conflicts) {
+    return 'There are $count pending changes and $conflicts unresolved conflicts. Unsynced data and both conflict versions stay in this account\'s workspace on this device, but may not yet be available elsewhere. Sign out and return to the separate guest workspace?';
+  }
+
+  @override
+  String get accountProfileOptional =>
+      'All fields are optional. Age and measurements are not required for sign-in. Changes are saved in your current workspace.';
+
+  @override
+  String get accountName => 'Name';
+
+  @override
+  String get accountAge => 'Age (optional)';
+
+  @override
+  String get accountWeight => 'Weight (kg, optional)';
+
+  @override
+  String get accountHeight => 'Height (cm, optional)';
+
+  @override
+  String get accountGender => 'Gender (optional)';
+
+  @override
+  String get accountGenderUnspecified => 'Prefer not to say';
+
+  @override
+  String get accountGenderFemale => 'Female';
+
+  @override
+  String get accountGenderMale => 'Male';
+
+  @override
+  String get accountGenderOther => 'Other';
+
+  @override
+  String get accountAgeInvalid =>
+      'Enter a nonnegative whole number or leave blank.';
+
+  @override
+  String get accountMeasurementInvalid =>
+      'Enter a finite number greater than zero or leave blank.';
+
+  @override
+  String get accountDelete => 'Delete account';
+
+  @override
+  String get accountDeleteSummary =>
+      'Permanently remove your account and server data.';
+
+  @override
+  String get accountDeleteWarning =>
+      'Permanently delete this account and all its private and social server data? Pending local changes will also be removed. Guest data is separate. This cannot be undone and requires a connection. If linked to Apple, its authorization must be revoked by the server before deletion can complete.';
+
+  @override
+  String get accountDeleteError =>
+      'Account deletion could not be completed. No success has been confirmed. Reconnect and retry; contact support if Apple authorization cannot be revoked.';
+
+  @override
+  String get accountCloudResetWarning =>
+      'This resets only the signed-in account\'s workspace. Deletions will sync to this account on your other devices. Guest data and other accounts are unaffected.';
+
+  @override
+  String get accountCloudImportWarning =>
+      'This replaces data in the signed-in account\'s workspace. The imported changes and deletions will sync to this account on other devices. Guest data and other accounts are unaffected.';
+
+  @override
+  String get accountGuestResetWarning =>
+      'Only this device\'s guest workspace is affected. Signed-in account workspaces are unchanged.';
+
+  @override
+  String get accountBackupScope =>
+      'Exports contain only the current workspace, never sign-in tokens or credentials. Keep backups private: they may include personal profile and health data.';
+
+  @override
+  String get accountWelcome => 'Welcome!';
+
+  @override
+  String get accountOnboardingName => 'What should we call you? (Optional)';
+
+  @override
+  String get accountContinue => 'Continue';
+
+  @override
+  String get accountSkip => 'Skip';
+
+  @override
+  String get accountDeletionCleanupError =>
+      'Your server account was deleted, but device cleanup did not finish. Retry to remove its local data and credentials safely.';
+
+  @override
+  String get syncConflictsTitle => 'Resolve sync conflicts';
+
+  @override
+  String get syncConflictResolveError =>
+      'The conflict could not be resolved. Both versions are retained; reconnect and retry.';
+
+  @override
+  String get syncNoConflicts => 'No unresolved conflicts.';
+
+  @override
+  String get syncConflictDeleted => 'Deleted record';
+
+  @override
+  String get syncLocalVersion => 'This device\'s version';
+
+  @override
+  String get syncRemoteVersion => 'Account\'s server version';
+
+  @override
+  String get syncKeepLocal => 'Use device version';
+
+  @override
+  String get syncKeepRemote => 'Use server version';
+
+  @override
+  String get accountDeletedSuccess =>
+      'Your account has been deleted from the server and its local data has been removed. Your separate guest data is unchanged.';
+
+  @override
+  String get accountContinueAsGuest => 'Continue as guest';
+
+  @override
+  String get accountAppleReauthentication =>
+      'Apple authorization must be revoked before deletion. Sign in with Apple again on Android, then retry deleting your account. If Apple does not supply a refresh token, use an iOS device or contact support. No account data has been deleted.';
+
+  @override
+  String get accountAppleReauthenticateButton => 'Reauthenticate with Apple';
+
+  @override
+  String get accountDeletionCancelled =>
+      'Account deletion was cancelled. Your account and data are unchanged.';
+
+  @override
+  String get accountDeletionUnavailable =>
+      'Account deletion is not configured on the server. Contact support to complete deletion. Your account and data have not been deleted.';
+
+  @override
+  String get accountAppleMismatch =>
+      'This Apple account does not match the Apple identity linked to your current account. Reauthenticate with the correct Apple account and retry. Nothing has been deleted.';
+
+  @override
+  String get syncRelatedRecordsNotice =>
+      'This conflict includes related workout records. Choosing a version applies to the whole group.';
 }

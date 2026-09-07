@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'account_change_notifier.dart';
 
 import '../data/database_helper.dart';
 
@@ -22,8 +22,11 @@ class PlannedWorkout {
 /// user trains again, advancing only when a workout is actually completed -
 /// skipped calendar days don't affect it) and manual per-date program/day
 /// assignments made from the calendar.
-class ProgramProgressProvider extends ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+class ProgramProgressProvider extends AccountChangeNotifier {
+  final DatabaseHelper _db = DatabaseHelper.instance.workspace();
+
+  @override
+  Future<void> reloadAccount() => load();
 
   final Map<String, int> _nextDayIndexByProgram = {};
   Map<String, PlannedWorkout> _plannedByDate = {};
@@ -69,7 +72,12 @@ class ProgramProgressProvider extends ChangeNotifier {
 
   /// Call once a guided workout for [programKey]/[dayIndex] is finished, so
   /// the following visit suggests the next day in sequence.
-  Future<void> markCompleted(String programKey, int dayIndex, int totalDays, String date) async {
+  Future<void> markCompleted(
+    String programKey,
+    int dayIndex,
+    int totalDays,
+    String date,
+  ) async {
     if (totalDays <= 0) return;
     final next = (dayIndex + 1) % totalDays;
     await _db.setNextDayIndex(programKey, next, date);
@@ -79,7 +87,12 @@ class ProgramProgressProvider extends ChangeNotifier {
 
   PlannedWorkout? plannedFor(String date) => _plannedByDate[date];
 
-  Future<void> setPlanned(String date, String programKey, int dayIndex, String dayName) async {
+  Future<void> setPlanned(
+    String date,
+    String programKey,
+    int dayIndex,
+    String dayName,
+  ) async {
     await _db.setPlannedWorkout(date, programKey, dayIndex, dayName);
     _plannedByDate[date] = PlannedWorkout(
       date: date,

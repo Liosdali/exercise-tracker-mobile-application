@@ -1,4 +1,9 @@
--- Supabase Schema for Atlas Workout
+-- Fresh-install psql entry point for Atlas Workout.
+-- Run with ON_ERROR_STOP=1. Existing installations must apply only the
+-- incremental files under supabase/migrations, not this social bootstrap.
+-- The final \ir includes the authoritative private schema without maintaining
+-- a second copy. In the Supabase SQL editor, run this social bootstrap without
+-- the \ir line, followed by 202609070001_private_accounts.sql.
 
 -- 1. ENUMS & EXTENSIONS
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -19,7 +24,7 @@ BEGIN
   VALUES (new.id, new.raw_user_meta_data->>'full_name');
   RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
@@ -135,6 +140,19 @@ RETURNS void AS $$
 BEGIN
   -- Data in public tables will cascade automatically because of 'ON DELETE CASCADE'
   -- Deleting the user from auth.users triggers the cascades
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'Authentication required' USING ERRCODE = '42501';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM auth.identities
+    WHERE user_id = auth.uid() AND provider = 'apple'
+  ) THEN
+    RAISE EXCEPTION 'Apple accounts must use the delete-account endpoint'
+      USING ERRCODE = '42501';
+  END IF;
   DELETE FROM auth.users WHERE id = auth.uid();
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
+
+-- This authoritative migration also hardens the legacy function grants.
+\ir supabase/migrations/202609070001_private_accounts.sql

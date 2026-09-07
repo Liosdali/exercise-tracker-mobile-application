@@ -1,0 +1,6 @@
+project_id = "exercise-app"
+
+[functions.delete-account]
+# The handler verifies the bearer token against Auth itself, including projects
+# using asymmetric JWT signing keys that the legacy gateway cannot verify.
+verify_jwt = false

@@ -1447,6 +1447,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to Home'**
   String get workoutSummaryBackHomeButton;
+
+  /// No description provided for @accountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountTitle;
+
+  /// No description provided for @accountGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get accountGuest;
+
+  /// No description provided for @accountGuestDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your guest data stays on this device. Sign in to privately sync across devices.'**
+  String get accountGuestDescription;
+
+  /// No description provided for @accountSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in'**
+  String get accountSignedIn;
+
+  /// No description provided for @accountEditProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit personal profile'**
+  String get accountEditProfile;
+
+  /// No description provided for @accountGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get accountGoogle;
+
+  /// No description provided for @accountApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get accountApple;
+
+  /// No description provided for @accountConfigurationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Accounts are unavailable: SUPABASE_URL and SUPABASE_ANON_KEY must be configured correctly. You can still use guest mode offline.'**
+  String get accountConfigurationError;
+
+  /// No description provided for @accountMobileOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Google and Apple sign-in is available on Android and iOS.'**
+  String get accountMobileOnly;
+
+  /// No description provided for @accountLoginError.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in failed. Check your connection and try again.'**
+  String get accountLoginError;
+
+  /// No description provided for @accountLoginCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in was cancelled or timed out. Your local data is unchanged.'**
+  String get accountLoginCancelled;
+
+  /// No description provided for @accountSessionExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session needs renewal. Sign in again to sync; your saved data remains available offline.'**
+  String get accountSessionExpired;
+
+  /// No description provided for @accountOperationError.
+  ///
+  /// In en, this message translates to:
+  /// **'The operation could not be completed. Your saved data is retained. Please try again.'**
+  String get accountOperationError;
+
+  /// No description provided for @accountWorkspaceError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your local workspace could not be opened. Retry to safely load your data.'**
+  String get accountWorkspaceError;
+
+  /// No description provided for @accountRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get accountRetry;
+
+  /// No description provided for @accountBrowserWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete sign-in in your browser. If you closed it, cancel here to try again.'**
+  String get accountBrowserWaiting;
+
+  /// No description provided for @accountGuestImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import guest data?'**
+  String get accountGuestImportTitle;
+
+  /// No description provided for @accountGuestImportMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this device\'s guest workouts, programs, profile and history into this account? Only import data that belongs to you. Guest data is kept separately, and importing may upload it to your private account.'**
+  String get accountGuestImportMessage;
+
+  /// No description provided for @accountGuestImportAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Import my guest data'**
+  String get accountGuestImportAccept;
+
+  /// No description provided for @accountGuestImportDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep guest data separate'**
+  String get accountGuestImportDecline;
+
+  /// No description provided for @accountSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing private account data…'**
+  String get accountSyncing;
+
+  /// No description provided for @accountPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pending changes'**
+  String accountPending(int count);
+
+  /// No description provided for @accountSyncError.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed. Your changes are saved on this device. Check your connection and retry.'**
+  String get accountSyncError;
+
+  /// No description provided for @accountSyncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync / retry'**
+  String get accountSyncNow;
+
+  /// No description provided for @accountConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve conflicts ({count})'**
+  String accountConflicts(int count);
+
+  /// No description provided for @accountSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get accountSignOut;
+
+  /// No description provided for @accountSignOutWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'There are {count} pending changes and {conflicts} unresolved conflicts. Unsynced data and both conflict versions stay in this account\'s workspace on this device, but may not yet be available elsewhere. Sign out and return to the separate guest workspace?'**
+  String accountSignOutWarning(int count, int conflicts);
+
+  /// No description provided for @accountProfileOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'All fields are optional. Age and measurements are not required for sign-in. Changes are saved in your current workspace.'**
+  String get accountProfileOptional;
+
+  /// No description provided for @accountName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get accountName;
+
+  /// No description provided for @accountAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age (optional)'**
+  String get accountAge;
+
+  /// No description provided for @accountWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg, optional)'**
+  String get accountWeight;
+
+  /// No description provided for @accountHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Height (cm, optional)'**
+  String get accountHeight;
+
+  /// No description provided for @accountGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender (optional)'**
+  String get accountGender;
+
+  /// No description provided for @accountGenderUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get accountGenderUnspecified;
+
+  /// No description provided for @accountGenderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get accountGenderFemale;
+
+  /// No description provided for @accountGenderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get accountGenderMale;
+
+  /// No description provided for @accountGenderOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get accountGenderOther;
+
+  /// No description provided for @accountAgeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a nonnegative whole number or leave blank.'**
+  String get accountAgeInvalid;
+
+  /// No description provided for @accountMeasurementInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a finite number greater than zero or leave blank.'**
+  String get accountMeasurementInvalid;
+
+  /// No description provided for @accountDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDelete;
+
+  /// No description provided for @accountDeleteSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently remove your account and server data.'**
+  String get accountDeleteSummary;
+
+  /// No description provided for @accountDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete this account and all its private and social server data? Pending local changes will also be removed. Guest data is separate. This cannot be undone and requires a connection. If linked to Apple, its authorization must be revoked by the server before deletion can complete.'**
+  String get accountDeleteWarning;
+
+  /// No description provided for @accountDeleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion could not be completed. No success has been confirmed. Reconnect and retry; contact support if Apple authorization cannot be revoked.'**
+  String get accountDeleteError;
+
+  /// No description provided for @accountCloudResetWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This resets only the signed-in account\'s workspace. Deletions will sync to this account on your other devices. Guest data and other accounts are unaffected.'**
+  String get accountCloudResetWarning;
+
+  /// No description provided for @accountCloudImportWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This replaces data in the signed-in account\'s workspace. The imported changes and deletions will sync to this account on other devices. Guest data and other accounts are unaffected.'**
+  String get accountCloudImportWarning;
+
+  /// No description provided for @accountGuestResetWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this device\'s guest workspace is affected. Signed-in account workspaces are unchanged.'**
+  String get accountGuestResetWarning;
+
+  /// No description provided for @accountBackupScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Exports contain only the current workspace, never sign-in tokens or credentials. Keep backups private: they may include personal profile and health data.'**
+  String get accountBackupScope;
+
+  /// No description provided for @accountWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome!'**
+  String get accountWelcome;
+
+  /// No description provided for @accountOnboardingName.
+  ///
+  /// In en, this message translates to:
+  /// **'What should we call you? (Optional)'**
+  String get accountOnboardingName;
+
+  /// No description provided for @accountContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get accountContinue;
+
+  /// No description provided for @accountSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get accountSkip;
+
+  /// No description provided for @accountDeletionCleanupError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your server account was deleted, but device cleanup did not finish. Retry to remove its local data and credentials safely.'**
+  String get accountDeletionCleanupError;
+
+  /// No description provided for @syncConflictsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve sync conflicts'**
+  String get syncConflictsTitle;
+
+  /// No description provided for @syncConflictResolveError.
+  ///
+  /// In en, this message translates to:
+  /// **'The conflict could not be resolved. Both versions are retained; reconnect and retry.'**
+  String get syncConflictResolveError;
+
+  /// No description provided for @syncNoConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'No unresolved conflicts.'**
+  String get syncNoConflicts;
+
+  /// No description provided for @syncConflictDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted record'**
+  String get syncConflictDeleted;
+
+  /// No description provided for @syncLocalVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'This device\'s version'**
+  String get syncLocalVersion;
+
+  /// No description provided for @syncRemoteVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Account\'s server version'**
+  String get syncRemoteVersion;
+
+  /// No description provided for @syncKeepLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Use device version'**
+  String get syncKeepLocal;
+
+  /// No description provided for @syncKeepRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Use server version'**
+  String get syncKeepRemote;
+
+  /// No description provided for @accountDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted from the server and its local data has been removed. Your separate guest data is unchanged.'**
+  String get accountDeletedSuccess;
+
+  /// No description provided for @accountContinueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as guest'**
+  String get accountContinueAsGuest;
+
+  /// No description provided for @accountAppleReauthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple authorization must be revoked before deletion. Sign in with Apple again on Android, then retry deleting your account. If Apple does not supply a refresh token, use an iOS device or contact support. No account data has been deleted.'**
+  String get accountAppleReauthentication;
+
+  /// No description provided for @accountAppleReauthenticateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reauthenticate with Apple'**
+  String get accountAppleReauthenticateButton;
+
+  /// No description provided for @accountDeletionCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion was cancelled. Your account and data are unchanged.'**
+  String get accountDeletionCancelled;
+
+  /// No description provided for @accountDeletionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion is not configured on the server. Contact support to complete deletion. Your account and data have not been deleted.'**
+  String get accountDeletionUnavailable;
+
+  /// No description provided for @accountAppleMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'This Apple account does not match the Apple identity linked to your current account. Reauthenticate with the correct Apple account and retry. Nothing has been deleted.'**
+  String get accountAppleMismatch;
+
+  /// No description provided for @syncRelatedRecordsNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This conflict includes related workout records. Choosing a version applies to the whole group.'**
+  String get syncRelatedRecordsNotice;
 }
 
 class _AppLocalizationsDelegate

@@ -28,15 +28,31 @@ class NotificationScheduler {
     required WorkoutProvider workoutProvider,
   }) async {
     final notifier = NotificationService.instance;
+    final generation = notifier.accountGeneration;
 
     if (!settings.notificationsEnabled) {
-      await notifier.cancel(NotificationService.idStreakWarning2DaysLeft);
-      await notifier.cancel(NotificationService.idStreakWarningLastDay);
-      await notifier.cancel(NotificationService.idDailyWorkoutReminder);
+      await notifier.cancel(
+        NotificationService.idStreakWarning2DaysLeft,
+        accountGeneration: generation,
+      );
+      await notifier.cancel(
+        NotificationService.idStreakWarningLastDay,
+        accountGeneration: generation,
+      );
+      await notifier.cancel(
+        NotificationService.idDailyWorkoutReminder,
+        accountGeneration: generation,
+      );
       return;
     }
 
-    await _rescheduleStreakWarnings(l10n: l10n, stats: stats, settings: settings, notifier: notifier);
+    await _rescheduleStreakWarnings(
+      l10n: l10n,
+      stats: stats,
+      settings: settings,
+      notifier: notifier,
+      generation: generation,
+    );
     await _rescheduleDailyReminder(
       l10n: l10n,
       settings: settings,
@@ -45,6 +61,7 @@ class NotificationScheduler {
       customPrograms: customPrograms,
       workoutProvider: workoutProvider,
       notifier: notifier,
+      generation: generation,
     );
   }
 
@@ -53,10 +70,19 @@ class NotificationScheduler {
     required StatsProvider stats,
     required SettingsProvider settings,
     required NotificationService notifier,
+    required int generation,
   }) async {
-    if (!settings.streakWarningsEnabled || stats.currentStreak <= 0 || stats.lastWorkoutDate == null) {
-      await notifier.cancel(NotificationService.idStreakWarning2DaysLeft);
-      await notifier.cancel(NotificationService.idStreakWarningLastDay);
+    if (!settings.streakWarningsEnabled ||
+        stats.currentStreak <= 0 ||
+        stats.lastWorkoutDate == null) {
+      await notifier.cancel(
+        NotificationService.idStreakWarning2DaysLeft,
+        accountGeneration: generation,
+      );
+      await notifier.cancel(
+        NotificationService.idStreakWarningLastDay,
+        accountGeneration: generation,
+      );
       return;
     }
 
@@ -64,19 +90,29 @@ class NotificationScheduler {
     // on lastWorkoutDate + 7 days. Warn 2 days before that (day 5) and on
     // the very last day before the reset (day 6).
     final lastWorkoutDate = stats.lastWorkoutDate!;
-    final twoDaysLeftAt = DateTime(lastWorkoutDate.year, lastWorkoutDate.month, lastWorkoutDate.day, 9)
-        .add(const Duration(days: 5));
-    final lastDayAt = DateTime(lastWorkoutDate.year, lastWorkoutDate.month, lastWorkoutDate.day, 9)
-        .add(const Duration(days: 6));
+    final twoDaysLeftAt = DateTime(
+      lastWorkoutDate.year,
+      lastWorkoutDate.month,
+      lastWorkoutDate.day,
+      9,
+    ).add(const Duration(days: 5));
+    final lastDayAt = DateTime(
+      lastWorkoutDate.year,
+      lastWorkoutDate.month,
+      lastWorkoutDate.day,
+      9,
+    ).add(const Duration(days: 6));
 
     await notifier.scheduleAt(
       id: NotificationService.idStreakWarning2DaysLeft,
+      accountGeneration: generation,
       title: l10n.notificationStreakWarning2DaysTitle,
       body: l10n.notificationStreakWarning2DaysBody(stats.currentStreak),
       dateTime: twoDaysLeftAt,
     );
     await notifier.scheduleAt(
       id: NotificationService.idStreakWarningLastDay,
+      accountGeneration: generation,
       title: l10n.notificationStreakWarningLastDayTitle,
       body: l10n.notificationStreakWarningLastDayBody(stats.currentStreak),
       dateTime: lastDayAt,
@@ -91,9 +127,13 @@ class NotificationScheduler {
     required CustomProgramProvider customPrograms,
     required WorkoutProvider workoutProvider,
     required NotificationService notifier,
+    required int generation,
   }) async {
     if (!settings.dailyReminderEnabled) {
-      await notifier.cancel(NotificationService.idDailyWorkoutReminder);
+      await notifier.cancel(
+        NotificationService.idDailyWorkoutReminder,
+        accountGeneration: generation,
+      );
       return;
     }
 
@@ -101,7 +141,10 @@ class NotificationScheduler {
     final today = _fmt(now);
     final todayCompleted = workoutProvider.loggedDates.contains(today);
     if (todayCompleted) {
-      await notifier.cancel(NotificationService.idDailyWorkoutReminder);
+      await notifier.cancel(
+        NotificationService.idDailyWorkoutReminder,
+        accountGeneration: generation,
+      );
       return;
     }
 
@@ -119,8 +162,11 @@ class NotificationScheduler {
         l10n: l10n,
       );
     } else {
-      final activeKey = settings.activeProgramKey ??
-          (builtinPrograms.programs.isNotEmpty ? 'builtin:${builtinPrograms.programs.first.id}' : null);
+      final activeKey =
+          settings.activeProgramKey ??
+          (builtinPrograms.programs.isNotEmpty
+              ? 'builtin:${builtinPrograms.programs.first.id}'
+              : null);
       if (activeKey != null) {
         final nextIndex = progress.cachedNextDayIndex(
           activeKey,
@@ -137,15 +183,22 @@ class NotificationScheduler {
     }
 
     if (suggested == null) {
-      await notifier.cancel(NotificationService.idDailyWorkoutReminder);
+      await notifier.cancel(
+        NotificationService.idDailyWorkoutReminder,
+        accountGeneration: generation,
+      );
       return;
     }
 
     final reminderAt = DateTime(now.year, now.month, now.day, 7);
     await notifier.scheduleAt(
       id: NotificationService.idDailyWorkoutReminder,
+      accountGeneration: generation,
       title: l10n.notificationDailyReminderTitle,
-      body: l10n.notificationDailyReminderBody(suggested.programTitle, suggested.dayName),
+      body: l10n.notificationDailyReminderBody(
+        suggested.programTitle,
+        suggested.dayName,
+      ),
       dateTime: reminderAt,
     );
   }
