@@ -18,6 +18,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get navWorkouts => 'Antrenmanlar';
 
   @override
+  String get navTeam => 'Ekip';
+
+  @override
   String get navCalendar => 'Takvim';
 
   @override
@@ -277,6 +280,13 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get tutorialWorkoutsTabDescription =>
       'Hazır programlara göz atabilir, kendi rutinini veya çok günlük programını oluşturabilirsin.';
+
+  @override
+  String get tutorialTeamTabTitle => 'Ekip';
+
+  @override
+  String get tutorialTeamTabDescription =>
+      'Arkadaşlarınla bağlan, ilerlemenizi paylaş ve topluluğumuzda motivasyon bul.';
 
   @override
   String get tutorialCalendarTabTitle => 'Takvim';
@@ -993,4 +1003,265 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get syncRelatedRecordsNotice =>
       'Bu çakışma, ilişkili antrenman kayıtlarını da içerir. Seçtiğiniz sürüm grubun tamamına uygulanır.';
+
+  @override
+  String get teamCreateTeam => 'Ekip Oluştur';
+
+  @override
+  String get teamJoinTeam => 'Ekibe Katıl';
+
+  @override
+  String get teamEmptyTitle => 'Henüz Ekip Yok';
+
+  @override
+  String get teamEmptyDescription =>
+      'Arkadaşlarla bağlantı kurmak için yeni bir ekip oluşturun veya davet koduyla mevcut bir ekibe katılın.';
+
+  @override
+  String get teamCreateDescription =>
+      'Arkadaşlarla işbirliği yapmak ve antrenmanları birlikte takip etmek için yeni bir ekip oluşturun.';
+
+  @override
+  String get teamNameLabel => 'Ekip Adı';
+
+  @override
+  String get teamNameRequired => 'Lütfen bir ekip adı girin';
+
+  @override
+  String get teamDescriptionLabel => 'Ekip Açıklaması';
+
+  @override
+  String get teamCreatedSuccess => 'Ekip başarıyla oluşturuldu!';
+
+  @override
+  String get teamCreateNote =>
+      'Siz otomatik olarak ekip yöneticisi olarak eklenir ve paylaşabileceğiniz bir davet kodu alırsınız.';
+
+  @override
+  String get teamJoinDescription =>
+      'Mevcut bir ekibe katılmak için davet kodunu girin. Bu kodu ekip sahibinden alabilirsiniz.';
+
+  @override
+  String get teamInviteCodeLabel => 'Davet Kodu';
+
+  @override
+  String get teamCodeRequired => 'Lütfen bir davet kodu girin';
+
+  @override
+  String get teamInviteCodeHint =>
+      'Başkalarını ekibinize davet etmek için bu kodu paylaşın';
+
+  @override
+  String get teamInviteCodeTip => 'Davet kodunu bulma ipuçları:';
+
+  @override
+  String get teamInviteCodeTip1 =>
+      'Ekip sahibinden ekip ayarlarından davet kodunu paylaşmasını isteyin';
+
+  @override
+  String get teamInviteCodeTip2 =>
+      'Kod genellikle 8 karakter uzunluğunda ve tümü büyük harftir';
+
+  @override
+  String get teamCodeInvalid =>
+      'Geçersiz davet kodu. Lütfen kontrol edin ve tekrar deneyin.';
+
+  @override
+  String get teamAlreadyMember => 'Zaten bu ekibin üyesisiniz.';
+
+  @override
+  String get teamJoinError =>
+      'Ekibe katılırken hata oluştu. Lütfen tekrar deneyin.';
+
+  @override
+  String teamJoinedSuccess(String teamName) {
+    return '$teamName adlı ekibe başarıyla katıldınız!';
+  }
+
+  @override
+  String get teamMembers => 'Üyeler';
+
+  @override
+  String get teamNoMembers => 'Henüz üye yok';
+
+  @override
+  String get teamAdmin => 'Yönetici';
+
+  @override
+  String get teamInviteMembers => 'Üyeleri Davet Et';
+
+  @override
+  String get teamInviteCode => 'Davet Kodu';
+
+  @override
+  String get teamInviteLink => 'Davet Linki';
+
+  @override
+  String get teamCodeCopied => 'Davet kodu panoya kopyalandı';
+
+  @override
+  String get teamLeave => 'Ekipten Çık';
+
+  @override
+  String get teamLeaveConfirmTitle => 'Ekipten Çık';
+
+  @override
+  String teamLeaveConfirmMessage(String teamName) {
+    return '$teamName adlı ekipten çıkmak istediğinizden emin misiniz?';
+  }
+
+  @override
+  String get teamLeftSuccess => 'Ekipten çıktınız';
+
+  @override
+  String get teamLeaveError =>
+      'Ekipten çıkarken hata oluştu. Lütfen tekrar deneyin.';
+
+  @override
+  String get teamDeleteConfirmTitle => 'Ekibi Sil';
+
+  @override
+  String teamDeleteConfirmMessage(String teamName) {
+    return '$teamName adlı ekibi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.';
+  }
+
+  @override
+  String get teamDeletedSuccess => 'Ekip başarıyla silindi';
+
+  @override
+  String get teamDeleteError =>
+      'Ekip silinirken hata oluştu. Lütfen tekrar deneyin.';
+
+  @override
+  String get teamSelectTeam => 'Bir ekip seçin';
+
+  @override
+  String get teamAllMembers => 'Tüm Üyeler';
+
+  @override
+  String get teamNoActivity =>
+      'Henüz sosyal aktivite yok.\nBir ekibe katılın veya arkadaş davet edin!';
+
+  @override
+  String get teamActivity => 'Ekip Aktivitesi';
+
+  @override
+  String get teamActivityWorkouts => 'Antrenmanlar';
+
+  @override
+  String get teamActivityCalories => 'Kalori';
+
+  @override
+  String get teamActivityMinutes => 'Dakika';
+
+  @override
+  String get memberActivityDetail => 'Üye Aktivite Detayları';
+
+  @override
+  String get teamMember => 'Ekip Üyesi';
+
+  @override
+  String get actionSuggest => 'Öner';
+
+  @override
+  String get suggestionTitle => 'Program Değişikliği Öner';
+
+  @override
+  String get teamLeaderboard => 'Liderlik Tablosu';
+
+  @override
+  String get leaderboardWeekly => 'Haftalık';
+
+  @override
+  String get leaderboardMonthly => 'Aylık';
+
+  @override
+  String get leaderboardMetricWorkouts => 'Antrenmanlar';
+
+  @override
+  String get leaderboardMetricWeight => 'Kaldırılan Ağırlık';
+
+  @override
+  String get leaderboardMetricCalories => 'Kalori';
+
+  @override
+  String get leaderboardEmpty => 'Liderlik tablosu boş';
+
+  @override
+  String get leaderboardWorkouts => 'antrenman';
+
+  @override
+  String get leaderboardRank => 'Sıra';
+
+  @override
+  String get leaderboardStats => 'İstatistikler';
+
+  @override
+  String get actionCancel => 'İptal';
+
+  @override
+  String get suggestionPending => 'Beklemede';
+
+  @override
+  String get suggestionAccepted => 'Kabul Edildi';
+
+  @override
+  String get suggestionRejected => 'Reddedildi';
+
+  @override
+  String get suggestionNoPending => 'Beklemede olan öneri yok';
+
+  @override
+  String get suggestionNone => 'Öneri yok';
+
+  @override
+  String get suggestionNoMessage => '(Mesaj sağlanmadı)';
+
+  @override
+  String get suggestionStatusPending => 'Beklemede';
+
+  @override
+  String get suggestionStatusAccepted => 'Kabul Edildi';
+
+  @override
+  String get suggestionStatusRejected => 'Reddedildi';
+
+  @override
+  String get suggestionDetail => 'Öneri Detayları';
+
+  @override
+  String get suggestionType => 'Tür';
+
+  @override
+  String get suggestionMessage => 'Mesaj';
+
+  @override
+  String get suggestionYourResponse => 'Sizin Cevabınız';
+
+  @override
+  String get suggestionResponseHint => 'İsteğe bağlı bir cevap ekleyin';
+
+  @override
+  String get suggestionTheirResponse => 'Onların Cevabı';
+
+  @override
+  String get suggestionReject => 'Reddet';
+
+  @override
+  String get suggestionAccept => 'Kabul Et';
+
+  @override
+  String get suggestionAcceptedSuccess => 'Öneri kabul edildi!';
+
+  @override
+  String get suggestionRejectedSuccess => 'Öneri reddedildi!';
+
+  @override
+  String get suggestionTypeExercise => 'Egzersiz';
+
+  @override
+  String get suggestionTypeProgram => 'Program Değişikliği';
+
+  @override
+  String get suggestionTypeFeedback => 'Geri Bildirim';
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../l10n/app_localizations.dart';
+import '../providers/team_provider.dart';
 import '../services/supabase_service.dart';
 
 class SocialFeedScreen extends StatefulWidget {
@@ -13,11 +17,23 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
   final _supabase = Supabase.instance.client;
   bool _isLoading = true;
   List<dynamic> _friendsWorkouts = [];
+  String? _selectedTeamId;
 
   @override
   void initState() {
     super.initState();
-    _fetchFeed();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchTeamsAndFeed();
+    });
+  }
+
+  Future<void> _fetchTeamsAndFeed() async {
+    try {
+      await context.read<TeamProvider>().fetchMyTeams();
+      await _fetchFeed();
+    } catch (e) {
+      debugPrint('Error loading teams and feed: $e');
+    }
   }
 
   Future<void> _fetchFeed() async {
@@ -33,7 +49,7 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
           ''')
           .order('date', ascending: false)
           .limit(50);
-          
+
       setState(() {
         _friendsWorkouts = response as List<dynamic>;
       });
@@ -86,14 +102,58 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final teamProvider = context.watch<TeamProvider>();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.navTeam),
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          if (teamProvider.myTeams.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: DropdownButton<String?>(
+                value: _selectedTeamId,
+                hint: Text(l10n.teamSelectTeam),
+                isExpanded: true,
+                items: [
+                  DropdownMenuItem<String?>(
+                    value: null,
+                    child: Text(l10n.teamAllMembers),
+                  ),
+                  ...teamProvider.myTeams.map((team) {
+                    return DropdownMenuItem<String?>(
+                      value: team.id,
+                      child: Text(team.name),
+                    );
+                  }),
+                ],
+                onChanged: (value) {
+                  setState(() => _selectedTeamId = value);
+                  _fetchFeed();
+                },
+              ),
+            ),
+          Expanded(
+            child: _buildFeedContent(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeedContent() {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (_friendsWorkouts.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          "No social activity yet.\nJoin a group or invite friends!",
+          AppLocalizations.of(context)!.teamNoActivity,
           textAlign: TextAlign.center,
         ),
       );
@@ -111,21 +171,24 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
           elevation: 2,
           child: ListTile(
             leading: CircleAvatar(
-              backgroundImage: user['avatar_url'] != null 
-                ? NetworkImage(user['avatar_url']) 
-                : null,
-              child: user['avatar_url'] == null 
-                ? const Icon(Icons.person) 
-                : null,
+              backgroundImage: user['avatar_url'] != null
+                  ? NetworkImage(user['avatar_url'])
+                  : null,
+              child: user['avatar_url'] == null
+                  ? const Icon(Icons.person)
+                  : null,
             ),
             title: Text('${user['display_name']} completed a workout!'),
-            subtitle: Text('${session['title']}\n${session['duration_minutes']} min, ${session['calories']} kcal'),
-            trailing: isMe 
-              ? null 
-              : IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () => _showReportBlockModal(user['id'], user['display_name']),
-                ),
+            subtitle: Text(
+              '${session['title']}\n${session['duration_minutes']} min, ${session['calories']} kcal',
+            ),
+            trailing: isMe
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () =>
+                        _showReportBlockModal(user['id'], user['display_name']),
+                  ),
           ),
         );
       },

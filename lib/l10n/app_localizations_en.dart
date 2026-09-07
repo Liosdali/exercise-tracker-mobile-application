@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navWorkouts => 'Workouts';
 
   @override
+  String get navTeam => 'Team';
+
+  @override
   String get navCalendar => 'Calendar';
 
   @override
@@ -274,6 +277,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tutorialWorkoutsTabDescription =>
       'Browse ready-made programs, or build your own custom routines and multi-day programs.';
+
+  @override
+  String get tutorialTeamTabTitle => 'Team';
+
+  @override
+  String get tutorialTeamTabDescription =>
+      'Connect with friends, share your progress, and find motivation in our community.';
 
   @override
   String get tutorialCalendarTabTitle => 'Calendar';
@@ -992,4 +1002,262 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get syncRelatedRecordsNotice =>
       'This conflict includes related workout records. Choosing a version applies to the whole group.';
+
+  @override
+  String get teamCreateTeam => 'Create Team';
+
+  @override
+  String get teamJoinTeam => 'Join Team';
+
+  @override
+  String get teamEmptyTitle => 'No Teams Yet';
+
+  @override
+  String get teamEmptyDescription =>
+      'Create a new team to start connecting with friends, or join an existing one with an invite code.';
+
+  @override
+  String get teamCreateDescription =>
+      'Create a new team to collaborate with friends and track workouts together.';
+
+  @override
+  String get teamNameLabel => 'Team Name';
+
+  @override
+  String get teamNameRequired => 'Please enter a team name';
+
+  @override
+  String get teamDescriptionLabel => 'Team Description';
+
+  @override
+  String get teamCreatedSuccess => 'Team created successfully!';
+
+  @override
+  String get teamCreateNote =>
+      'You\'ll be automatically added as the team admin with an invite code to share.';
+
+  @override
+  String get teamJoinDescription =>
+      'Enter the invite code to join an existing team. You can get this code from the team owner.';
+
+  @override
+  String get teamInviteCodeLabel => 'Invite Code';
+
+  @override
+  String get teamCodeRequired => 'Please enter an invite code';
+
+  @override
+  String get teamInviteCodeHint =>
+      'Share this code with others to invite them to your team';
+
+  @override
+  String get teamInviteCodeTip => 'Tips for finding your invite code:';
+
+  @override
+  String get teamInviteCodeTip1 =>
+      'Ask the team owner to share the invite code from team settings';
+
+  @override
+  String get teamInviteCodeTip2 =>
+      'The code is typically 8 characters long and all uppercase';
+
+  @override
+  String get teamCodeInvalid =>
+      'Invalid invite code. Please check and try again.';
+
+  @override
+  String get teamAlreadyMember => 'You are already a member of this team.';
+
+  @override
+  String get teamJoinError => 'Error joining team. Please try again.';
+
+  @override
+  String teamJoinedSuccess(String teamName) {
+    return 'Successfully joined $teamName!';
+  }
+
+  @override
+  String get teamMembers => 'Members';
+
+  @override
+  String get teamNoMembers => 'No members yet';
+
+  @override
+  String get teamAdmin => 'Admin';
+
+  @override
+  String get teamInviteMembers => 'Invite Members';
+
+  @override
+  String get teamInviteCode => 'Invite Code';
+
+  @override
+  String get teamInviteLink => 'Invite Link';
+
+  @override
+  String get teamCodeCopied => 'Invite code copied to clipboard';
+
+  @override
+  String get teamLeave => 'Leave Team';
+
+  @override
+  String get teamLeaveConfirmTitle => 'Leave Team';
+
+  @override
+  String teamLeaveConfirmMessage(String teamName) {
+    return 'Are you sure you want to leave $teamName?';
+  }
+
+  @override
+  String get teamLeftSuccess => 'You have left the team';
+
+  @override
+  String get teamLeaveError => 'Error leaving team. Please try again.';
+
+  @override
+  String get teamDeleteConfirmTitle => 'Delete Team';
+
+  @override
+  String teamDeleteConfirmMessage(String teamName) {
+    return 'Are you sure you want to delete $teamName? This action cannot be undone.';
+  }
+
+  @override
+  String get teamDeletedSuccess => 'Team deleted successfully';
+
+  @override
+  String get teamDeleteError => 'Error deleting team. Please try again.';
+
+  @override
+  String get teamSelectTeam => 'Select a team';
+
+  @override
+  String get teamAllMembers => 'All Members';
+
+  @override
+  String get teamNoActivity =>
+      'No social activity yet.\nJoin a team or invite friends!';
+
+  @override
+  String get teamActivity => 'Team Activity';
+
+  @override
+  String get teamActivityWorkouts => 'Workouts';
+
+  @override
+  String get teamActivityCalories => 'Calories';
+
+  @override
+  String get teamActivityMinutes => 'Minutes';
+
+  @override
+  String get memberActivityDetail => 'Member Activity Details';
+
+  @override
+  String get teamMember => 'Team Member';
+
+  @override
+  String get actionSuggest => 'Suggest';
+
+  @override
+  String get suggestionTitle => 'Suggest Program Change';
+
+  @override
+  String get teamLeaderboard => 'Leaderboard';
+
+  @override
+  String get leaderboardWeekly => 'Weekly';
+
+  @override
+  String get leaderboardMonthly => 'Monthly';
+
+  @override
+  String get leaderboardMetricWorkouts => 'Workouts';
+
+  @override
+  String get leaderboardMetricWeight => 'Weight Lifted';
+
+  @override
+  String get leaderboardMetricCalories => 'Calories';
+
+  @override
+  String get leaderboardEmpty => 'Leaderboard is empty';
+
+  @override
+  String get leaderboardWorkouts => 'workouts';
+
+  @override
+  String get leaderboardRank => 'Rank';
+
+  @override
+  String get leaderboardStats => 'Statistics';
+
+  @override
+  String get actionCancel => 'Cancel';
+
+  @override
+  String get suggestionPending => 'Pending';
+
+  @override
+  String get suggestionAccepted => 'Accepted';
+
+  @override
+  String get suggestionRejected => 'Rejected';
+
+  @override
+  String get suggestionNoPending => 'No pending suggestions';
+
+  @override
+  String get suggestionNone => 'No suggestions';
+
+  @override
+  String get suggestionNoMessage => '(No message provided)';
+
+  @override
+  String get suggestionStatusPending => 'Pending';
+
+  @override
+  String get suggestionStatusAccepted => 'Accepted';
+
+  @override
+  String get suggestionStatusRejected => 'Rejected';
+
+  @override
+  String get suggestionDetail => 'Suggestion Details';
+
+  @override
+  String get suggestionType => 'Type';
+
+  @override
+  String get suggestionMessage => 'Message';
+
+  @override
+  String get suggestionYourResponse => 'Your Response';
+
+  @override
+  String get suggestionResponseHint => 'Add an optional response (optional)';
+
+  @override
+  String get suggestionTheirResponse => 'Their Response';
+
+  @override
+  String get suggestionReject => 'Reject';
+
+  @override
+  String get suggestionAccept => 'Accept';
+
+  @override
+  String get suggestionAcceptedSuccess => 'Suggestion accepted!';
+
+  @override
+  String get suggestionRejectedSuccess => 'Suggestion rejected!';
+
+  @override
+  String get suggestionTypeExercise => 'Exercise';
+
+  @override
+  String get suggestionTypeProgram => 'Program Change';
+
+  @override
+  String get suggestionTypeFeedback => 'Feedback';
 }

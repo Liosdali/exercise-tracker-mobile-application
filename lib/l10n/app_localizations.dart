@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Workouts'**
   String get navWorkouts;
 
+  /// No description provided for @navTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get navTeam;
+
   /// No description provided for @navCalendar.
   ///
   /// In en, this message translates to:
@@ -589,6 +595,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Browse ready-made programs, or build your own custom routines and multi-day programs.'**
   String get tutorialWorkoutsTabDescription;
+
+  /// No description provided for @tutorialTeamTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get tutorialTeamTabTitle;
+
+  /// No description provided for @tutorialTeamTabDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with friends, share your progress, and find motivation in our community.'**
+  String get tutorialTeamTabDescription;
 
   /// No description provided for @tutorialCalendarTabTitle.
   ///
@@ -1855,6 +1873,492 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This conflict includes related workout records. Choosing a version applies to the whole group.'**
   String get syncRelatedRecordsNotice;
+
+  /// No description provided for @teamCreateTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Team'**
+  String get teamCreateTeam;
+
+  /// No description provided for @teamJoinTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Team'**
+  String get teamJoinTeam;
+
+  /// No description provided for @teamEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Teams Yet'**
+  String get teamEmptyTitle;
+
+  /// No description provided for @teamEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new team to start connecting with friends, or join an existing one with an invite code.'**
+  String get teamEmptyDescription;
+
+  /// No description provided for @teamCreateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new team to collaborate with friends and track workouts together.'**
+  String get teamCreateDescription;
+
+  /// No description provided for @teamNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Name'**
+  String get teamNameLabel;
+
+  /// No description provided for @teamNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a team name'**
+  String get teamNameRequired;
+
+  /// No description provided for @teamDescriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Description'**
+  String get teamDescriptionLabel;
+
+  /// No description provided for @teamCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Team created successfully!'**
+  String get teamCreatedSuccess;
+
+  /// No description provided for @teamCreateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be automatically added as the team admin with an invite code to share.'**
+  String get teamCreateNote;
+
+  /// No description provided for @teamJoinDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the invite code to join an existing team. You can get this code from the team owner.'**
+  String get teamJoinDescription;
+
+  /// No description provided for @teamInviteCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Code'**
+  String get teamInviteCodeLabel;
+
+  /// No description provided for @teamCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an invite code'**
+  String get teamCodeRequired;
+
+  /// No description provided for @teamInviteCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this code with others to invite them to your team'**
+  String get teamInviteCodeHint;
+
+  /// No description provided for @teamInviteCodeTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips for finding your invite code:'**
+  String get teamInviteCodeTip;
+
+  /// No description provided for @teamInviteCodeTip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the team owner to share the invite code from team settings'**
+  String get teamInviteCodeTip1;
+
+  /// No description provided for @teamInviteCodeTip2.
+  ///
+  /// In en, this message translates to:
+  /// **'The code is typically 8 characters long and all uppercase'**
+  String get teamInviteCodeTip2;
+
+  /// No description provided for @teamCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid invite code. Please check and try again.'**
+  String get teamCodeInvalid;
+
+  /// No description provided for @teamAlreadyMember.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already a member of this team.'**
+  String get teamAlreadyMember;
+
+  /// No description provided for @teamJoinError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error joining team. Please try again.'**
+  String get teamJoinError;
+
+  /// No description provided for @teamJoinedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully joined {teamName}!'**
+  String teamJoinedSuccess(String teamName);
+
+  /// No description provided for @teamMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get teamMembers;
+
+  /// No description provided for @teamNoMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'No members yet'**
+  String get teamNoMembers;
+
+  /// No description provided for @teamAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get teamAdmin;
+
+  /// No description provided for @teamInviteMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Members'**
+  String get teamInviteMembers;
+
+  /// No description provided for @teamInviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Code'**
+  String get teamInviteCode;
+
+  /// No description provided for @teamInviteLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Link'**
+  String get teamInviteLink;
+
+  /// No description provided for @teamCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code copied to clipboard'**
+  String get teamCodeCopied;
+
+  /// No description provided for @teamLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Team'**
+  String get teamLeave;
+
+  /// No description provided for @teamLeaveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Team'**
+  String get teamLeaveConfirmTitle;
+
+  /// No description provided for @teamLeaveConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to leave {teamName}?'**
+  String teamLeaveConfirmMessage(String teamName);
+
+  /// No description provided for @teamLeftSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'You have left the team'**
+  String get teamLeftSuccess;
+
+  /// No description provided for @teamLeaveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error leaving team. Please try again.'**
+  String get teamLeaveError;
+
+  /// No description provided for @teamDeleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Team'**
+  String get teamDeleteConfirmTitle;
+
+  /// No description provided for @teamDeleteConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {teamName}? This action cannot be undone.'**
+  String teamDeleteConfirmMessage(String teamName);
+
+  /// No description provided for @teamDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Team deleted successfully'**
+  String get teamDeletedSuccess;
+
+  /// No description provided for @teamDeleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting team. Please try again.'**
+  String get teamDeleteError;
+
+  /// No description provided for @teamSelectTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a team'**
+  String get teamSelectTeam;
+
+  /// No description provided for @teamAllMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'All Members'**
+  String get teamAllMembers;
+
+  /// No description provided for @teamNoActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No social activity yet.\nJoin a team or invite friends!'**
+  String get teamNoActivity;
+
+  /// No description provided for @teamActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Activity'**
+  String get teamActivity;
+
+  /// No description provided for @teamActivityWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get teamActivityWorkouts;
+
+  /// No description provided for @teamActivityCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get teamActivityCalories;
+
+  /// No description provided for @teamActivityMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get teamActivityMinutes;
+
+  /// No description provided for @memberActivityDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Activity Details'**
+  String get memberActivityDetail;
+
+  /// No description provided for @teamMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Member'**
+  String get teamMember;
+
+  /// No description provided for @actionSuggest.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest'**
+  String get actionSuggest;
+
+  /// No description provided for @suggestionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest Program Change'**
+  String get suggestionTitle;
+
+  /// No description provided for @teamLeaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get teamLeaderboard;
+
+  /// No description provided for @leaderboardWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get leaderboardWeekly;
+
+  /// No description provided for @leaderboardMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get leaderboardMonthly;
+
+  /// No description provided for @leaderboardMetricWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get leaderboardMetricWorkouts;
+
+  /// No description provided for @leaderboardMetricWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Lifted'**
+  String get leaderboardMetricWeight;
+
+  /// No description provided for @leaderboardMetricCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get leaderboardMetricCalories;
+
+  /// No description provided for @leaderboardEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard is empty'**
+  String get leaderboardEmpty;
+
+  /// No description provided for @leaderboardWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'workouts'**
+  String get leaderboardWorkouts;
+
+  /// No description provided for @leaderboardRank.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get leaderboardRank;
+
+  /// No description provided for @leaderboardStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get leaderboardStats;
+
+  /// No description provided for @actionCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get actionCancel;
+
+  /// No description provided for @suggestionPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get suggestionPending;
+
+  /// No description provided for @suggestionAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get suggestionAccepted;
+
+  /// No description provided for @suggestionRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get suggestionRejected;
+
+  /// No description provided for @suggestionNoPending.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending suggestions'**
+  String get suggestionNoPending;
+
+  /// No description provided for @suggestionNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions'**
+  String get suggestionNone;
+
+  /// No description provided for @suggestionNoMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'(No message provided)'**
+  String get suggestionNoMessage;
+
+  /// No description provided for @suggestionStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get suggestionStatusPending;
+
+  /// No description provided for @suggestionStatusAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get suggestionStatusAccepted;
+
+  /// No description provided for @suggestionStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get suggestionStatusRejected;
+
+  /// No description provided for @suggestionDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion Details'**
+  String get suggestionDetail;
+
+  /// No description provided for @suggestionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get suggestionType;
+
+  /// No description provided for @suggestionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get suggestionMessage;
+
+  /// No description provided for @suggestionYourResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Response'**
+  String get suggestionYourResponse;
+
+  /// No description provided for @suggestionResponseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an optional response (optional)'**
+  String get suggestionResponseHint;
+
+  /// No description provided for @suggestionTheirResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Their Response'**
+  String get suggestionTheirResponse;
+
+  /// No description provided for @suggestionReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get suggestionReject;
+
+  /// No description provided for @suggestionAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get suggestionAccept;
+
+  /// No description provided for @suggestionAcceptedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion accepted!'**
+  String get suggestionAcceptedSuccess;
+
+  /// No description provided for @suggestionRejectedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion rejected!'**
+  String get suggestionRejectedSuccess;
+
+  /// No description provided for @suggestionTypeExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get suggestionTypeExercise;
+
+  /// No description provided for @suggestionTypeProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Program Change'**
+  String get suggestionTypeProgram;
+
+  /// No description provided for @suggestionTypeFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get suggestionTypeFeedback;
 }
 
 class _AppLocalizationsDelegate

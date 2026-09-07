@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'l10n/app_localizations.dart';
@@ -12,6 +13,7 @@ import 'providers/program_provider.dart';
 import 'providers/routine_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/stats_provider.dart';
+import 'providers/team_provider.dart';
 import 'providers/workout_provider.dart';
 import 'screens/home_shell.dart';
 import 'screens/account_section.dart';
@@ -22,6 +24,7 @@ import 'services/user_account_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await SupabaseService().initialize();
   runApp(const ExerciseApp());
 }
@@ -129,6 +132,7 @@ class _AccountRootState extends State<_AccountRoot>
         ChangeNotifierProvider(create: (_) => StatsProvider()),
         ChangeNotifierProvider(create: (_) => CustomProgramProvider()),
         ChangeNotifierProvider(create: (_) => ProgramProgressProvider()),
+        ChangeNotifierProvider(create: (_) => TeamProvider()),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {

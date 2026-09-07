@@ -115,7 +115,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : (stats.thisWeekCount / settings.weeklyGoal).clamp(0.0, 1.0);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.navHome)),
+      appBar: AppBar(
+        title: Text(l10n.navHome),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

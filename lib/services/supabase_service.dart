@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -58,8 +59,10 @@ class SupabaseService implements AuthGateway {
   SupabaseClient? _clientOverride;
 
   Future<void> initialize() async {
-    const url = String.fromEnvironment('SUPABASE_URL');
-    const key = String.fromEnvironment('SUPABASE_ANON_KEY');
+    // Try to load from .env file first, fall back to environment variables
+    final url = dotenv.env['SUPABASE_URL'] ?? const String.fromEnvironment('SUPABASE_URL');
+    final key = dotenv.env['SUPABASE_ANON_KEY'] ?? const String.fromEnvironment('SUPABASE_ANON_KEY');
+    
     final uri = Uri.tryParse(url);
     if (uri == null ||
         uri.scheme != 'https' ||
