@@ -2102,6 +2102,48 @@ abstract class AppLocalizations {
   /// **'Select a team'**
   String get teamSelectTeam;
 
+  /// No description provided for @teamSignInRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to create or join a team. Your guest workouts stay on this device.'**
+  String get teamSignInRequired;
+
+  /// No description provided for @teamLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your teams. Check your connection and try again.'**
+  String get teamLoadError;
+
+  /// No description provided for @teamMyTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'My Teams'**
+  String get teamMyTeams;
+
+  /// No description provided for @teamShareInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Invite Link'**
+  String get teamShareInvite;
+
+  /// No description provided for @teamLinkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link copied to clipboard'**
+  String get teamLinkCopied;
+
+  /// No description provided for @suggestionInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get suggestionInbox;
+
+  /// No description provided for @teamInviteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Join my team {teamName} on Atlas Workout!'**
+  String teamInviteMessage(String teamName);
+
   /// No description provided for @teamAllMembers.
   ///
   /// In en, this message translates to:

@@ -1136,6 +1136,31 @@ class AppLocalizationsTr extends AppLocalizations {
   String get teamSelectTeam => 'Bir ekip seçin';
 
   @override
+  String get teamSignInRequired =>
+      'Ekip kurmak veya bir ekibe katılmak için giriş yapın. Misafir antrenmanlarınız bu cihazda kalır.';
+
+  @override
+  String get teamLoadError =>
+      'Ekipleriniz yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.';
+
+  @override
+  String get teamMyTeams => 'Ekiplerim';
+
+  @override
+  String get teamShareInvite => 'Davet Linkini Paylaş';
+
+  @override
+  String get teamLinkCopied => 'Davet linki panoya kopyalandı';
+
+  @override
+  String get suggestionInbox => 'Öneriler';
+
+  @override
+  String teamInviteMessage(String teamName) {
+    return 'Atlas Workout\'ta $teamName ekibime katıl!';
+  }
+
+  @override
   String get teamAllMembers => 'Tüm Üyeler';
 
   @override

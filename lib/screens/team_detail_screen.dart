@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/team.dart';
 import '../providers/team_provider.dart';
+import '../services/deep_link_service.dart';
+import 'team_activity_screen.dart';
+import 'team_leaderboard_screen.dart';
 
 /// Screen showing team details, members, and management options.
 class TeamDetailScreen extends StatefulWidget {
@@ -25,6 +30,29 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<TeamProvider>().fetchTeamMembers(widget.team.id);
     });
+  }
+
+  Future<void> _copy(String value, String confirmation) async {
+    await Clipboard.setData(ClipboardData(text: value));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(confirmation)),
+    );
+  }
+
+  Future<void> _shareInvite() async {
+    final l10n = AppLocalizations.of(context)!;
+    await DeepLinkService().shareGroupInviteLink(
+      widget.team.name,
+      widget.team.inviteToken,
+      message: l10n.teamInviteMessage(widget.team.name),
+    );
+  }
+
+  void _open(Widget screen) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => screen),
+    );
   }
 
   Future<void> _leaveTeam() async {
@@ -124,6 +152,8 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     final l10n = AppLocalizations.of(context)!;
     final teamProvider = context.watch<TeamProvider>();
     final members = teamProvider.getTeamMembers(widget.team.id);
+    final isOwner = widget.team.ownerId != null &&
+        widget.team.ownerId == Supabase.instance.client.auth.currentUser?.id;
 
     return Scaffold(
       appBar: AppBar(
@@ -142,13 +172,14 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                 value: 'leave',
                 child: Text(l10n.teamLeave),
               ),
-              PopupMenuItem<String>(
-                value: 'delete',
-                child: Text(
-                  l10n.commonDelete,
-                  style: const TextStyle(color: Colors.red),
+              if (isOwner)
+                PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Text(
+                    l10n.commonDelete,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
-              ),
             ],
           ),
         ],
@@ -217,31 +248,88 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.copy),
-                          onPressed: () {
-                            // Copy to clipboard implementation
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    l10n.teamCodeCopied),
-                              ),
-                            );
-                          },
+                          tooltip: l10n.teamInviteCode,
+                          onPressed: () => _copy(
+                            widget.team.inviteToken,
+                            l10n.teamCodeCopied,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Text(
-                      l10n.teamInviteLink + ': ' +
-                          teamProvider.getInviteLink(
-                              widget.team),
-                      style: Theme.of(context).textTheme.bodySmall,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.teamInviteLink,
+                                style: Theme.of(context)
+                                    .textTheme.labelSmall,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                teamProvider
+                                    .getInviteLink(widget.team),
+                                style: Theme.of(context)
+                                    .textTheme.bodySmall,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.copy),
+                          tooltip: l10n.teamInviteLink,
+                          onPressed: () => _copy(
+                            teamProvider.getInviteLink(widget.team),
+                            l10n.teamLinkCopied,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    FilledButton.tonalIcon(
+                      onPressed: _shareInvite,
+                      icon: const Icon(Icons.ios_share),
+                      label: Text(l10n.teamShareInvite),
                     ),
                   ],
                 ),
               ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _open(
+                      TeamLeaderboardScreen(teamId: widget.team.id),
+                    ),
+                    icon: const Icon(Icons.leaderboard_outlined),
+                    label: Text(
+                      l10n.teamLeaderboard,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _open(
+                      TeamActivityScreen(teamId: widget.team.id),
+                    ),
+                    icon: const Icon(Icons.insights_outlined),
+                    label: Text(
+                      l10n.teamActivity,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             // Members Section

@@ -450,6 +450,18 @@
   "teamDeletedSuccess": "Team deleted successfully",
   "teamDeleteError": "Error deleting team. Please try again.",
   "teamSelectTeam": "Select a team",
+  "teamSignInRequired": "Sign in to create or join a team. Your guest workouts stay on this device.",
+  "teamLoadError": "Couldn't load your teams. Check your connection and try again.",
+  "teamMyTeams": "My Teams",
+  "teamShareInvite": "Share Invite Link",
+  "teamLinkCopied": "Invite link copied to clipboard",
+  "suggestionInbox": "Suggestions",
+  "teamInviteMessage": "Join my team {teamName} on Atlas Workout!",
+  "@teamInviteMessage": {
+    "placeholders": {
+      "teamName": {"type": "String"}
+    }
+  },
   "teamAllMembers": "All Members",
   "teamNoActivity": "No social activity yet.\nJoin a team or invite friends!",
   "teamActivity": "Team Activity",

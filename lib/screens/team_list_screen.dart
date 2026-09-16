@@ -21,7 +21,11 @@ class _TeamListScreenState extends State<TeamListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<TeamProvider>().fetchMyTeams();
+      // fetchMyTeams rethrows; unawaited it would surface as an unhandled
+      // async error and leave the list on a stale state.
+      context.read<TeamProvider>().fetchMyTeams().catchError((Object e) {
+        debugPrint('Error loading teams: $e');
+      });
     });
   }
 

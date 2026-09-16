@@ -18,7 +18,7 @@ class TeamMember {
   factory TeamMember.fromJson(Map<String, dynamic> json) {
     return TeamMember(
       userId: json['user_id'] as String,
-      displayName: json['social_users']['display_name'] as String,
+      displayName: json['social_users']['display_name'] as String? ?? '',
       avatarUrl: json['social_users']['avatar_url'] as String?,
       role: json['role'] as String? ?? 'member',
       joinedAt: DateTime.parse(json['joined_at'] as String),
@@ -29,7 +29,7 @@ class TeamMember {
   factory TeamMember.fromJsonFlat(Map<String, dynamic> json) {
     return TeamMember(
       userId: json['user_id'] as String,
-      displayName: json['display_name'] as String,
+      displayName: json['display_name'] as String? ?? '',
       avatarUrl: json['avatar_url'] as String?,
       role: json['role'] as String? ?? 'member',
       joinedAt: DateTime.parse(json['joined_at'] as String),

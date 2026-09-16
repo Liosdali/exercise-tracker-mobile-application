@@ -58,11 +58,49 @@ class SupabaseService implements AuthGateway {
   LocalStorage? _sessionStorage;
   SupabaseClient? _clientOverride;
 
+  /// True when [value] is still one of the `.env.example` placeholders.
+  ///
+  /// `https://your-project.supabase.co` is a structurally valid https URL and
+  /// `your_anon_key_here` is a non-empty string, so a `.env` copied from the
+  /// example passes every shape check below. The app then reports itself as
+  /// configured, enables the sign-in buttons, and sends the user to a host
+  /// that does not resolve. Treating the placeholders as "not configured" is
+  /// what makes an unconfigured build behave like one.
+  static bool isPlaceholderCredential(String value) {
+    final v = value.trim().toLowerCase();
+    if (v.isEmpty) return true;
+    const markers = [
+      'your-project',
+      'your_project',
+      'your-anon',
+      'your_anon',
+      'your-supabase',
+      'your_supabase',
+      'yourproject',
+      'changeme',
+      'example.com',
+      'placeholder',
+    ];
+    return markers.any(v.contains) || v.startsWith('<') || v.endsWith('>');
+  }
+
   Future<void> initialize() async {
     // Try to load from .env file first, fall back to environment variables
     final url = dotenv.env['SUPABASE_URL'] ?? const String.fromEnvironment('SUPABASE_URL');
     final key = dotenv.env['SUPABASE_ANON_KEY'] ?? const String.fromEnvironment('SUPABASE_ANON_KEY');
-    
+
+    if (isPlaceholderCredential(url) || isPlaceholderCredential(key)) {
+      assert(() {
+        debugPrint(
+          'Supabase is not configured: .env still holds the .env.example '
+          'placeholders. Account and team features stay disabled; guest mode '
+          'is unaffected.',
+        );
+        return true;
+      }());
+      return;
+    }
+
     final uri = Uri.tryParse(url);
     if (uri == null ||
         uri.scheme != 'https' ||

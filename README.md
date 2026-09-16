@@ -54,16 +54,44 @@ Marka adı ve mevcut Android/iOS uygulama kimlikleri bu entegrasyonla değiştir
 
 ### Veritabanı ve hesap silme servisi
 
-Supabase projesinde `supabase\migrations\` altındaki migration'ları sırayla uygulayın.
-Mevcut üretim veritabanına eski başlangıç şemasını tekrar çalıştırmayın.
-Supabase CLI ile hedef projeyi açıkça seçerek dağıtabilirsiniz:
+Sıralama önemlidir. Kök dizindeki `supabase_schema.sql` sosyal tabloları
+(`social_users`, `groups`, `group_members`, `workout_sessions`, `user_blocks`,
+`user_reports`) kuran **yalnızca sıfırdan kurulum** dosyasıdır; migration
+klasöründe karşılığı yoktur. `supabase/migrations/202609071000_team_content_features.sql`
+ise `public.groups` tablosuna foreign key verir. Dolayısıyla boş bir projede
+doğrudan `supabase db push` çalıştırmak, `groups` tablosu henüz olmadığı için
+hata verir.
 
-```powershell
-supabase login
-supabase link --project-ref <project-ref>
-supabase db push
-supabase functions deploy delete-account
-```
+**Yeni (boş) bir Supabase projesinde:**
+
+1. Önce `supabase_schema.sql` dosyasını çalıştırın. Supabase SQL Editor
+   kullanıyorsanız dosyanın en sonundaki `\ir ...` satırını atlayın ve ardından
+   `supabase/migrations/202609070001_private_accounts.sql` dosyasını elle
+   çalıştırın. `psql` kullanıyorsanız `\ir` satırı bunu kendisi halleder:
+
+   ```powershell
+   psql "<connection-string>" -v ON_ERROR_STOP=1 -f supabase_schema.sql
+   ```
+
+2. Ardından kalan migration'ları uygulayın:
+
+   ```powershell
+   supabase login
+   supabase link --project-ref <project-ref>
+   supabase db push
+   supabase functions deploy delete-account
+   ```
+
+**Mevcut bir veritabanında:** eski başlangıç şemasını tekrar çalıştırmayın,
+yalnızca `supabase db push` ile yeni migration'ları uygulayın.
+
+`202609160001_team_rls_and_schema_fixes.sql` ekip özelliklerinin çalışması için
+gereklidir: `groups` tablosuna `description`/`owner_id` sütunlarını ekler,
+`group_members` üzerindeki kendine referans veren (sonsuz döngüye giren) RLS
+politikasını değiştirir, ekip oluşturma/katılma/ayrılma/silme için eksik
+INSERT/UPDATE/DELETE politikalarını tanımlar ve davet koduyla katılma işlemini
+`join_team_by_invite_token` fonksiyonuna taşır. Bu migration uygulanmadan ekip
+ekranları çalışmaz.
 
 `delete-account` fonksiyonu istekteki kullanıcı kimliğine güvenmez; Bearer
 oturumunu Supabase Auth ile doğrular ve yalnızca o hesabı siler. Fonksiyonun

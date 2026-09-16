@@ -1,20 +1,50 @@
-import 'package:crypto/crypto.dart';
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/team.dart';
-import '../models/team_member.dart';
-import '../models/team_activity_log.dart';
-import '../models/program_suggestion.dart';
 import '../models/leaderboard_entry.dart';
+import '../models/program_suggestion.dart';
+import '../models/team.dart';
+import '../models/team_activity_log.dart';
+import '../models/team_member.dart';
+import '../services/deep_link_service.dart';
+import '../services/supabase_service.dart';
+
+/// Why the team features can or cannot be used right now.
+enum TeamAvailability {
+  /// Supabase credentials are missing or still the `.env.example` placeholders.
+  notConfigured,
+
+  /// Supabase is configured but nobody is signed in (guest mode).
+  signedOut,
+
+  /// Teams are usable.
+  ready,
+}
 
 /// Manages team/group operations for social features.
 /// Handles creating, joining, and managing teams via Supabase.
 class TeamProvider extends ChangeNotifier {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  final SupabaseService _service = SupabaseService();
+
+  /// Resolved lazily: reading `Supabase.instance` before `Supabase.initialize`
+  /// has run throws, and in an unconfigured build it never runs. Constructing
+  /// this provider must stay safe so the Team tab can render an explanation
+  /// instead of crashing.
+  SupabaseClient get _supabase => _service.client;
+
+  /// Whether team features can be used, and if not, why.
+  TeamAvailability get availability {
+    if (!_service.configured) return TeamAvailability.notConfigured;
+    if (_service.currentUser == null) return TeamAvailability.signedOut;
+    return TeamAvailability.ready;
+  }
+
+  bool get isReady => availability == TeamAvailability.ready;
 
   List<Team> _myTeams = [];
-  Map<String, List<TeamMember>> _teamMembers = {};
+  final Map<String, List<TeamMember>> _teamMembers = {};
   List<TeamActivityLog> _teamActivityLogs = [];
   List<ProgramSuggestion> _pendingSuggestions = [];
   List<LeaderboardEntry> _weeklyLeaderboard = [];
@@ -50,12 +80,23 @@ class TeamProvider extends ChangeNotifier {
 
   /// Loads the current user's teams from Supabase.
   Future<void> fetchMyTeams() async {
+    // Not an error condition: a guest, or an unconfigured build, simply has no
+    // teams to load. Throwing here used to leave callers mid-flight with their
+    // loading flag still set.
+    if (!isReady) {
+      _myTeams = [];
+      _isLoading = false;
+      _error = null;
+      notifyListeners();
+      return;
+    }
+
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final userId = _supabase.auth.currentUser?.id;
+      final userId = _service.currentUser?.id;
       if (userId == null) throw Exception('User not authenticated');
 
       // Query groups where user is a member
@@ -91,7 +132,7 @@ class TeamProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final userId = _supabase.auth.currentUser?.id;
+      final userId = _service.currentUser?.id;
       if (userId == null) throw Exception('User not authenticated');
 
       // Generate a unique invite token
@@ -135,33 +176,25 @@ class TeamProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final userId = _supabase.auth.currentUser?.id;
+      final userId = _service.currentUser?.id;
       if (userId == null) throw Exception('User not authenticated');
 
-      // Find the team with this invite token
-      final groupResponse = await _supabase
-          .from('groups')
-          .select()
-          .eq('invite_token', inviteToken)
-          .single();
+      // The group cannot be looked up directly: the SELECT policy only exposes
+      // groups the caller already belongs to. `join_team_by_invite_token` is a
+      // SECURITY DEFINER function that validates the token, inserts the
+      // membership row and returns the group in one round trip.
+      final response = await _supabase.rpc(
+        'join_team_by_invite_token',
+        params: {'p_token': inviteToken.trim().toUpperCase()},
+      );
 
-      final team = Team.fromJson(groupResponse);
-
-      // Check if user is already a member
-      final existingMember = await _supabase.from('group_members').select().eq('group_id', team.id).eq('user_id', userId);
-
-      if ((existingMember as List).isNotEmpty) {
-        throw Exception('You are already a member of this team');
+      if (response == null) {
+        throw Exception('Invalid invite code');
       }
 
-      // Add user to the team
-      await _supabase.from('group_members').insert({
-        'group_id': team.id,
-        'user_id': userId,
-        'role': 'member',
-        'joined_at': DateTime.now().toIso8601String(),
-      });
+      final team = Team.fromJson(Map<String, dynamic>.from(response as Map));
 
+      _myTeams.removeWhere((t) => t.id == team.id);
       _myTeams.add(team);
       _isLoading = false;
       notifyListeners();
@@ -206,7 +239,7 @@ class TeamProvider extends ChangeNotifier {
   /// Removes a member from a team (admin only).
   Future<void> removeMember(String teamId, String userId) async {
     try {
-      final currentUserId = _supabase.auth.currentUser?.id;
+      final currentUserId = _service.currentUser?.id;
       if (currentUserId == null) throw Exception('User not authenticated');
 
       // Verify current user is admin
@@ -231,7 +264,7 @@ class TeamProvider extends ChangeNotifier {
   /// Leaves a team.
   Future<void> leaveTeam(String teamId) async {
     try {
-      final userId = _supabase.auth.currentUser?.id;
+      final userId = _service.currentUser?.id;
       if (userId == null) throw Exception('User not authenticated');
 
       await _supabase
@@ -253,7 +286,7 @@ class TeamProvider extends ChangeNotifier {
   /// Deletes a team (owner/admin only).
   Future<void> deleteTeam(String teamId) async {
     try {
-      final currentUserId = _supabase.auth.currentUser?.id;
+      final currentUserId = _service.currentUser?.id;
       if (currentUserId == null) throw Exception('User not authenticated');
 
       // Verify current user is owner
@@ -290,18 +323,27 @@ class TeamProvider extends ChangeNotifier {
     }
   }
 
-  /// Generates a unique invite token.
+  /// Generates an invite token: 8 characters, uppercase, no look-alike
+  /// glyphs (0/O, 1/I) so it survives being read aloud or retyped.
+  ///
+  /// A time-derived token is both guessable and collision-prone against the
+  /// UNIQUE constraint on `groups.invite_token`, so this draws from a secure
+  /// random source instead.
   String _generateInviteToken() {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final random = DateTime.now().microsecond;
-    final input = '$timestamp-$random';
-    return md5.convert(input.codeUnits).toString().substring(0, 8).toUpperCase();
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    final random = Random.secure();
+    return List.generate(
+      8,
+      (_) => alphabet[random.nextInt(alphabet.length)],
+    ).join();
   }
 
   /// Gets the invite link for sharing a team.
-  String getInviteLink(Team team) {
-    return 'https://atlasworkout.app/join-team?token=${team.inviteToken}';
-  }
+  ///
+  /// Must stay in step with the path [DeepLinkService] listens on, otherwise
+  /// shared links open the app without joining anything.
+  String getInviteLink(Team team) =>
+      DeepLinkService.inviteLinkFor(team.inviteToken);
 
   /// Clears all cached data.
   void clear() {
@@ -379,7 +421,7 @@ class TeamProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final currentUserId = _supabase.auth.currentUser?.id;
+      final currentUserId = _service.currentUser?.id;
       if (currentUserId == null) throw Exception('User not authenticated');
 
       final response = await _supabase
@@ -415,12 +457,17 @@ class TeamProvider extends ChangeNotifier {
 
   /// Fetches pending suggestions for the current user.
   Future<void> fetchPendingSuggestions() async {
+    if (!isReady) {
+      _pendingSuggestions = [];
+      return;
+    }
+
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final currentUserId = _supabase.auth.currentUser?.id;
+      final currentUserId = _service.currentUser?.id;
       if (currentUserId == null) throw Exception('User not authenticated');
 
       final response = await _supabase

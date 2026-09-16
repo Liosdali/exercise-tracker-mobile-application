@@ -1132,6 +1132,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamSelectTeam => 'Select a team';
 
   @override
+  String get teamSignInRequired =>
+      'Sign in to create or join a team. Your guest workouts stay on this device.';
+
+  @override
+  String get teamLoadError =>
+      'Couldn\'t load your teams. Check your connection and try again.';
+
+  @override
+  String get teamMyTeams => 'My Teams';
+
+  @override
+  String get teamShareInvite => 'Share Invite Link';
+
+  @override
+  String get teamLinkCopied => 'Invite link copied to clipboard';
+
+  @override
+  String get suggestionInbox => 'Suggestions';
+
+  @override
+  String teamInviteMessage(String teamName) {
+    return 'Join my team $teamName on Atlas Workout!';
+  }
+
+  @override
   String get teamAllMembers => 'All Members';
 
   @override

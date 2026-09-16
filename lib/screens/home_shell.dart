@@ -4,6 +4,7 @@ import 'package:showcaseview/showcaseview.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/settings_provider.dart';
+import '../services/deep_link_service.dart';
 import '../utils/date_watcher.dart';
 import '../utils/tutorial_keys.dart';
 import 'calendar_screen.dart';
@@ -41,6 +42,7 @@ class _HomeShellState extends State<HomeShell> {
   // every rebuild (e.g. while providers are still asynchronously loading).
   bool? _lastHandledHasSeenTutorial;
   late final ShowcaseView _showcaseView;
+  final DeepLinkService _deepLinkService = DeepLinkService();
 
   static const _screens = [
     DashboardScreen(),      // 0: Home
@@ -63,6 +65,9 @@ class _HomeShellState extends State<HomeShell> {
       onFinish: _markTutorialSeen,
       onDismiss: (_) => _markTutorialSeen(),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _deepLinkService.initDeepLinks(context);
+    });
   }
 
   @override
@@ -124,6 +129,7 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   void dispose() {
+    _deepLinkService.dispose();
     _showcaseView.unregister();
     super.dispose();
   }

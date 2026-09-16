@@ -422,6 +422,18 @@
   "teamDeletedSuccess": "Ekip başarıyla silindi",
   "teamDeleteError": "Ekip silinirken hata oluştu. Lütfen tekrar deneyin.",
   "teamSelectTeam": "Bir ekip seçin",
+  "teamSignInRequired": "Ekip kurmak veya bir ekibe katılmak için giriş yapın. Misafir antrenmanlarınız bu cihazda kalır.",
+  "teamLoadError": "Ekipleriniz yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.",
+  "teamMyTeams": "Ekiplerim",
+  "teamShareInvite": "Davet Linkini Paylaş",
+  "teamLinkCopied": "Davet linki panoya kopyalandı",
+  "suggestionInbox": "Öneriler",
+  "teamInviteMessage": "Atlas Workout'ta {teamName} ekibime katıl!",
+  "@teamInviteMessage": {
+    "placeholders": {
+      "teamName": {"type": "String"}
+    }
+  },
   "teamAllMembers": "Tüm Üyeler",
   "teamNoActivity": "Henüz sosyal aktivite yok.\nBir ekibe katılın veya arkadaş davet edin!",
   "teamActivity": "Ekip Aktivitesi",
