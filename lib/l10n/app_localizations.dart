@@ -1736,6 +1736,12 @@ abstract class AppLocalizations {
   /// **'This replaces data in the signed-in account\'s workspace. The imported changes and deletions will sync to this account on other devices. Guest data and other accounts are unaffected.'**
   String get accountCloudImportWarning;
 
+  /// No description provided for @accountPendingLossWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} changes have not reached the cloud yet, and {conflicts} conflicts are unresolved. They are discarded here and will never reach your other devices. Sync first if you want to keep them.'**
+  String accountPendingLossWarning(int count, int conflicts);
+
   /// No description provided for @accountGuestResetWarning.
   ///
   /// In en, this message translates to:

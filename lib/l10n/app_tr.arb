@@ -351,6 +351,7 @@
   "accountDeleteError": "Hesap silme tamamlanamadı. Başarı onaylanmadı. Bağlanıp tekrar deneyin; Apple yetkisi iptal edilemiyorsa destekle iletişime geçin.",
   "accountCloudResetWarning": "Yalnızca giriş yapılan hesabın çalışma alanı sıfırlanır. Silme işlemleri bu hesabın diğer cihazlarına eşitlenir. Misafir verileri ve diğer hesaplar etkilenmez.",
   "accountCloudImportWarning": "Giriş yapılan hesabın çalışma alanındaki veriler değiştirilir. Aktarılan değişiklikler ve silmeler bu hesabın diğer cihazlarına eşitlenir. Misafir verileri ve diğer hesaplar etkilenmez.",
+  "accountPendingLossWarning": "{count} değişiklik henüz buluta ulaşmadı ve {conflicts} çakışma çözülmedi. Bunlar burada silinir ve diğer cihazlarınıza hiçbir zaman ulaşmaz. Korumak istiyorsanız önce eşitleyin.",
   "accountGuestResetWarning": "Yalnızca bu cihazın misafir çalışma alanı etkilenir. Giriş yapılan hesapların alanları değişmez.",
   "accountBackupScope": "Dışa aktarma yalnızca geçerli çalışma alanını içerir; giriş belirteçlerini veya kimlik bilgilerini içermez. Yedekleri gizli tutun: kişisel profil ve sağlık verileri içerebilir.",
   "accountWelcome": "Hoş geldin!",

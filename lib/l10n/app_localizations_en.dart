@@ -925,6 +925,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'This replaces data in the signed-in account\'s workspace. The imported changes and deletions will sync to this account on other devices. Guest data and other accounts are unaffected.';
 
   @override
+  String accountPendingLossWarning(int count, int conflicts) {
+    return '$count changes have not reached the cloud yet, and $conflicts conflicts are unresolved. They are discarded here and will never reach your other devices. Sync first if you want to keep them.';
+  }
+
+  @override
   String get accountGuestResetWarning =>
       'Only this device\'s guest workspace is affected. Signed-in account workspaces are unchanged.';
 

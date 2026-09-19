@@ -2,6 +2,7 @@ import 'package:exercise_app/l10n/app_localizations.dart';
 import 'package:exercise_app/providers/auth_provider.dart';
 import 'package:exercise_app/screens/account_section.dart';
 import 'package:exercise_app/screens/profile_edit_screen.dart';
+import 'package:exercise_app/screens/settings_screen.dart';
 import 'package:exercise_app/services/user_account_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -68,6 +69,28 @@ void main() {
       expect(validOptionalMeasurement(value), isFalse);
     }
   });
+
+
+  test('destructive data actions warn only when unsynced work would be lost', () {
+    // Signed in with everything uploaded: the cloud already has it, so the
+    // reset warning stays as it was.
+    expect(
+      losesUnsyncedWork(signedIn: true, pending: 0, conflicts: 0),
+      isFalse,
+    );
+    // Pending uploads are destroyed by a reset and never reach other devices.
+    expect(losesUnsyncedWork(signedIn: true, pending: 1, conflicts: 0), isTrue);
+    // An unresolved conflict holds a local version that is equally lost.
+    expect(losesUnsyncedWork(signedIn: true, pending: 0, conflicts: 1), isTrue);
+    // A guest has no cloud copy; the plain guest warning already applies and
+    // promising anything about "other devices" would be false.
+    expect(
+      losesUnsyncedWork(signedIn: false, pending: 9, conflicts: 9),
+      isFalse,
+    );
+  });
+
+
 
   testWidgets('mobile guest shows both providers and optional profile editor', (
     tester,

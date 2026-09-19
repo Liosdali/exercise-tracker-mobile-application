@@ -379,6 +379,8 @@
   "accountDeleteError": "Account deletion could not be completed. No success has been confirmed. Reconnect and retry; contact support if Apple authorization cannot be revoked.",
   "accountCloudResetWarning": "This resets only the signed-in account's workspace. Deletions will sync to this account on your other devices. Guest data and other accounts are unaffected.",
   "accountCloudImportWarning": "This replaces data in the signed-in account's workspace. The imported changes and deletions will sync to this account on other devices. Guest data and other accounts are unaffected.",
+  "accountPendingLossWarning": "{count} changes have not reached the cloud yet, and {conflicts} conflicts are unresolved. They are discarded here and will never reach your other devices. Sync first if you want to keep them.",
+  "@accountPendingLossWarning": {"placeholders": {"count": {"type": "int"}, "conflicts": {"type": "int"}}},
   "accountGuestResetWarning": "Only this device's guest workspace is affected. Signed-in account workspaces are unchanged.",
   "accountBackupScope": "Exports contain only the current workspace, never sign-in tokens or credentials. Keep backups private: they may include personal profile and health data.",
   "accountWelcome": "Welcome!",

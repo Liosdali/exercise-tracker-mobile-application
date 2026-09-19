@@ -926,6 +926,11 @@ class AppLocalizationsTr extends AppLocalizations {
       'Giriş yapılan hesabın çalışma alanındaki veriler değiştirilir. Aktarılan değişiklikler ve silmeler bu hesabın diğer cihazlarına eşitlenir. Misafir verileri ve diğer hesaplar etkilenmez.';
 
   @override
+  String accountPendingLossWarning(int count, int conflicts) {
+    return '$count değişiklik henüz buluta ulaşmadı ve $conflicts çakışma çözülmedi. Bunlar burada silinir ve diğer cihazlarınıza hiçbir zaman ulaşmaz. Korumak istiyorsanız önce eşitleyin.';
+  }
+
+  @override
   String get accountGuestResetWarning =>
       'Yalnızca bu cihazın misafir çalışma alanı etkilenir. Giriş yapılan hesapların alanları değişmez.';
 

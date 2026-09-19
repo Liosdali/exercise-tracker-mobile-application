@@ -14,23 +14,56 @@ import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
 import '../services/backup_service.dart';
 import '../services/supabase_service.dart';
+import '../services/user_account_service.dart';
 import 'about_screen.dart';
 import 'account_section.dart';
+
+/// True when a destructive data action would discard work that has not yet
+/// reached the cloud.
+///
+/// Guest workspaces return false: they have no cloud copy, so there is no
+/// "lost on the way to your other devices" to warn about — the plain guest
+/// reset warning already covers losing local data.
+bool losesUnsyncedWork({
+  required bool signedIn,
+  required int pending,
+  required int conflicts,
+}) => signedIn && (pending > 0 || conflicts > 0);
 
 /// Settings screen: manual language override, rest-timer/weekly-goal
 /// preferences, and a "reset all data" factory-reset action.
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
+  /// The amount of work that has not reached the cloud, phrased as a warning,
+  /// or an empty string when there is nothing to lose. A reset destroys
+  /// unsynced changes outright: unlike signing out, no workspace is left
+  /// holding them afterwards, so the user is told what is at stake before
+  /// confirming rather than discovering it later.
+  String _unsyncedWarning(BuildContext context, AppLocalizations l10n) {
+    final account = context.read<UserAccountService>();
+    if (!losesUnsyncedWork(
+      signedIn: context.read<AuthProvider>().signedIn,
+      pending: account.pendingCount,
+      conflicts: account.conflictCount,
+    )) {
+      return '';
+    }
+    return '\n\n'
+        '${l10n.accountPendingLossWarning(account.pendingCount, account.conflictCount)}';
+  }
+
   Future<void> _confirmReset(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
+    final message =
+        '${l10n.settingsResetDataConfirmMessage}\n\n'
+        '${context.read<AuthProvider>().signedIn ? l10n.accountCloudResetWarning : l10n.accountGuestResetWarning}'
+        '${_unsyncedWarning(context, l10n)}';
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.settingsResetDataConfirmTitle),
-        content: Text(
-          '${l10n.settingsResetDataConfirmMessage}\n\n${context.read<AuthProvider>().signedIn ? l10n.accountCloudResetWarning : l10n.accountGuestResetWarning}',
-        ),
+        content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -57,6 +90,10 @@ class SettingsScreen extends StatelessWidget {
         context.read<RoutineProvider>().load(),
         context.read<ProgramProgressProvider>().load(),
         context.read<SettingsProvider>().resetToDefaults(),
+        // The delete triggers have just rewritten sync_records; without this
+        // the account card keeps showing the pre-reset pending count until
+        // the periodic sync happens to run.
+        context.read<UserAccountService>().refresh(),
       ]);
       if (!context.mounted) return;
 
@@ -116,13 +153,15 @@ class SettingsScreen extends StatelessWidget {
 
     final totalRows = counts.values.fold<int>(0, (a, b) => a + b);
     if (!context.mounted) return;
+    final importMessage =
+        '${l10n.settingsBackupImportConfirmMessage('$totalRows')}\n\n'
+        '${context.read<AuthProvider>().signedIn ? l10n.accountCloudImportWarning : l10n.accountGuestResetWarning}'
+        '${_unsyncedWarning(context, l10n)}';
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.settingsBackupImportConfirmTitle),
-        content: Text(
-          '${l10n.settingsBackupImportConfirmMessage('$totalRows')}\n\n${context.read<AuthProvider>().signedIn ? l10n.accountCloudImportWarning : l10n.accountGuestResetWarning}',
-        ),
+        content: Text(importMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -149,6 +188,7 @@ class SettingsScreen extends StatelessWidget {
         context.read<RoutineProvider>().load(),
         context.read<ProgramProgressProvider>().load(),
         context.read<SettingsProvider>().load(),
+        context.read<UserAccountService>().refresh(),
       ]);
       if (!context.mounted) return;
 
