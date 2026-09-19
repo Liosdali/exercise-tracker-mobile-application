@@ -1,7 +1,9 @@
 import 'package:exercise_app/l10n/app_localizations.dart';
+import 'package:exercise_app/models/body_measurement.dart';
 import 'package:exercise_app/providers/auth_provider.dart';
 import 'package:exercise_app/screens/account_section.dart';
 import 'package:exercise_app/screens/profile_edit_screen.dart';
+import 'package:exercise_app/screens/measurement_history_screen.dart';
 import 'package:exercise_app/screens/settings_screen.dart';
 import 'package:exercise_app/services/user_account_service.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +93,40 @@ void main() {
   });
 
 
+  test('measurement summary lists only the values that were recorded', () async {
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    // A weight-only entry must not imply a height or a body fat reading.
+    expect(
+      measurementSummary(
+        l10n,
+        const BodyMeasurement(date: '2026-03-12', weightKg: 82, createdAt: ''),
+      ),
+      '82.0 kg',
+    );
+    // Body fat is rounded to one decimal; the rest are joined in field order.
+    expect(
+      measurementSummary(
+        l10n,
+        const BodyMeasurement(
+          date: '2026-03-12',
+          weightKg: 82,
+          heightCm: 180,
+          calculatedBodyFat: 18.246,
+          waistCm: 84,
+          createdAt: '',
+        ),
+      ),
+      '82.0 kg • 180.0 cm tall • 18.2% fat • Waist 84.0 cm',
+    );
+    // Nothing recorded yields an empty summary rather than stray separators.
+    expect(
+      measurementSummary(
+        l10n,
+        const BodyMeasurement(date: '2026-03-12', createdAt: ''),
+      ),
+      isEmpty,
+    );
+  });
 
   testWidgets('mobile guest shows both providers and optional profile editor', (
     tester,

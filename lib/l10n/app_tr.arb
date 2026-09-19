@@ -43,6 +43,12 @@
   "profileCalendarLinkTitle": "Antrenman Takvimi / Geçmiş",
   "profileBodyMeasurementsTitle": "Vücut Ölçümleri",
   "profileNoMeasurements": "Henüz ölçüm kaydı yok.",
+  "measurementWeightValue": "{value} kg",
+  "measurementHeightValue": "{value} cm boy",
+  "measurementBodyFatValue": "%{value} yağ",
+  "measurementChestValue": "Göğüs {value} cm",
+  "measurementWaistValue": "Bel {value} cm",
+  "accountViewMeasurementHistory": "Ölçüm geçmişini görüntüle",
 
   "settingsTitle": "Ayarlar",
   "settingsLanguageSection": "Dil",

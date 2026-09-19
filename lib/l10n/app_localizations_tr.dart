@@ -132,6 +132,34 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profileNoMeasurements => 'Henüz ölçüm kaydı yok.';
 
   @override
+  String measurementWeightValue(String value) {
+    return '$value kg';
+  }
+
+  @override
+  String measurementHeightValue(String value) {
+    return '$value cm boy';
+  }
+
+  @override
+  String measurementBodyFatValue(String value) {
+    return '%$value yağ';
+  }
+
+  @override
+  String measurementChestValue(String value) {
+    return 'Göğüs $value cm';
+  }
+
+  @override
+  String measurementWaistValue(String value) {
+    return 'Bel $value cm';
+  }
+
+  @override
+  String get accountViewMeasurementHistory => 'Ölçüm geçmişini görüntüle';
+
+  @override
   String get settingsTitle => 'Ayarlar';
 
   @override

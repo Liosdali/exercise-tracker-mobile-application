@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/user_account_service.dart';
+import 'measurement_history_screen.dart';
 
 bool validOptionalAge(String value) {
   if (value.trim().isEmpty) return true;
@@ -148,6 +149,20 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               onChanged: _saving
                   ? null
                   : (value) => setState(() => _gender = value),
+            ),
+            // Weight and height edits here are written into the measurement
+            // history, so the history is reachable from the place that adds
+            // to it rather than only from the Profile tab.
+            TextButton.icon(
+              onPressed: _saving
+                  ? null
+                  : () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const MeasurementHistoryScreen(),
+                      ),
+                    ),
+              icon: const Icon(Icons.timeline),
+              label: Text(l10n.accountViewMeasurementHistory),
             ),
             if (_error) Text(l10n.accountOperationError),
             const SizedBox(height: 24),

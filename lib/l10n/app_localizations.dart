@@ -326,6 +326,42 @@ abstract class AppLocalizations {
   /// **'No measurements logged yet.'**
   String get profileNoMeasurements;
 
+  /// No description provided for @measurementWeightValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kg'**
+  String measurementWeightValue(String value);
+
+  /// No description provided for @measurementHeightValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} cm tall'**
+  String measurementHeightValue(String value);
+
+  /// No description provided for @measurementBodyFatValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}% fat'**
+  String measurementBodyFatValue(String value);
+
+  /// No description provided for @measurementChestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest {value} cm'**
+  String measurementChestValue(String value);
+
+  /// No description provided for @measurementWaistValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Waist {value} cm'**
+  String measurementWaistValue(String value);
+
+  /// No description provided for @accountViewMeasurementHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'View measurement history'**
+  String get accountViewMeasurementHistory;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:

@@ -1,16 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../data/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../models/achievement.dart';
-import '../models/body_measurement.dart';
 import '../providers/stats_provider.dart';
 import '../services/achievement_localizer.dart';
-import '../services/user_account_service.dart';
 import 'body_measurement_form.dart';
+import 'measurement_history_screen.dart';
 import 'account_section.dart';
 import 'settings_screen.dart';
 
@@ -47,32 +44,17 @@ class ProfileStatsScreen extends StatefulWidget {
 }
 
 class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
-  List<BodyMeasurement> _measurements = [];
-  late final UserAccountService _accounts;
 
   @override
   void initState() {
     super.initState();
-    _accounts = context.read<UserAccountService>();
-    _accounts.addListener(_refreshMeasurements);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<StatsProvider>().load();
-      _loadMeasurements();
     });
-  }
-
-  Future<void> _loadMeasurements() async {
-    final measurements = await DatabaseHelper.instance.allMeasurements();
-    if (mounted) setState(() => _measurements = measurements);
-  }
-
-  void _refreshMeasurements() {
-    if (mounted) _loadMeasurements();
   }
 
   @override
   void dispose() {
-    _accounts.removeListener(_refreshMeasurements);
     super.dispose();
   }
 
@@ -232,40 +214,19 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               TextButton.icon(
-                onPressed: () async {
-                  final saved = await Navigator.of(context).push<bool>(
-                    MaterialPageRoute(
-                      builder: (_) => const BodyMeasurementForm(),
-                    ),
-                  );
-                  if (saved == true) _loadMeasurements();
-                },
+                // No reload here: MeasurementHistoryList refreshes itself
+                // when the save updates the account service.
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<bool>(
+                    builder: (_) => const BodyMeasurementForm(),
+                  ),
+                ),
                 icon: const Icon(Icons.add),
                 label: Text(l10n.commonAdd),
               ),
             ],
           ),
-          if (_measurements.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(l10n.profileNoMeasurements),
-            )
-          else
-            for (final m in _measurements)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(DateFormat.yMMMd().format(DateTime.parse(m.date))),
-                subtitle: Text(
-                  [
-                    if (m.weightKg != null) '${m.weightKg} kg',
-                    if (m.heightCm != null) '${m.heightCm} cm boy',
-                    if (m.calculatedBodyFat != null)
-                      '%${m.calculatedBodyFat!.toStringAsFixed(1)} yağ',
-                    if (m.chestCm != null) 'Göğüs ${m.chestCm} cm',
-                    if (m.waistCm != null) 'Bel ${m.waistCm} cm',
-                  ].join(' • '),
-                ),
-              ),
+          const MeasurementHistoryList(),
         ],
       ),
     );

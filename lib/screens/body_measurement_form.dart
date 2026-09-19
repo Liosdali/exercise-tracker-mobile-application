@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../data/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../models/body_measurement.dart';
 import '../services/body_fat_calculator_service.dart';
+import '../services/user_account_service.dart';
 
 /// Form to add a new body-measurement log entry: weight, height, and
 /// circumferences (waist/neck/hip), from which the body fat percentage is
@@ -83,8 +85,14 @@ class _BodyMeasurementFormState extends State<BodyMeasurementForm> {
       createdAt: DateTime.now().toIso8601String(),
     );
     final l10n = AppLocalizations.of(context)!;
+    final accounts = context.read<UserAccountService>();
     try {
       await DatabaseHelper.instance.workspace().insertMeasurement(measurement);
+      // The insert has already recorded itself in sync_records via the table
+      // triggers; this only refreshes the counts the account UI reads, which
+      // would otherwise lag behind until the periodic sync happened to run.
+      // Profile edits do the same through updateProfile.
+      await accounts.refresh();
       if (mounted) Navigator.of(context).pop(true);
     } on ArgumentError {
       if (mounted) {

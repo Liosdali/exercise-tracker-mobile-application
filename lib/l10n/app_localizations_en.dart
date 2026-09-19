@@ -131,6 +131,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileNoMeasurements => 'No measurements logged yet.';
 
   @override
+  String measurementWeightValue(String value) {
+    return '$value kg';
+  }
+
+  @override
+  String measurementHeightValue(String value) {
+    return '$value cm tall';
+  }
+
+  @override
+  String measurementBodyFatValue(String value) {
+    return '$value% fat';
+  }
+
+  @override
+  String measurementChestValue(String value) {
+    return 'Chest $value cm';
+  }
+
+  @override
+  String measurementWaistValue(String value) {
+    return 'Waist $value cm';
+  }
+
+  @override
+  String get accountViewMeasurementHistory => 'View measurement history';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override
