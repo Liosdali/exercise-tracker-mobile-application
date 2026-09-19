@@ -84,10 +84,48 @@ class SupabaseService implements AuthGateway {
     return markers.any(v.contains) || v.startsWith('<') || v.endsWith('>');
   }
 
+  /// True when [value] holds anything that cannot legally go in an HTTP
+  /// header value: a non-ASCII rune, a control character or a space.
+  ///
+  /// A hand-edited `.env` picks these up easily — a Turkish keyboard once
+  /// turned `m6Gw` into `m6şppGw` in the anon key. Nothing rejects that at
+  /// startup: `Supabase.initialize` performs no request, so the app looks
+  /// configured and the sign-in button is enabled. The failure only surfaces
+  /// on the first auth request, as
+  /// `FormatException: Invalid HTTP header field value`, thrown from inside
+  /// gotrue and far from anything that names `.env`. Catching it here turns a
+  /// debugging session into a message.
+  static bool isUnusableCredential(String value) =>
+      value.runes.any((rune) => rune < 0x21 || rune > 0x7E);
+
   Future<void> initialize() async {
     // Try to load from .env file first, fall back to environment variables
-    final url = dotenv.env['SUPABASE_URL'] ?? const String.fromEnvironment('SUPABASE_URL');
-    final key = dotenv.env['SUPABASE_ANON_KEY'] ?? const String.fromEnvironment('SUPABASE_ANON_KEY');
+    // (trimmed: a trailing space or stray newline is invalid in a header).
+    final url = (dotenv.env['SUPABASE_URL'] ??
+            const String.fromEnvironment('SUPABASE_URL'))
+        .trim();
+    final key = (dotenv.env['SUPABASE_ANON_KEY'] ??
+            const String.fromEnvironment('SUPABASE_ANON_KEY'))
+        .trim();
+
+    if (isUnusableCredential(url) || isUnusableCredential(key)) {
+      assert(() {
+        final bad = [
+          for (final entry in {'SUPABASE_URL': url, 'SUPABASE_ANON_KEY': key}.entries)
+            if (isUnusableCredential(entry.value))
+              '${entry.key} at index '
+                  '${entry.value.runes.toList().indexWhere((r) => r < 0x21 || r > 0x7E)}',
+        ].join(', ');
+        debugPrint(
+          'Supabase is not configured: .env holds a character that is not '
+          'valid in an HTTP header ($bad). Check for a stray non-ASCII '
+          'character. Account and team features stay disabled; guest mode is '
+          'unaffected.',
+        );
+        return true;
+      }());
+      return;
+    }
 
     if (isPlaceholderCredential(url) || isPlaceholderCredential(key)) {
       assert(() {
@@ -200,6 +238,11 @@ class SupabaseService implements AuthGateway {
       'pending_oauth_started_at',
       DateTime.now().millisecondsSinceEpoch,
     );
+    assert(() {
+      debugPrint('[auth] launching OAuth: provider=${provider.name} '
+          'redirectTo=$redirectUrl');
+      return true;
+    }());
     try {
       final launched = await client.auth.signInWithOAuth(
         provider == AccountLoginProvider.apple
@@ -209,7 +252,12 @@ class SupabaseService implements AuthGateway {
         authScreenLaunchMode: LaunchMode.externalApplication,
       );
       if (!launched) throw StateError('OAuth launch failed');
-    } catch (_) {
+    } catch (e, st) {
+      assert(() {
+        debugPrint('[auth] signInWithOAuth FAILED: $e');
+        debugPrint('[auth] $st');
+        return true;
+      }());
       await prefs.remove('pending_oauth_provider');
       rethrow;
     }
@@ -276,6 +324,12 @@ class SupabaseService implements AuthGateway {
   }
 
   Future<void> _recordOAuthProvenance(AuthState state) async {
+    assert(() {
+      debugPrint('[auth] gotrue state=${state.event} '
+          'session=${state.session != null} '
+          'user=${state.session?.user.id}');
+      return true;
+    }());
     if (state.event != AuthChangeEvent.signedIn || state.session == null) {
       return;
     }

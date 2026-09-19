@@ -2114,6 +2114,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t load your teams. Check your connection and try again.'**
   String get teamLoadError;
 
+  /// No description provided for @teamFeedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the activity feed. Check your connection and try again.'**
+  String get teamFeedError;
+
   /// No description provided for @teamMyTeams.
   ///
   /// In en, this message translates to:

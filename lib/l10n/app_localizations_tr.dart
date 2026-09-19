@@ -1144,6 +1144,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Ekipleriniz yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.';
 
   @override
+  String get teamFeedError =>
+      'Aktivite akışı yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.';
+
+  @override
   String get teamMyTeams => 'Ekiplerim';
 
   @override

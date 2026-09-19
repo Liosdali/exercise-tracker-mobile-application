@@ -19,15 +19,24 @@ CREATE TABLE IF NOT EXISTS public.team_activity_log (
   UNIQUE(team_id, user_id, activity_date)
 );
 
-CREATE INDEX idx_team_activity_log_team_date ON public.team_activity_log(team_id, activity_date);
-CREATE INDEX idx_team_activity_log_user_date ON public.team_activity_log(user_id, activity_date);
+CREATE INDEX IF NOT EXISTS idx_team_activity_log_team_date ON public.team_activity_log(team_id, activity_date);
+CREATE INDEX IF NOT EXISTS idx_team_activity_log_user_date ON public.team_activity_log(user_id, activity_date);
 
 -- ============================================================================
 -- 2. PROGRAM SUGGESTIONS TABLE
 -- ============================================================================
 
-CREATE TYPE suggestion_type AS ENUM ('exercise', 'program_change', 'feedback');
-CREATE TYPE suggestion_status AS ENUM ('pending', 'accepted', 'rejected');
+-- Postgres'te CREATE TYPE ... IF NOT EXISTS yok; migration'in tekrar
+-- calistirilabilir kalmasi icin istisna yakalaniyor.
+DO $enum$ BEGIN
+  CREATE TYPE suggestion_type AS ENUM ('exercise', 'program_change', 'feedback');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $enum$;
+
+DO $enum$ BEGIN
+  CREATE TYPE suggestion_status AS ENUM ('pending', 'accepted', 'rejected');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $enum$;
 
 CREATE TABLE IF NOT EXISTS public.program_suggestions (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -44,9 +53,9 @@ CREATE TABLE IF NOT EXISTS public.program_suggestions (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_program_suggestions_to_user ON public.program_suggestions(to_user_id, status);
-CREATE INDEX idx_program_suggestions_team ON public.program_suggestions(team_id, created_at DESC);
-CREATE INDEX idx_program_suggestions_from_user ON public.program_suggestions(from_user_id);
+CREATE INDEX IF NOT EXISTS idx_program_suggestions_to_user ON public.program_suggestions(to_user_id, status);
+CREATE INDEX IF NOT EXISTS idx_program_suggestions_team ON public.program_suggestions(team_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_program_suggestions_from_user ON public.program_suggestions(from_user_id);
 
 -- ============================================================================
 -- 3. TEAM LEADERBOARD TABLES (Periodic Aggregation)
@@ -78,8 +87,8 @@ CREATE TABLE IF NOT EXISTS public.team_leaderboard_monthly (
   UNIQUE(team_id, user_id, month_start_date)
 );
 
-CREATE INDEX idx_team_leaderboard_weekly_team ON public.team_leaderboard_weekly(team_id, week_start_date);
-CREATE INDEX idx_team_leaderboard_monthly_team ON public.team_leaderboard_monthly(team_id, month_start_date);
+CREATE INDEX IF NOT EXISTS idx_team_leaderboard_weekly_team ON public.team_leaderboard_weekly(team_id, week_start_date);
+CREATE INDEX IF NOT EXISTS idx_team_leaderboard_monthly_team ON public.team_leaderboard_monthly(team_id, month_start_date);
 
 -- ============================================================================
 -- 4. ENABLE RLS
@@ -95,12 +104,14 @@ ALTER TABLE public.team_leaderboard_monthly ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 
 -- Users can see activity logs only for teams they belong to
+DROP POLICY IF EXISTS "Users can view team activity for their teams" ON public.team_activity_log;
 CREATE POLICY "Users can view team activity for their teams" ON public.team_activity_log
   FOR SELECT USING (
     team_id IN (SELECT group_id FROM public.group_members WHERE user_id = auth.uid())
   );
 
 -- Activity logs are managed by system (triggers), not direct inserts
+DROP POLICY IF EXISTS "Only system can insert activity logs" ON public.team_activity_log;
 CREATE POLICY "Only system can insert activity logs" ON public.team_activity_log
   FOR INSERT WITH CHECK (FALSE);
 
@@ -109,14 +120,17 @@ CREATE POLICY "Only system can insert activity logs" ON public.team_activity_log
 -- ============================================================================
 
 -- Users can see suggestions they received
+DROP POLICY IF EXISTS "Users can view received suggestions" ON public.program_suggestions;
 CREATE POLICY "Users can view received suggestions" ON public.program_suggestions
   FOR SELECT USING (to_user_id = auth.uid());
 
 -- Users can see suggestions they sent
+DROP POLICY IF EXISTS "Users can view sent suggestions" ON public.program_suggestions;
 CREATE POLICY "Users can view sent suggestions" ON public.program_suggestions
   FOR SELECT USING (from_user_id = auth.uid());
 
 -- Users can create suggestions for team members
+DROP POLICY IF EXISTS "Users can send suggestions to team members" ON public.program_suggestions;
 CREATE POLICY "Users can send suggestions to team members" ON public.program_suggestions
   FOR INSERT WITH CHECK (
     from_user_id = auth.uid()
@@ -128,6 +142,7 @@ CREATE POLICY "Users can send suggestions to team members" ON public.program_sug
   );
 
 -- Users can update their received suggestions (accept/reject with response)
+DROP POLICY IF EXISTS "Users can update received suggestions" ON public.program_suggestions;
 CREATE POLICY "Users can update received suggestions" ON public.program_suggestions
   FOR UPDATE USING (to_user_id = auth.uid());
 
@@ -136,20 +151,24 @@ CREATE POLICY "Users can update received suggestions" ON public.program_suggesti
 -- ============================================================================
 
 -- Users can view leaderboards only for teams they belong to
+DROP POLICY IF EXISTS "Users can view team leaderboards" ON public.team_leaderboard_weekly;
 CREATE POLICY "Users can view team leaderboards" ON public.team_leaderboard_weekly
   FOR SELECT USING (
     team_id IN (SELECT group_id FROM public.group_members WHERE user_id = auth.uid())
   );
 
+DROP POLICY IF EXISTS "Users can view team leaderboards monthly" ON public.team_leaderboard_monthly;
 CREATE POLICY "Users can view team leaderboards monthly" ON public.team_leaderboard_monthly
   FOR SELECT USING (
     team_id IN (SELECT group_id FROM public.group_members WHERE user_id = auth.uid())
   );
 
 -- Leaderboards are managed by system (triggers/cron), not direct inserts
+DROP POLICY IF EXISTS "Only system can insert leaderboard entries" ON public.team_leaderboard_weekly;
 CREATE POLICY "Only system can insert leaderboard entries" ON public.team_leaderboard_weekly
   FOR INSERT WITH CHECK (FALSE);
 
+DROP POLICY IF EXISTS "Only system can insert leaderboard entries monthly" ON public.team_leaderboard_monthly;
 CREATE POLICY "Only system can insert leaderboard entries monthly" ON public.team_leaderboard_monthly
   FOR INSERT WITH CHECK (FALSE);
 
@@ -194,6 +213,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 -- Trigger on workout_sessions insert
+DROP TRIGGER IF EXISTS trigger_update_team_activity_log ON public.workout_sessions;
 CREATE TRIGGER trigger_update_team_activity_log
   AFTER INSERT ON public.workout_sessions
   FOR EACH ROW

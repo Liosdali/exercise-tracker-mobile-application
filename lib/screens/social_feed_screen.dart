@@ -7,6 +7,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
 import '../services/supabase_service.dart';
+import 'create_team_screen.dart';
+import 'join_team_screen.dart';
 import 'pending_suggestions_screen.dart';
 import 'team_activity_screen.dart';
 import 'team_leaderboard_screen.dart';
@@ -24,7 +26,12 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
   // and touching `Supabase.instance` would throw while this State is built.
   SupabaseClient get _supabase => SupabaseService().client;
   bool _isLoading = true;
-  bool _loadFailed = false;
+  /// fetchMyTeams patladi: ekip listesine hic ulasilamadi.
+  bool _teamsFailed = false;
+  /// Ekipler geldi ama aktivite akisi sorgusu patladi. Ayri tutuluyor cunku
+  /// "ekiplerin yuklenemedi" demek, ekipleri duran bir kullaniciyi yanlis
+  /// yere bakmaya gonderiyor.
+  bool _feedFailed = false;
   List<dynamic> _friendsWorkouts = [];
   String? _selectedTeamId;
 
@@ -45,7 +52,8 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _loadFailed = false;
+          _teamsFailed = false;
+          _feedFailed = false;
         });
       }
       return;
@@ -59,13 +67,13 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       }));
       await _fetchFeed();
     } catch (e) {
-      debugPrint('Error loading teams and feed: $e');
-      // Previously this left `_isLoading` true forever, because only
-      // _fetchFeed's finally block ever cleared it and we never got there.
+      debugPrint('Error loading teams: $e');
+      // Only fetchMyTeams can land here: _fetchFeed handles its own failure
+      // and does not rethrow.
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _loadFailed = true;
+          _teamsFailed = true;
         });
       }
     }
@@ -74,9 +82,19 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
   Future<void> _retry() async {
     setState(() {
       _isLoading = true;
-      _loadFailed = false;
+      _teamsFailed = false;
+      _feedFailed = false;
     });
     await _fetchTeamsAndFeed();
+  }
+
+  /// Pushes [screen], then reloads — the user may have created or joined a
+  /// team while they were away.
+  Future<void> _pushThenReload(Widget screen) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => screen),
+    );
+    if (mounted) await _retry();
   }
 
   Future<void> _fetchFeed() async {
@@ -98,7 +116,7 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
           if (!mounted) return;
           setState(() {
             _friendsWorkouts = const [];
-            _loadFailed = false;
+            _feedFailed = false;
           });
           return;
         }
@@ -117,11 +135,11 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       if (!mounted) return;
       setState(() {
         _friendsWorkouts = response as List<dynamic>;
-        _loadFailed = false;
+        _feedFailed = false;
       });
     } catch (e) {
       debugPrint('Error fetching social feed: $e');
-      if (mounted) setState(() => _loadFailed = true);
+      if (mounted) setState(() => _feedFailed = true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -280,8 +298,8 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
   Widget _message(
     IconData icon,
     String text, {
-    String? actionLabel,
-    VoidCallback? onAction,
+    String? title,
+    List<Widget> actions = const [],
     Color? iconColor,
   }) {
     return Center(
@@ -296,10 +314,18 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
               color: iconColor ?? Theme.of(context).colorScheme.outline,
             ),
             const SizedBox(height: 16),
+            if (title != null) ...[
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+            ],
             Text(text, textAlign: TextAlign.center),
-            if (actionLabel != null && onAction != null) ...[
+            if (actions.isNotEmpty) ...[
               const SizedBox(height: 24),
-              FilledButton(onPressed: onAction, child: Text(actionLabel)),
+              ...actions,
             ],
           ],
         ),
@@ -325,12 +351,50 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (_loadFailed) {
+    // Ekip listesine hic ulasilamadi: gercek bir hata, tekrar denenebilir.
+    if (_teamsFailed) {
       return _message(
         Icons.error_outline,
         l10n.teamLoadError,
-        actionLabel: l10n.accountRetry,
-        onAction: _retry,
+        actions: [
+          FilledButton(onPressed: _retry, child: Text(l10n.accountRetry)),
+        ],
+        iconColor: Theme.of(context).colorScheme.error,
+      );
+    }
+
+    // Ekipler yuklendi ve kullanicinin hic ekibi yok. Bu bir hata degil,
+    // baslangic durumu -- dogru cevap kurma/katilma yoluna cikarmak.
+    if (context.watch<TeamProvider>().myTeams.isEmpty) {
+      return _message(
+        Icons.groups_outlined,
+        l10n.teamEmptyDescription,
+        title: l10n.teamEmptyTitle,
+        actions: [
+          FilledButton.icon(
+            onPressed: () => _pushThenReload(const CreateTeamScreen()),
+            icon: const Icon(Icons.group_add),
+            label: Text(l10n.teamCreateTeam),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: () => _pushThenReload(const JoinTeamScreen()),
+            icon: const Icon(Icons.person_add),
+            label: Text(l10n.teamJoinTeam),
+          ),
+        ],
+      );
+    }
+
+    // Ekipler var ama akis sorgusu patladi -- ayri mesaj, yoksa kullanici
+    // duran ekiplerini aramaya gider.
+    if (_feedFailed) {
+      return _message(
+        Icons.error_outline,
+        l10n.teamFeedError,
+        actions: [
+          FilledButton(onPressed: _retry, child: Text(l10n.accountRetry)),
+        ],
         iconColor: Theme.of(context).colorScheme.error,
       );
     }
@@ -339,8 +403,13 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       return _message(
         Icons.group_outlined,
         l10n.teamNoActivity,
-        actionLabel: l10n.teamMyTeams,
-        onAction: _openTeams,
+        actions: [
+          FilledButton.icon(
+            onPressed: _openTeams,
+            icon: const Icon(Icons.groups_outlined),
+            label: Text(l10n.teamMyTeams),
+          ),
+        ],
       );
     }
 

@@ -424,6 +424,7 @@
   "teamSelectTeam": "Bir ekip seçin",
   "teamSignInRequired": "Ekip kurmak veya bir ekibe katılmak için giriş yapın. Misafir antrenmanlarınız bu cihazda kalır.",
   "teamLoadError": "Ekipleriniz yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.",
+  "teamFeedError": "Aktivite akışı yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.",
   "teamMyTeams": "Ekiplerim",
   "teamShareInvite": "Davet Linkini Paylaş",
   "teamLinkCopied": "Davet linki panoya kopyalandı",

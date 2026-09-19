@@ -1,28 +1,28 @@
 -- ============================================================================
 -- Atlas Workout — SIFIRDAN KURULUM (tek dosya)
 --
--- Bu dosya elle üretildi: kök dizindeki supabase_schema.sql ile
--- supabase/migrations/ altındaki üç migration'ı DOĞRU SIRADA birleştirir.
--- Sıra önemlidir; team_content_features public.groups tablosuna foreign key
--- verdiği için bootstrap'tan önce çalıştırılamaz.
+-- Kök dizindeki supabase_schema.sql ile supabase/migrations/ altındaki üç
+-- migration'ı DOĞRU SIRADA birleştirir. Sıra önemlidir: team_content_features
+-- public.groups tablosuna foreign key verdiği için bootstrap'tan önce
+-- çalıştırılamaz.
 --
--- NASIL ÇALIŞTIRILIR
---   Supabase Dashboard -> SQL Editor -> New query -> bu dosyanın tamamını
---   yapıştır -> Run. Tek seferde çalışır.
+-- NASIL: Supabase Dashboard -> SQL Editor -> New query -> tamamını yapıştır -> Run.
 --
--- UYARI
---   Yalnızca BOŞ bir Supabase projesi içindir. Şeması kurulmuş mevcut bir
---   veritabanında bunu ÇALIŞTIRMA — orada yalnızca yeni migration'ları
---   uygula (supabase db push).
+-- YALNIZCA BOŞ BİR PROJE İÇİN. Bu dosyanın ilk bölümü (bootstrap) tabloları
+-- korumasız CREATE TABLE ile kurar; ikinci kez çalıştırılırsa
+-- "relation already exists" ile durur. Şeması kurulmuş bir veritabanında bunu
+-- çalıştırma.
 --
--- Kaynak dosyalar değişirse bu birleşik dosya elle güncellenmelidir.
--- Üretildiği tarih: 2026-09-16
+-- supabase/migrations/ altındaki dört dosyanın kendisi idempotenttir; mevcut
+-- bir veritabanını güncellemenin doğru yolu `supabase db push` ya da o
+-- dosyaları tek tek çalıştırmaktır.
+--
+-- Üretildiği tarih: 2026-09-19
 -- ============================================================================
 
 
 -- ==========================================================================
 -- 1/4  Sosyal temel şema (social_users, groups, group_members, workout_sessions, bloklar, şikâyetler)
--- kaynak: supabase_schema.sql
 -- ==========================================================================
 
 -- Fresh-install psql entry point for Atlas Workout.
@@ -186,7 +186,6 @@ $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 -- ==========================================================================
 -- 2/4  Özel hesap şeması ve senkronizasyon (private_profiles, account_records, account_operations)
--- kaynak: supabase/migrations/202609070001_private_accounts.sql
 -- ==========================================================================
 
 -- Private account synchronization is deliberately separate from social feeds.
@@ -661,7 +660,6 @@ COMMIT;
 
 -- ==========================================================================
 -- 3/4  Ekip içeriği (aktivite kaydı, program önerileri, liderlik tabloları)
--- kaynak: supabase/migrations/202609071000_team_content_features.sql
 -- ==========================================================================
 
 -- Team Content Features Migration
@@ -685,15 +683,24 @@ CREATE TABLE IF NOT EXISTS public.team_activity_log (
   UNIQUE(team_id, user_id, activity_date)
 );
 
-CREATE INDEX idx_team_activity_log_team_date ON public.team_activity_log(team_id, activity_date);
-CREATE INDEX idx_team_activity_log_user_date ON public.team_activity_log(user_id, activity_date);
+CREATE INDEX IF NOT EXISTS idx_team_activity_log_team_date ON public.team_activity_log(team_id, activity_date);
+CREATE INDEX IF NOT EXISTS idx_team_activity_log_user_date ON public.team_activity_log(user_id, activity_date);
 
 -- ============================================================================
 -- 2. PROGRAM SUGGESTIONS TABLE
 -- ============================================================================
 
-CREATE TYPE suggestion_type AS ENUM ('exercise', 'program_change', 'feedback');
-CREATE TYPE suggestion_status AS ENUM ('pending', 'accepted', 'rejected');
+-- Postgres'te CREATE TYPE ... IF NOT EXISTS yok; migration'in tekrar
+-- calistirilabilir kalmasi icin istisna yakalaniyor.
+DO $enum$ BEGIN
+  CREATE TYPE suggestion_type AS ENUM ('exercise', 'program_change', 'feedback');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $enum$;
+
+DO $enum$ BEGIN
+  CREATE TYPE suggestion_status AS ENUM ('pending', 'accepted', 'rejected');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $enum$;
 
 CREATE TABLE IF NOT EXISTS public.program_suggestions (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -710,9 +717,9 @@ CREATE TABLE IF NOT EXISTS public.program_suggestions (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_program_suggestions_to_user ON public.program_suggestions(to_user_id, status);
-CREATE INDEX idx_program_suggestions_team ON public.program_suggestions(team_id, created_at DESC);
-CREATE INDEX idx_program_suggestions_from_user ON public.program_suggestions(from_user_id);
+CREATE INDEX IF NOT EXISTS idx_program_suggestions_to_user ON public.program_suggestions(to_user_id, status);
+CREATE INDEX IF NOT EXISTS idx_program_suggestions_team ON public.program_suggestions(team_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_program_suggestions_from_user ON public.program_suggestions(from_user_id);
 
 -- ============================================================================
 -- 3. TEAM LEADERBOARD TABLES (Periodic Aggregation)
@@ -744,8 +751,8 @@ CREATE TABLE IF NOT EXISTS public.team_leaderboard_monthly (
   UNIQUE(team_id, user_id, month_start_date)
 );
 
-CREATE INDEX idx_team_leaderboard_weekly_team ON public.team_leaderboard_weekly(team_id, week_start_date);
-CREATE INDEX idx_team_leaderboard_monthly_team ON public.team_leaderboard_monthly(team_id, month_start_date);
+CREATE INDEX IF NOT EXISTS idx_team_leaderboard_weekly_team ON public.team_leaderboard_weekly(team_id, week_start_date);
+CREATE INDEX IF NOT EXISTS idx_team_leaderboard_monthly_team ON public.team_leaderboard_monthly(team_id, month_start_date);
 
 -- ============================================================================
 -- 4. ENABLE RLS
@@ -761,12 +768,14 @@ ALTER TABLE public.team_leaderboard_monthly ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 
 -- Users can see activity logs only for teams they belong to
+DROP POLICY IF EXISTS "Users can view team activity for their teams" ON public.team_activity_log;
 CREATE POLICY "Users can view team activity for their teams" ON public.team_activity_log
   FOR SELECT USING (
     team_id IN (SELECT group_id FROM public.group_members WHERE user_id = auth.uid())
   );
 
 -- Activity logs are managed by system (triggers), not direct inserts
+DROP POLICY IF EXISTS "Only system can insert activity logs" ON public.team_activity_log;
 CREATE POLICY "Only system can insert activity logs" ON public.team_activity_log
   FOR INSERT WITH CHECK (FALSE);
 
@@ -775,14 +784,17 @@ CREATE POLICY "Only system can insert activity logs" ON public.team_activity_log
 -- ============================================================================
 
 -- Users can see suggestions they received
+DROP POLICY IF EXISTS "Users can view received suggestions" ON public.program_suggestions;
 CREATE POLICY "Users can view received suggestions" ON public.program_suggestions
   FOR SELECT USING (to_user_id = auth.uid());
 
 -- Users can see suggestions they sent
+DROP POLICY IF EXISTS "Users can view sent suggestions" ON public.program_suggestions;
 CREATE POLICY "Users can view sent suggestions" ON public.program_suggestions
   FOR SELECT USING (from_user_id = auth.uid());
 
 -- Users can create suggestions for team members
+DROP POLICY IF EXISTS "Users can send suggestions to team members" ON public.program_suggestions;
 CREATE POLICY "Users can send suggestions to team members" ON public.program_suggestions
   FOR INSERT WITH CHECK (
     from_user_id = auth.uid()
@@ -794,6 +806,7 @@ CREATE POLICY "Users can send suggestions to team members" ON public.program_sug
   );
 
 -- Users can update their received suggestions (accept/reject with response)
+DROP POLICY IF EXISTS "Users can update received suggestions" ON public.program_suggestions;
 CREATE POLICY "Users can update received suggestions" ON public.program_suggestions
   FOR UPDATE USING (to_user_id = auth.uid());
 
@@ -802,20 +815,24 @@ CREATE POLICY "Users can update received suggestions" ON public.program_suggesti
 -- ============================================================================
 
 -- Users can view leaderboards only for teams they belong to
+DROP POLICY IF EXISTS "Users can view team leaderboards" ON public.team_leaderboard_weekly;
 CREATE POLICY "Users can view team leaderboards" ON public.team_leaderboard_weekly
   FOR SELECT USING (
     team_id IN (SELECT group_id FROM public.group_members WHERE user_id = auth.uid())
   );
 
+DROP POLICY IF EXISTS "Users can view team leaderboards monthly" ON public.team_leaderboard_monthly;
 CREATE POLICY "Users can view team leaderboards monthly" ON public.team_leaderboard_monthly
   FOR SELECT USING (
     team_id IN (SELECT group_id FROM public.group_members WHERE user_id = auth.uid())
   );
 
 -- Leaderboards are managed by system (triggers/cron), not direct inserts
+DROP POLICY IF EXISTS "Only system can insert leaderboard entries" ON public.team_leaderboard_weekly;
 CREATE POLICY "Only system can insert leaderboard entries" ON public.team_leaderboard_weekly
   FOR INSERT WITH CHECK (FALSE);
 
+DROP POLICY IF EXISTS "Only system can insert leaderboard entries monthly" ON public.team_leaderboard_monthly;
 CREATE POLICY "Only system can insert leaderboard entries monthly" ON public.team_leaderboard_monthly
   FOR INSERT WITH CHECK (FALSE);
 
@@ -860,6 +877,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 -- Trigger on workout_sessions insert
+DROP TRIGGER IF EXISTS trigger_update_team_activity_log ON public.workout_sessions;
 CREATE TRIGGER trigger_update_team_activity_log
   AFTER INSERT ON public.workout_sessions
   FOR EACH ROW
@@ -937,8 +955,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 
 -- ==========================================================================
--- 4/4  Ekip şema ve RLS düzeltmeleri (sütunlar, politikalar, davet fonksiyonu)
--- kaynak: supabase/migrations/202609160001_team_rls_and_schema_fixes.sql
+-- 4/4  Ekip şema ve RLS düzeltmeleri + PostgREST ilişkileri
 -- ==========================================================================
 
 -- ============================================================================
@@ -1041,19 +1058,23 @@ DROP POLICY IF EXISTS "Users can view groups they belong to" ON public.groups;
 
 -- The owner is included so that the INSERT ... RETURNING of createTeam() can
 -- read back the row it just wrote, before the first membership row exists.
+DROP POLICY IF EXISTS "Users can view groups they belong to" ON public.groups;
 CREATE POLICY "Users can view groups they belong to" ON public.groups
   FOR SELECT TO authenticated
   USING (public.is_team_member(id) OR owner_id = auth.uid());
 
+DROP POLICY IF EXISTS "Users can create groups" ON public.groups;
 CREATE POLICY "Users can create groups" ON public.groups
   FOR INSERT TO authenticated
   WITH CHECK (owner_id = auth.uid());
 
+DROP POLICY IF EXISTS "Admins can update their group" ON public.groups;
 CREATE POLICY "Admins can update their group" ON public.groups
   FOR UPDATE TO authenticated
   USING (public.is_team_admin(id) OR owner_id = auth.uid())
   WITH CHECK (public.is_team_admin(id) OR owner_id = auth.uid());
 
+DROP POLICY IF EXISTS "Owners can delete their group" ON public.groups;
 CREATE POLICY "Owners can delete their group" ON public.groups
   FOR DELETE TO authenticated
   USING (owner_id = auth.uid());
@@ -1071,14 +1092,17 @@ CREATE POLICY "Users can view members of their groups" ON public.group_members
 -- Direct self-insert is limited to the group's own creator. Everyone else
 -- joins through join_team_by_invite_token(), which proves they hold a valid
 -- token; otherwise knowing a group's UUID would be enough to walk in.
+DROP POLICY IF EXISTS "Owners can add themselves to their group" ON public.group_members;
 CREATE POLICY "Owners can add themselves to their group" ON public.group_members
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid() AND public.is_group_owner(group_id));
 
+DROP POLICY IF EXISTS "Members can leave and admins can remove" ON public.group_members;
 CREATE POLICY "Members can leave and admins can remove" ON public.group_members
   FOR DELETE TO authenticated
   USING (user_id = auth.uid() OR public.is_team_admin(group_id));
 
+DROP POLICY IF EXISTS "Admins can change member roles" ON public.group_members;
 CREATE POLICY "Admins can change member roles" ON public.group_members
   FOR UPDATE TO authenticated
   USING (public.is_team_admin(group_id))
@@ -1151,11 +1175,84 @@ CREATE POLICY "Users can read their own reports" ON public.user_reports
 COMMIT;
 
 
+-- ==========================================================================
+-- 4/4  (devam) social_users foreign key'leri
+-- ==========================================================================
+
 -- ============================================================================
--- Kurulum tamam.
+-- PostgREST embed'leri için social_users ilişkileri
+-- ----------------------------------------------------------------------------
+-- İstemci, antrenman ve liderlik satırlarına yazarın adını/avatarını gömüyor:
 --
--- Sırada:
---   1. Project Settings -> API'den Project URL ve anon/public key'i .env'e yaz.
---   2. Authentication -> Providers altında Google (ve Apple) sağlayıcılarını aç.
---   3. Edge Function: supabase functions deploy delete-account
+--   from('workout_sessions').select('*, social_users!inner(...)')
+--   from('group_members').select('..., social_users(...)')
+--   from('team_leaderboard_weekly').select('*, social_users!user_id(...)')
+--
+-- PostgREST bu gömmeyi yalnızca iki tablo arasında gerçek bir FOREIGN KEY
+-- varsa çözebiliyor. Bootstrap şemasında bu sütunların hepsi auth.users'a
+-- bakıyordu; social_users da ayrıca auth.users'a bakıyor. İki tablo ortak bir
+-- ebeveyni paylaşıyor ama aralarında doğrudan bir ilişki yok, üstelik auth
+-- şeması PostgREST'e açık değil. Sonuç:
+--
+--   PGRST200: Could not find a relationship between 'workout_sessions'
+--             and 'social_users' in the schema cache
+--
+-- Çözüm: gömülen her sütuna public.social_users(id)'ye ikinci bir FK ekle.
+-- social_users.id zaten auth.users(id)'yi ON DELETE CASCADE ile takip ettiği
+-- için silme davranışı değişmez; kullanıcı silindiğinde zincir yine temizler.
+-- ============================================================================
+
+BEGIN;
+
+-- FK eklemeden önce her user_id'nin social_users'ta karşılığı olmalı.
+-- handle_new_user tetikleyicisi bunu yeni kayıtlarda zaten yapıyor; bu
+-- backfill, tetikleyici kurulmadan önce açılmış hesapları kurtarır.
+INSERT INTO public.social_users (id, display_name)
+SELECT u.id, u.raw_user_meta_data->>'full_name'
+FROM auth.users u
+LEFT JOIN public.social_users s ON s.id = u.id
+WHERE s.id IS NULL;
+
+-- Yalnızca istemcinin gerçekten gömdüğü sütunlar. Yeni bir embed eklenirse
+-- ilgili (tablo, sütun) çiftini buraya eklemek yeterli.
+DO $$
+DECLARE
+  r        record;
+  fk_name  text;
+BEGIN
+  FOR r IN
+    SELECT * FROM (VALUES
+      ('workout_sessions',         'user_id'),
+      ('group_members',            'user_id'),
+      ('team_leaderboard_weekly',  'user_id'),
+      ('team_leaderboard_monthly', 'user_id')
+    ) AS t(tbl, col)
+  LOOP
+    fk_name := format('%s_%s_social_users_fkey', r.tbl, r.col);
+
+    IF NOT EXISTS (
+      SELECT 1
+      FROM pg_constraint c
+      JOIN pg_namespace n ON n.oid = c.connamespace
+      WHERE n.nspname = 'public' AND c.conname = fk_name
+    ) THEN
+      EXECUTE format(
+        'ALTER TABLE public.%I '
+        'ADD CONSTRAINT %I FOREIGN KEY (%I) '
+        'REFERENCES public.social_users(id) ON DELETE CASCADE',
+        r.tbl, fk_name, r.col
+      );
+    END IF;
+  END LOOP;
+END $$;
+
+COMMIT;
+
+-- PostgREST ilişkileri bir şema önbelleğinde tutuyor; DDL sonrası yenilenmezse
+-- yukarıdaki FK'ler görünmez ve PGRST200 devam eder.
+NOTIFY pgrst, 'reload schema';
+
+
+-- ============================================================================
+-- Kurulum tamam. Doğrulamak için supabase/denetim.sql dosyasını çalıştırın.
 -- ============================================================================

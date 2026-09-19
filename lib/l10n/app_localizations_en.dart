@@ -1140,6 +1140,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t load your teams. Check your connection and try again.';
 
   @override
+  String get teamFeedError =>
+      'Couldn\'t load the activity feed. Check your connection and try again.';
+
+  @override
   String get teamMyTeams => 'My Teams';
 
   @override

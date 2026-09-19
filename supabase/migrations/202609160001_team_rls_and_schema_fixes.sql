@@ -102,15 +102,18 @@ CREATE POLICY "Users can view groups they belong to" ON public.groups
   FOR SELECT TO authenticated
   USING (public.is_team_member(id) OR owner_id = auth.uid());
 
+DROP POLICY IF EXISTS "Users can create groups" ON public.groups;
 CREATE POLICY "Users can create groups" ON public.groups
   FOR INSERT TO authenticated
   WITH CHECK (owner_id = auth.uid());
 
+DROP POLICY IF EXISTS "Admins can update their group" ON public.groups;
 CREATE POLICY "Admins can update their group" ON public.groups
   FOR UPDATE TO authenticated
   USING (public.is_team_admin(id) OR owner_id = auth.uid())
   WITH CHECK (public.is_team_admin(id) OR owner_id = auth.uid());
 
+DROP POLICY IF EXISTS "Owners can delete their group" ON public.groups;
 CREATE POLICY "Owners can delete their group" ON public.groups
   FOR DELETE TO authenticated
   USING (owner_id = auth.uid());
@@ -128,14 +131,17 @@ CREATE POLICY "Users can view members of their groups" ON public.group_members
 -- Direct self-insert is limited to the group's own creator. Everyone else
 -- joins through join_team_by_invite_token(), which proves they hold a valid
 -- token; otherwise knowing a group's UUID would be enough to walk in.
+DROP POLICY IF EXISTS "Owners can add themselves to their group" ON public.group_members;
 CREATE POLICY "Owners can add themselves to their group" ON public.group_members
   FOR INSERT TO authenticated
   WITH CHECK (user_id = auth.uid() AND public.is_group_owner(group_id));
 
+DROP POLICY IF EXISTS "Members can leave and admins can remove" ON public.group_members;
 CREATE POLICY "Members can leave and admins can remove" ON public.group_members
   FOR DELETE TO authenticated
   USING (user_id = auth.uid() OR public.is_team_admin(group_id));
 
+DROP POLICY IF EXISTS "Admins can change member roles" ON public.group_members;
 CREATE POLICY "Admins can change member roles" ON public.group_members
   FOR UPDATE TO authenticated
   USING (public.is_team_admin(group_id))

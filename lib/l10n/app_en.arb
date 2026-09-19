@@ -452,6 +452,7 @@
   "teamSelectTeam": "Select a team",
   "teamSignInRequired": "Sign in to create or join a team. Your guest workouts stay on this device.",
   "teamLoadError": "Couldn't load your teams. Check your connection and try again.",
+  "teamFeedError": "Couldn't load the activity feed. Check your connection and try again.",
   "teamMyTeams": "My Teams",
   "teamShareInvite": "Share Invite Link",
   "teamLinkCopied": "Invite link copied to clipboard",

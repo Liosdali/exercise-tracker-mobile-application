@@ -58,3 +58,6 @@ app.*.map.json
 
 *.jks
 **/key.properties
+
+# Claude teshis ciktilari (makineye ozel, paylasilmaz)
+claude-out/

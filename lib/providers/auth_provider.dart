@@ -6,6 +6,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/supabase_service.dart';
 import '../services/user_account_service.dart';
 
+/// Debug-only breadcrumb for the sign-in path.
+///
+/// Every failure handler below collapses the real exception into an
+/// [AccountAuthError] constant. That is right for the UI, but it leaves
+/// nothing to diagnose with when sign-in fails on a real device. The assert
+/// keeps the detail in debug builds and costs nothing in release.
+void _authLog(String message) {
+  assert(() {
+    debugPrint('[auth] $message');
+    return true;
+  }());
+}
+
+void _authFailure(String step, Object error, [StackTrace? stack]) {
+  assert(() {
+    debugPrint('[auth] $step FAILED: $error');
+    if (stack != null) debugPrint('[auth] $stack');
+    return true;
+  }());
+}
+
 enum AccountAuthError {
   configuration,
   login,
@@ -68,6 +89,8 @@ class AuthProvider extends ChangeNotifier {
     if (!gateway.configured) error = AccountAuthError.configuration;
     _subscription = gateway.events.listen(
       (event) {
+        _authLog('auth event=$event userId=${gateway.userId} '
+            'sessionValid=${gateway.sessionValid}');
         if (_deleting || _deletedAccountToClear != null) return;
         if (_expectedReauthenticationUser != null &&
             gateway.userId != null &&
@@ -85,6 +108,7 @@ class AuthProvider extends ChangeNotifier {
         unawaited(_selectWorkspace(gateway.userId));
       },
       onError: (Object failure) {
+        _authFailure('auth event stream', failure);
         _loginTimeout?.cancel();
         error = failure is AppleAccountMismatch
             ? AccountAuthError.appleAccountMismatch
@@ -121,20 +145,24 @@ class AuthProvider extends ChangeNotifier {
     _transition = _transition.then((_) async {
       if (_disposed || generation != _generation) return;
       try {
+        _authLog('workspace switch -> ${nextUser ?? 'guest'}');
         await beforeWorkspaceSwitch?.call();
         if (_disposed || generation != _generation) return;
+        _authLog('beforeWorkspaceSwitch ok, initializing account store');
         await accounts.initialize(nextUser);
         if (_disposed || generation != _generation) return;
         userId = nextUser;
         workspaceReady = true;
         workspaceRevision++;
         busy = false;
+        _authLog('workspace ready for ${nextUser ?? 'guest'}');
         _notify();
         if (nextUser != null) {
           // Never delay offline access while waiting for the network.
           unawaited(_finishAccountInitialization(generation, nextUser));
         }
-      } catch (_) {
+      } catch (e, st) {
+        _authFailure('workspace switch', e, st);
         if (generation != _generation || _disposed) return;
         error = AccountAuthError.workspace;
         busy = false;
@@ -153,18 +181,24 @@ class AuthProvider extends ChangeNotifier {
           hasData && !(prefs.getBool('guest_import_decision:$id') ?? false);
       _notify();
       if (!gateway.sessionValid) {
+        _authFailure('session check after workspace ready',
+            'gateway.sessionValid == false');
         error = AccountAuthError.expired;
         _notify();
         return;
       }
       // Download first: an empty local profile may have an edited remote name.
       try {
+        _authLog('initial sync starting');
         await accounts.sync();
-      } catch (_) {
+        _authLog('initial sync ok');
+      } catch (e, st) {
+        _authFailure('initial sync', e, st);
         return;
       }
       await _applyPendingName(generation);
-    } catch (_) {
+    } catch (e, st) {
+      _authFailure('account initialization', e, st);
       if (_disposed || generation != _generation) return;
       error = AccountAuthError.operation;
       _notify();
@@ -197,9 +231,12 @@ class AuthProvider extends ChangeNotifier {
     error = null;
     busy = true;
     _notify();
+    _authLog('signIn(${provider.name}) started');
     try {
       final browser = await gateway.signIn(provider);
       if (_disposed || attempt != _loginGeneration) return;
+      _authLog('gateway.signIn returned browser=$browser '
+          'userId=${gateway.userId}');
       if (browser) {
         waitingForBrowser = true;
         _loginTimeout = Timer(const Duration(minutes: 2), cancelSignIn);
@@ -207,8 +244,10 @@ class AuthProvider extends ChangeNotifier {
         await _selectWorkspace(gateway.userId);
       }
     } on LoginCancelled {
+      _authLog('signIn cancelled by user');
       if (attempt == _loginGeneration) error = AccountAuthError.cancelled;
-    } catch (_) {
+    } catch (e, st) {
+      _authFailure('signIn', e, st);
       if (attempt == _loginGeneration) error = AccountAuthError.login;
     } finally {
       if (attempt == _loginGeneration) {
