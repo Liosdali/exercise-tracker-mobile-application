@@ -1916,6 +1916,264 @@ abstract class AppLocalizations {
   /// **'This conflict includes related workout records. Choosing a version applies to the whole group.'**
   String get syncRelatedRecordsNotice;
 
+  /// No description provided for @conflictFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get conflictFieldName;
+
+  /// No description provided for @conflictFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get conflictFieldTitle;
+
+  /// No description provided for @conflictFieldNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get conflictFieldNotes;
+
+  /// No description provided for @conflictFieldWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get conflictFieldWeight;
+
+  /// No description provided for @conflictFieldHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get conflictFieldHeight;
+
+  /// No description provided for @conflictFieldAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get conflictFieldAge;
+
+  /// No description provided for @conflictFieldGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get conflictFieldGender;
+
+  /// No description provided for @conflictFieldBodyFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Body fat'**
+  String get conflictFieldBodyFat;
+
+  /// No description provided for @conflictFieldChest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get conflictFieldChest;
+
+  /// No description provided for @conflictFieldWaist.
+  ///
+  /// In en, this message translates to:
+  /// **'Waist'**
+  String get conflictFieldWaist;
+
+  /// No description provided for @conflictFieldNeck.
+  ///
+  /// In en, this message translates to:
+  /// **'Neck'**
+  String get conflictFieldNeck;
+
+  /// No description provided for @conflictFieldHip.
+  ///
+  /// In en, this message translates to:
+  /// **'Hip'**
+  String get conflictFieldHip;
+
+  /// No description provided for @conflictFieldExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get conflictFieldExercise;
+
+  /// No description provided for @conflictFieldCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get conflictFieldCategory;
+
+  /// No description provided for @conflictFieldDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (minutes)'**
+  String get conflictFieldDuration;
+
+  /// No description provided for @conflictFieldDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get conflictFieldDays;
+
+  /// No description provided for @conflictFieldExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises'**
+  String get conflictFieldExercises;
+
+  /// No description provided for @conflictFieldDayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get conflictFieldDayName;
+
+  /// No description provided for @conflictFieldValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get conflictFieldValue;
+
+  /// No description provided for @conflictFieldUnlockedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get conflictFieldUnlockedAt;
+
+  /// No description provided for @conflictFieldProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Program'**
+  String get conflictFieldProgram;
+
+  /// No description provided for @conflictFieldNextDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Next day'**
+  String get conflictFieldNextDay;
+
+  /// No description provided for @conflictFieldLastCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Last completed'**
+  String get conflictFieldLastCompleted;
+
+  /// No description provided for @syncConflictOriginBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Both versions changed since the last sync.'**
+  String get syncConflictOriginBoth;
+
+  /// No description provided for @syncConflictOriginLocalOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this device changed this record.'**
+  String get syncConflictOriginLocalOnly;
+
+  /// No description provided for @syncConflictOriginRemoteOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the server changed this record.'**
+  String get syncConflictOriginRemoteOnly;
+
+  /// No description provided for @syncConflictFieldsDiffer.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 field differs ({fields})} other{{count} fields differ ({fields})}}'**
+  String syncConflictFieldsDiffer(int count, String fields);
+
+  /// No description provided for @syncConflictNoVisibleDifference.
+  ///
+  /// In en, this message translates to:
+  /// **'The visible details match; only internal sync data differs.'**
+  String get syncConflictNoVisibleDifference;
+
+  /// No description provided for @syncConflictDeletedLocally.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted on this device · Still on the server'**
+  String get syncConflictDeletedLocally;
+
+  /// No description provided for @syncConflictDeletedRemotely.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted on the server · Still on this device'**
+  String get syncConflictDeletedRemotely;
+
+  /// No description provided for @syncConflictDeletedBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Both versions delete this record.'**
+  String get syncConflictDeletedBoth;
+
+  /// No description provided for @syncConflictDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Choosing the deleted version removes this record permanently.'**
+  String get syncConflictDeleteWarning;
+
+  /// No description provided for @syncConflictCollectionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} to {to}'**
+  String syncConflictCollectionCount(String from, String to);
+
+  /// No description provided for @syncConflictCollectionOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Order changed'**
+  String get syncConflictCollectionOrder;
+
+  /// No description provided for @syncConflictCollectionContent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} changed ({names})'**
+  String syncConflictCollectionContent(int count, String names);
+
+  /// No description provided for @syncConflictGroupSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'This choice applies to all {count} related records.'**
+  String syncConflictGroupSummary(int count);
+
+  /// No description provided for @syncConflictShowDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Show details'**
+  String get syncConflictShowDetails;
+
+  /// No description provided for @syncConflictDetailsWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Details ({count} records)'**
+  String syncConflictDetailsWithCount(int count);
+
+  /// No description provided for @syncConflictRawData.
+  ///
+  /// In en, this message translates to:
+  /// **'Raw data'**
+  String get syncConflictRawData;
+
+  /// No description provided for @syncConflictModifiedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited {date}'**
+  String syncConflictModifiedOn(String date);
+
+  /// No description provided for @syncConflictNewer.
+  ///
+  /// In en, this message translates to:
+  /// **'newer'**
+  String get syncConflictNewer;
+
+  /// No description provided for @syncConflictValueOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get syncConflictValueOn;
+
+  /// No description provided for @syncConflictValueOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get syncConflictValueOff;
+
   /// No description provided for @teamCreateTeam.
   ///
   /// In en, this message translates to:

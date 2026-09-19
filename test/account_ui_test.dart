@@ -1,10 +1,12 @@
 import 'package:exercise_app/l10n/app_localizations.dart';
+import 'package:exercise_app/models/sync_conflict.dart';
 import 'package:exercise_app/models/body_measurement.dart';
 import 'package:exercise_app/providers/auth_provider.dart';
 import 'package:exercise_app/screens/account_section.dart';
 import 'package:exercise_app/screens/profile_edit_screen.dart';
 import 'package:exercise_app/screens/measurement_history_screen.dart';
 import 'package:exercise_app/screens/settings_screen.dart';
+import 'package:exercise_app/screens/sync_conflicts_screen.dart';
 import 'package:exercise_app/services/user_account_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -201,4 +203,53 @@ void main() {
       await gateway.controller.close();
     },
   );
+
+  testWidgets('conflict cards describe the record instead of dumping JSON', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final accounts = FakeAccounts()
+      ..pendingConflicts = const [
+        SyncConflict(
+          entity: 'body_measurements',
+          recordId: 'r1',
+          base: {'weight_kg': 80.0, 'notes': null},
+          local: {'weight_kg': 82.0, 'notes': null},
+          remote: {'weight_kg': 83.5, 'notes': 'felt heavy'},
+          remoteRevision: 1,
+        ),
+      ];
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<UserAccountService>.value(value: accounts),
+        ],
+        child: const MaterialApp(
+          locale: Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SyncConflictsScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // The card speaks the app's vocabulary...
+    expect(find.textContaining('Weight'), findsWidgets);
+    // ...and no database column name reaches the screen.
+    expect(find.textContaining('weight_kg'), findsNothing);
+    // Both sides changed, so the origin line says so rather than guessing
+    // which one is newer.
+    expect(find.textContaining('Both versions changed'), findsOneWidget);
+
+    // The raw payloads survive, two expanders down, for bug reports.
+    await tester.tap(find.text('Show details'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Raw data'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('weight_kg'), findsWidgets);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    accounts.dispose();
+  });
 }

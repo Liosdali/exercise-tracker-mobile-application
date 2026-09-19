@@ -11,11 +11,14 @@ import 'account_change_notifier.dart';
 /// current SQLite workspace and participates in revisioned synchronization.
 class SettingsProvider extends AccountChangeNotifier {
   final _db = DatabaseHelper.instance.workspace();
+  static const _tutorialSeenKey = 'has_seen_tutorial';
+
   Map<String, dynamic> _values = {};
   bool _loaded = false;
   String? _languageCode;
   ThemeMode _themeMode = ThemeMode.system;
   String? _userName;
+  bool _hasSeenTutorial = false;
 
   bool get isLoaded => _loaded;
   int get weeklyGoal => (_values['weekly_goal'] as num?)?.toInt() ?? 3;
@@ -33,7 +36,16 @@ class SettingsProvider extends AccountChangeNotifier {
       _values['streak_warnings_enabled'] as bool? ?? true;
   bool get dailyReminderEnabled =>
       _values['daily_reminder_enabled'] as bool? ?? true;
-  bool get hasSeenTutorial => _values['has_seen_tutorial'] as bool? ?? false;
+
+  /// Whether the interactive tour has already run on this installation.
+  ///
+  /// Stored per device rather than in the account workspace. It used to live
+  /// in `account_preferences`, which "Reset all data" deletes wholesale, so
+  /// resetting made the tour start over on top of the Settings screen. The
+  /// tour describes the app, not the user's data, so wiping the data is no
+  /// reason to show it again — it belongs with the language and theme
+  /// settings, which are likewise device-wide.
+  bool get hasSeenTutorial => _hasSeenTutorial;
 
   @override
   Future<void> reloadAccount() async {
@@ -53,6 +65,17 @@ class SettingsProvider extends AccountChangeNotifier {
     };
     _userName = profile.isEmpty ? null : profile.first['name'] as String?;
     if (_userName?.isEmpty == true) _userName = null;
+    final storedTutorial = prefs.getBool(_tutorialSeenKey);
+    if (storedTutorial != null) {
+      _hasSeenTutorial = storedTutorial;
+    } else {
+      // One-time migration of the old per-workspace flag, so someone who
+      // already dismissed the tour does not meet it again on upgrade. Only
+      // when nothing is stored on the device: once "Replay tutorial" writes
+      // false here, a stale `true` in the workspace must not resurrect it.
+      _hasSeenTutorial = _values[_tutorialSeenKey] as bool? ?? false;
+      if (_hasSeenTutorial) await prefs.setBool(_tutorialSeenKey, true);
+    }
     _languageCode = prefs.getString('app_language');
     _themeMode = ThemeMode.values.firstWhere(
       (mode) => mode.name == prefs.getString('app_theme_mode'),
@@ -152,8 +175,12 @@ class SettingsProvider extends AccountChangeNotifier {
       _set('streak_warnings_enabled', value);
   Future<void> setDailyReminderEnabled(bool value) =>
       _set('daily_reminder_enabled', value);
-  Future<void> setHasSeenTutorial(bool value) =>
-      _set('has_seen_tutorial', value);
+  Future<void> setHasSeenTutorial(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_tutorialSeenKey, value);
+    _hasSeenTutorial = value;
+    notifyListeners();
+  }
 
   Future<void> resetToDefaults() async {
     final db = await _db.database;

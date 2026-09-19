@@ -1037,6 +1037,160 @@ class AppLocalizationsEn extends AppLocalizations {
       'This conflict includes related workout records. Choosing a version applies to the whole group.';
 
   @override
+  String get conflictFieldName => 'Name';
+
+  @override
+  String get conflictFieldTitle => 'Title';
+
+  @override
+  String get conflictFieldNotes => 'Notes';
+
+  @override
+  String get conflictFieldWeight => 'Weight';
+
+  @override
+  String get conflictFieldHeight => 'Height';
+
+  @override
+  String get conflictFieldAge => 'Age';
+
+  @override
+  String get conflictFieldGender => 'Gender';
+
+  @override
+  String get conflictFieldBodyFat => 'Body fat';
+
+  @override
+  String get conflictFieldChest => 'Chest';
+
+  @override
+  String get conflictFieldWaist => 'Waist';
+
+  @override
+  String get conflictFieldNeck => 'Neck';
+
+  @override
+  String get conflictFieldHip => 'Hip';
+
+  @override
+  String get conflictFieldExercise => 'Exercise';
+
+  @override
+  String get conflictFieldCategory => 'Category';
+
+  @override
+  String get conflictFieldDuration => 'Duration (minutes)';
+
+  @override
+  String get conflictFieldDays => 'Days';
+
+  @override
+  String get conflictFieldExercises => 'Exercises';
+
+  @override
+  String get conflictFieldDayName => 'Day';
+
+  @override
+  String get conflictFieldValue => 'Value';
+
+  @override
+  String get conflictFieldUnlockedAt => 'Unlocked';
+
+  @override
+  String get conflictFieldProgram => 'Program';
+
+  @override
+  String get conflictFieldNextDay => 'Next day';
+
+  @override
+  String get conflictFieldLastCompleted => 'Last completed';
+
+  @override
+  String get syncConflictOriginBoth =>
+      'Both versions changed since the last sync.';
+
+  @override
+  String get syncConflictOriginLocalOnly =>
+      'Only this device changed this record.';
+
+  @override
+  String get syncConflictOriginRemoteOnly =>
+      'Only the server changed this record.';
+
+  @override
+  String syncConflictFieldsDiffer(int count, String fields) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fields differ ($fields)',
+      one: '1 field differs ($fields)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncConflictNoVisibleDifference =>
+      'The visible details match; only internal sync data differs.';
+
+  @override
+  String get syncConflictDeletedLocally =>
+      'Deleted on this device · Still on the server';
+
+  @override
+  String get syncConflictDeletedRemotely =>
+      'Deleted on the server · Still on this device';
+
+  @override
+  String get syncConflictDeletedBoth => 'Both versions delete this record.';
+
+  @override
+  String get syncConflictDeleteWarning =>
+      'Choosing the deleted version removes this record permanently.';
+
+  @override
+  String syncConflictCollectionCount(String from, String to) {
+    return '$from to $to';
+  }
+
+  @override
+  String get syncConflictCollectionOrder => 'Order changed';
+
+  @override
+  String syncConflictCollectionContent(int count, String names) {
+    return '$count changed ($names)';
+  }
+
+  @override
+  String syncConflictGroupSummary(int count) {
+    return 'This choice applies to all $count related records.';
+  }
+
+  @override
+  String get syncConflictShowDetails => 'Show details';
+
+  @override
+  String syncConflictDetailsWithCount(int count) {
+    return 'Details ($count records)';
+  }
+
+  @override
+  String get syncConflictRawData => 'Raw data';
+
+  @override
+  String syncConflictModifiedOn(String date) {
+    return 'Edited $date';
+  }
+
+  @override
+  String get syncConflictNewer => 'newer';
+
+  @override
+  String get syncConflictValueOn => 'On';
+
+  @override
+  String get syncConflictValueOff => 'Off';
+
+  @override
   String get teamCreateTeam => 'Create Team';
 
   @override

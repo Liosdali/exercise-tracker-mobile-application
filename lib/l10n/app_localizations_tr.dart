@@ -1038,6 +1038,154 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu çakışma, ilişkili antrenman kayıtlarını da içerir. Seçtiğiniz sürüm grubun tamamına uygulanır.';
 
   @override
+  String get conflictFieldName => 'İsim';
+
+  @override
+  String get conflictFieldTitle => 'Başlık';
+
+  @override
+  String get conflictFieldNotes => 'Not';
+
+  @override
+  String get conflictFieldWeight => 'Kilo';
+
+  @override
+  String get conflictFieldHeight => 'Boy';
+
+  @override
+  String get conflictFieldAge => 'Yaş';
+
+  @override
+  String get conflictFieldGender => 'Cinsiyet';
+
+  @override
+  String get conflictFieldBodyFat => 'Vücut yağı';
+
+  @override
+  String get conflictFieldChest => 'Göğüs';
+
+  @override
+  String get conflictFieldWaist => 'Bel';
+
+  @override
+  String get conflictFieldNeck => 'Boyun';
+
+  @override
+  String get conflictFieldHip => 'Kalça';
+
+  @override
+  String get conflictFieldExercise => 'Egzersiz';
+
+  @override
+  String get conflictFieldCategory => 'Kategori';
+
+  @override
+  String get conflictFieldDuration => 'Süre (dakika)';
+
+  @override
+  String get conflictFieldDays => 'Günler';
+
+  @override
+  String get conflictFieldExercises => 'Egzersizler';
+
+  @override
+  String get conflictFieldDayName => 'Gün';
+
+  @override
+  String get conflictFieldValue => 'Değer';
+
+  @override
+  String get conflictFieldUnlockedAt => 'Kazanıldı';
+
+  @override
+  String get conflictFieldProgram => 'Program';
+
+  @override
+  String get conflictFieldNextDay => 'Sonraki gün';
+
+  @override
+  String get conflictFieldLastCompleted => 'Son tamamlanan';
+
+  @override
+  String get syncConflictOriginBoth =>
+      'Her iki sürüm de son eşitlemeden beri değişti.';
+
+  @override
+  String get syncConflictOriginLocalOnly =>
+      'Bu kaydı yalnızca bu cihaz değiştirdi.';
+
+  @override
+  String get syncConflictOriginRemoteOnly =>
+      'Bu kaydı yalnızca sunucu değiştirdi.';
+
+  @override
+  String syncConflictFieldsDiffer(int count, String fields) {
+    return '$count alan farklı ($fields)';
+  }
+
+  @override
+  String get syncConflictNoVisibleDifference =>
+      'Görünen bilgiler aynı; yalnızca dahili eşitleme verisi farklı.';
+
+  @override
+  String get syncConflictDeletedLocally =>
+      'Bu cihazda silindi · Sunucuda duruyor';
+
+  @override
+  String get syncConflictDeletedRemotely =>
+      'Sunucuda silindi · Bu cihazda duruyor';
+
+  @override
+  String get syncConflictDeletedBoth => 'Her iki sürüm de bu kaydı siliyor.';
+
+  @override
+  String get syncConflictDeleteWarning =>
+      'Silinmiş sürümü seçmek bu kaydı kalıcı olarak kaldırır.';
+
+  @override
+  String syncConflictCollectionCount(String from, String to) {
+    return '$from → $to';
+  }
+
+  @override
+  String get syncConflictCollectionOrder => 'Sıra değişti';
+
+  @override
+  String syncConflictCollectionContent(int count, String names) {
+    return '$count tanesi değişti ($names)';
+  }
+
+  @override
+  String syncConflictGroupSummary(int count) {
+    return 'Bu seçim ilişkili $count kaydın tamamına uygulanır.';
+  }
+
+  @override
+  String get syncConflictShowDetails => 'Ayrıntıları göster';
+
+  @override
+  String syncConflictDetailsWithCount(int count) {
+    return 'Ayrıntılar ($count kayıt)';
+  }
+
+  @override
+  String get syncConflictRawData => 'Ham veri';
+
+  @override
+  String syncConflictModifiedOn(String date) {
+    return '$date tarihinde düzenlendi';
+  }
+
+  @override
+  String get syncConflictNewer => 'daha yeni';
+
+  @override
+  String get syncConflictValueOn => 'Açık';
+
+  @override
+  String get syncConflictValueOff => 'Kapalı';
+
+  @override
   String get teamCreateTeam => 'Ekip Oluştur';
 
   @override

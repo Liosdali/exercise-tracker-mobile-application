@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:exercise_app/models/sync_conflict.dart';
 import 'package:exercise_app/models/user_profile.dart';
 import 'package:exercise_app/providers/auth_provider.dart';
 import 'package:exercise_app/services/supabase_service.dart';
@@ -117,6 +118,23 @@ class FakeAccounts extends ChangeNotifier implements UserAccountService {
   Future<void> clearDeletedAccount(String id) async {
     if (cleanupFails) throw StateError('Device cleanup failed');
     deleted.add(id);
+  }
+
+  /// Conflicts handed to `SyncConflictsScreen`; empty unless a test sets it.
+  List<SyncConflict> pendingConflicts = const [];
+  final resolved = <String>[];
+
+  @override
+  Future<List<SyncConflict>> conflicts() async => pendingConflicts;
+
+  @override
+  Future<void> resolveConflict(
+    String entity,
+    String recordId,
+    bool useLocal,
+  ) async {
+    resolved.add('$entity/$recordId/$useLocal');
+    pendingConflicts = const [];
   }
 
   @override
