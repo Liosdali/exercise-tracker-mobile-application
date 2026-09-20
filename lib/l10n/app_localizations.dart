@@ -2234,6 +2234,78 @@ abstract class AppLocalizations {
   /// **'You\'ll be automatically added as the team admin with an invite code to share.'**
   String get teamCreateNote;
 
+  /// Label above the team kit color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Team color'**
+  String get teamColorLabel;
+
+  /// Helper text under the team color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the color your team wears in leaderboards and the feed.'**
+  String get teamColorHint;
+
+  /// Admin action opening the team color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Change color'**
+  String get teamColorChangeAction;
+
+  /// Confirmation after saving a new team color
+  ///
+  /// In en, this message translates to:
+  /// **'Team color updated'**
+  String get teamColorUpdated;
+
+  /// Name of the crimson kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Crimson'**
+  String get kitColorCrimson;
+
+  /// Name of the claret kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Claret'**
+  String get kitColorClaret;
+
+  /// Name of the violet kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get kitColorViolet;
+
+  /// Name of the royal blue kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Royal'**
+  String get kitColorRoyal;
+
+  /// Name of the teal kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get kitColorTeal;
+
+  /// Name of the forest green kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get kitColorForest;
+
+  /// Name of the gold kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Gold'**
+  String get kitColorGold;
+
+  /// Name of the steel kit color, the default
+  ///
+  /// In en, this message translates to:
+  /// **'Steel'**
+  String get kitColorSteel;
+
   /// No description provided for @teamJoinDescription.
   ///
   /// In en, this message translates to:

@@ -1224,6 +1224,43 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'ll be automatically added as the team admin with an invite code to share.';
 
   @override
+  String get teamColorLabel => 'Team color';
+
+  @override
+  String get teamColorHint =>
+      'Pick the color your team wears in leaderboards and the feed.';
+
+  @override
+  String get teamColorChangeAction => 'Change color';
+
+  @override
+  String get teamColorUpdated => 'Team color updated';
+
+  @override
+  String get kitColorCrimson => 'Crimson';
+
+  @override
+  String get kitColorClaret => 'Claret';
+
+  @override
+  String get kitColorViolet => 'Violet';
+
+  @override
+  String get kitColorRoyal => 'Royal';
+
+  @override
+  String get kitColorTeal => 'Teal';
+
+  @override
+  String get kitColorForest => 'Forest';
+
+  @override
+  String get kitColorGold => 'Gold';
+
+  @override
+  String get kitColorSteel => 'Steel';
+
+  @override
   String get teamJoinDescription =>
       'Enter the invite code to join an existing team. You can get this code from the team owner.';
 

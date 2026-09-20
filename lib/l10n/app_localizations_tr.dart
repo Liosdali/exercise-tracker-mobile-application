@@ -1219,6 +1219,43 @@ class AppLocalizationsTr extends AppLocalizations {
       'Siz otomatik olarak ekip yöneticisi olarak eklenir ve paylaşabileceğiniz bir davet kodu alırsınız.';
 
   @override
+  String get teamColorLabel => 'Takım rengi';
+
+  @override
+  String get teamColorHint =>
+      'Takımının sıralamalarda ve akışta taşıyacağı rengi seç.';
+
+  @override
+  String get teamColorChangeAction => 'Rengi değiştir';
+
+  @override
+  String get teamColorUpdated => 'Takım rengi güncellendi';
+
+  @override
+  String get kitColorCrimson => 'Kızıl';
+
+  @override
+  String get kitColorClaret => 'Bordo';
+
+  @override
+  String get kitColorViolet => 'Mor';
+
+  @override
+  String get kitColorRoyal => 'Kraliyet mavisi';
+
+  @override
+  String get kitColorTeal => 'Camgöbeği';
+
+  @override
+  String get kitColorForest => 'Orman yeşili';
+
+  @override
+  String get kitColorGold => 'Altın';
+
+  @override
+  String get kitColorSteel => 'Çelik';
+
+  @override
   String get teamJoinDescription =>
       'Mevcut bir ekibe katılmak için davet kodunu girin. Bu kodu ekip sahibinden alabilirsiniz.';
 

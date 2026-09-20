@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
 import '../theme/atlas_colors.dart';
+import '../theme/atlas_tokens.dart';
+import '../theme/team_palette.dart';
+import '../widgets/atlas/kit_picker.dart';
 
 /// Screen for creating a new team.
 class CreateTeamScreen extends StatefulWidget {
@@ -17,6 +20,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   bool _isSubmitting = false;
+  KitColor _kit = kDefaultKit;
 
   @override
   void initState() {
@@ -53,6 +57,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
         description: _descriptionController.text.trim().isEmpty
             ? null
             : _descriptionController.text.trim(),
+        kit: _kit,
       );
 
       if (!mounted) return;
@@ -120,6 +125,11 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.description),
               ),
+            ),
+            const SizedBox(height: AtlasSpace.xl),
+            KitPicker(
+              selected: _kit,
+              onChanged: (kit) => setState(() => _kit = kit),
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
