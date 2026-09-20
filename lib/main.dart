@@ -21,6 +21,7 @@ import 'screens/onboarding_name_screen.dart';
 import 'services/notification_service.dart';
 import 'services/supabase_service.dart';
 import 'services/user_account_service.dart';
+import 'theme/atlas_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -138,17 +139,8 @@ class _AccountRootState extends State<_AccountRoot>
         builder: (context, settings, _) {
           return MaterialApp(
             title: 'Atlas Workout',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
-            darkTheme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.deepPurple,
-                brightness: Brightness.dark,
-              ),
-              useMaterial3: true,
-            ),
+            theme: buildLightTheme(),
+            darkTheme: buildDarkTheme(),
             themeMode: settings.themeMode,
             // A manual language override takes precedence; otherwise fall
             // back to the device's system locale (resolved below), with
