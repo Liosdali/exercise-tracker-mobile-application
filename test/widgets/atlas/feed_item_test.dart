@@ -98,4 +98,25 @@ void main() {
       matchesGoldenFile('goldens/feed_item_dark.png'),
     );
   });
+
+  testWidgets('golden: feed item in light', (tester) async {
+    await pumpAtlas(
+      tester,
+      const TeamTheme(
+        kit: KitColor.gold,
+        child: FeedItem(
+          actor: 'Deniz',
+          action: 'finished Upper body A',
+          metric: '4 210 kg',
+          timestamp: '2 hours ago',
+        ),
+      ),
+      brightness: Brightness.light,
+      surfaceSize: const Size(390, 200),
+    );
+    await expectLater(
+      find.byType(FeedItem),
+      matchesGoldenFile('goldens/feed_item_light.png'),
+    );
+  });
 }
