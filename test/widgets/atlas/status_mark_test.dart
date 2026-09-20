@@ -80,4 +80,32 @@ void main() {
       matchesGoldenFile('goldens/status_mark_dark.png'),
     );
   });
+
+  testWidgets('golden: all four statuses in light', (tester) async {
+    await pumpAtlas(
+      tester,
+      const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          StatusMark(
+              status: AtlasStatus.success,
+              label: 'Synced',
+              icon: Icons.check_circle),
+          SizedBox(height: 8),
+          StatusMark(status: AtlasStatus.warn, label: 'Not synced'),
+          SizedBox(height: 8),
+          StatusMark(status: AtlasStatus.danger, label: 'Sync failed'),
+          SizedBox(height: 8),
+          StatusMark(status: AtlasStatus.info, label: '3 conflicts'),
+        ],
+      ),
+      brightness: Brightness.light,
+      surfaceSize: const Size(300, 220),
+    );
+    await expectLater(
+      find.byType(Column).first,
+      matchesGoldenFile('goldens/status_mark_light.png'),
+    );
+  });
 }

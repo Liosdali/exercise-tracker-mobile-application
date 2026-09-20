@@ -252,4 +252,20 @@ void main() {
       matchesGoldenFile('goldens/leaderboard_dark.png'),
     );
   });
+
+  testWidgets('golden: leaderboard in light', (tester) async {
+    await pumpAtlas(
+      tester,
+      const TeamTheme(
+        kit: KitColor.crimson,
+        child: AnimatedLeaderboard(entries: _entries, viewerId: 'b'),
+      ),
+      brightness: Brightness.light,
+      surfaceSize: const Size(390, 320),
+    );
+    await expectLater(
+      find.byType(AnimatedLeaderboard),
+      matchesGoldenFile('goldens/leaderboard_light.png'),
+    );
+  });
 }
