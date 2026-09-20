@@ -16,6 +16,8 @@
   "commonEdit": "Düzenle",
   "commonAdd": "Ekle",
   "commonConfirm": "Onayla",
+  "commonCopy": "Kopyala",
+  "errorDetailsCopied": "Hata ayrıntıları panoya kopyalandı",
   "commonClose": "Kapat",
 
   "dashboardGreeting": "Merhaba",

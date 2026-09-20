@@ -48,6 +48,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get commonConfirm => 'Onayla';
 
   @override
+  String get commonCopy => 'Kopyala';
+
+  @override
+  String get errorDetailsCopied => 'Hata ayrıntıları panoya kopyalandı';
+
+  @override
   String get commonClose => 'Kapat';
 
   @override

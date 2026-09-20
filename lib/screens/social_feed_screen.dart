@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -39,6 +40,16 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
   bool _feedFailed = false;
   List<dynamic> _friendsWorkouts = [];
   String? _selectedTeamId;
+
+  /// The underlying failure behind `_teamsFailed` / `_feedFailed`.
+  ///
+  /// The localized message on the card cannot say what actually went wrong —
+  /// it guesses "check your connection" for every cause, including ones that
+  /// have nothing to do with the network. These carry the real exception so
+  /// the card can show it on request, which is the difference between a
+  /// reproducible report and "the team tab is broken".
+  String? _teamsErrorDetail;
+  String? _feedErrorDetail;
 
   @override
   void initState() {
@@ -79,6 +90,7 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
         setState(() {
           _isLoading = false;
           _teamsFailed = true;
+          _teamsErrorDetail = e.toString();
         });
       }
     }
@@ -89,6 +101,8 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       _isLoading = true;
       _teamsFailed = false;
       _feedFailed = false;
+      _teamsErrorDetail = null;
+      _feedErrorDetail = null;
     });
     await _fetchTeamsAndFeed();
   }
@@ -144,7 +158,12 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       });
     } catch (e) {
       debugPrint('Error fetching social feed: $e');
-      if (mounted) setState(() => _feedFailed = true);
+      if (mounted) {
+        setState(() {
+          _feedFailed = true;
+          _feedErrorDetail = e.toString();
+        });
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -300,12 +319,52 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
   }
 
   /// A centred icon + message, with an optional action.
+  /// Shows the raw failure behind a friendly error card.
+  ///
+  /// The card's own text has to guess at a cause; this shows what actually
+  /// happened and lets the user copy it, so a report carries the exception
+  /// instead of a paraphrase.
+  Future<void> _showErrorDetails(String details) async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.syncConflictShowDetails),
+        content: SingleChildScrollView(
+          child: SelectableText(
+            details,
+            style: Theme.of(dialogContext).textTheme.bodySmall,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: details));
+              if (!dialogContext.mounted) return;
+              Navigator.pop(dialogContext);
+              messenger.showSnackBar(
+                SnackBar(content: Text(l10n.errorDetailsCopied)),
+              );
+            },
+            child: Text(l10n.commonCopy),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.commonClose),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _message(
     IconData icon,
     String text, {
     String? title,
     List<Widget> actions = const [],
     Color? iconColor,
+    String? details,
   }) {
     return Center(
       child: Padding(
@@ -328,6 +387,13 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
               const SizedBox(height: 8),
             ],
             Text(text, textAlign: TextAlign.center),
+            if (details != null) ...[
+              const SizedBox(height: 4),
+              TextButton(
+                onPressed: () => _showErrorDetails(details),
+                child: Text(AppLocalizations.of(context)!.syncConflictShowDetails),
+              ),
+            ],
             if (actions.isNotEmpty) ...[
               const SizedBox(height: 24),
               ...actions,
@@ -361,6 +427,7 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       return _message(
         Icons.error_outline,
         l10n.teamLoadError,
+        details: _teamsErrorDetail,
         actions: [
           FilledButton(onPressed: _retry, child: Text(l10n.accountRetry)),
         ],
@@ -397,6 +464,7 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
       return _message(
         Icons.error_outline,
         l10n.teamFeedError,
+        details: _feedErrorDetail,
         actions: [
           FilledButton(onPressed: _retry, child: Text(l10n.accountRetry)),
         ],

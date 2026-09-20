@@ -48,6 +48,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonConfirm => 'Confirm';
 
   @override
+  String get commonCopy => 'Copy';
+
+  @override
+  String get errorDetailsCopied => 'Error details copied to clipboard';
+
+  @override
   String get commonClose => 'Close';
 
   @override

@@ -106,12 +106,27 @@ class TeamProvider extends ChangeNotifier {
         groups(id, name, description, owner_id, invite_token, created_at, color)
       ''').eq('user_id', userId);
 
-      _myTeams = (response as List<dynamic>)
-          .map((row) {
-            final groupData = row['groups'];
-            return Team.fromJson(groupData);
-          })
-          .toList();
+      final teams = <Team>[];
+      var unreadable = 0;
+      for (final row in response as List<dynamic>) {
+        final groupData = row['groups'];
+        // PostgREST embeds null when the membership row survives but the
+        // group itself is not readable — hidden by RLS, or deleted between
+        // the two reads. Passing that null to Team.fromJson threw and failed
+        // the entire list, so one unreadable team took the whole tab down.
+        if (groupData == null) {
+          unreadable++;
+          continue;
+        }
+        teams.add(Team.fromJson(Map<String, dynamic>.from(groupData as Map)));
+      }
+      if (unreadable > 0) {
+        debugPrint(
+          'fetchMyTeams: skipped $unreadable membership row(s) whose group '
+          'was not readable',
+        );
+      }
+      _myTeams = teams;
 
       _isLoading = false;
       notifyListeners();

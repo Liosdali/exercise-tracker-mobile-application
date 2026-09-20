@@ -17,6 +17,10 @@
   "commonEdit": "Edit",
   "commonAdd": "Add",
   "commonConfirm": "Confirm",
+  "commonCopy": "Copy",
+  "@commonCopy": {"description": "Copies a value to the clipboard"},
+  "errorDetailsCopied": "Error details copied to clipboard",
+  "@errorDetailsCopied": {"description": "Confirmation after copying a technical error"},
   "commonClose": "Close",
 
   "dashboardGreeting": "Hello",

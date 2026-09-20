@@ -176,6 +176,18 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get commonConfirm;
 
+  /// Copies a value to the clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get commonCopy;
+
+  /// Confirmation after copying a technical error
+  ///
+  /// In en, this message translates to:
+  /// **'Error details copied to clipboard'**
+  String get errorDetailsCopied;
+
   /// No description provided for @commonClose.
   ///
   /// In en, this message translates to:
