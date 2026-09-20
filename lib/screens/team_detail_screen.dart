@@ -8,6 +8,11 @@ import '../models/team.dart';
 import '../providers/team_provider.dart';
 import '../services/deep_link_service.dart';
 import '../theme/atlas_colors.dart';
+import '../theme/atlas_tokens.dart';
+import '../theme/team_palette.dart';
+import '../widgets/atlas/kit_picker.dart';
+import '../widgets/atlas/team_header.dart';
+import '../widgets/atlas/team_theme.dart';
 import 'team_activity_screen.dart';
 import 'team_leaderboard_screen.dart';
 
@@ -102,6 +107,44 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     }
   }
 
+  Future<void> _editColor(BuildContext context, Team team) async {
+    final provider = context.read<TeamProvider>();
+    final l10n = AppLocalizations.of(context)!;
+    final picked = await showModalBottomSheet<KitColor>(
+      context: context,
+      builder: (sheetContext) {
+        var selection = team.kit;
+        return StatefulBuilder(
+          builder: (builderContext, setSheetState) => Padding(
+            padding: const EdgeInsets.all(AtlasSpace.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                KitPicker(
+                  selected: selection,
+                  onChanged: (kit) => setSheetState(() => selection = kit),
+                ),
+                const SizedBox(height: AtlasSpace.xl),
+                FilledButton(
+                  onPressed: () => Navigator.of(sheetContext).pop(selection),
+                  child: Text(l10n.teamColorChangeAction),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (picked == null || picked == team.kit) return;
+    await provider.setTeamColor(team.id, picked);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.teamColorUpdated)),
+    );
+  }
+
   Future<void> _deleteTeam() async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
@@ -153,10 +196,17 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     final l10n = AppLocalizations.of(context)!;
     final teamProvider = context.watch<TeamProvider>();
     final members = teamProvider.getTeamMembers(widget.team.id);
-    final isOwner = widget.team.ownerId != null &&
-        widget.team.ownerId == Supabase.instance.client.auth.currentUser?.id;
+    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+    final isOwner =
+        widget.team.ownerId != null && widget.team.ownerId == currentUserId;
+    // The RLS policy already restricts the write to admins and owners; this
+    // only decides whether the control is worth showing.
+    final isAdmin = isOwner ||
+        members.any((m) => m.userId == currentUserId && m.isAdmin);
 
-    return Scaffold(
+    return TeamTheme(
+      kit: widget.team.kit,
+      child: Scaffold(
       appBar: AppBar(
         title: Text(widget.team.name),
         actions: [
@@ -190,28 +240,20 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Team Info Card
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.team.name,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    if (widget.team.description != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        widget.team.description!,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ],
+            // Team Info Header
+            TeamHeader(
+              teamName: widget.team.name,
+              memberSummary: '${members.length} ${l10n.teamMembers}',
+              description: widget.team.description,
+            ),
+            if (isAdmin)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () => _editColor(context, widget.team),
+                  child: Text(l10n.teamColorChangeAction),
                 ),
               ),
-            ),
             const SizedBox(height: 24),
             // Invite Section
             Text(
@@ -389,6 +431,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
               ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/leaderboard_entry.dart';
+import '../models/team.dart';
 import '../providers/team_provider.dart';
 import '../theme/atlas_colors.dart';
+import '../theme/team_palette.dart';
+import '../widgets/atlas/leaderboard_row.dart' as atlas_leaderboard;
+import '../widgets/atlas/team_theme.dart';
 
 class TeamLeaderboardScreen extends StatefulWidget {
   final String teamId;
@@ -46,12 +51,25 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
     ]);
   }
 
+  /// Finds the team this leaderboard belongs to among the teams the viewer
+  /// already has loaded, falling back to the default kit rather than
+  /// fetching a team the caller has not made available.
+  Team? _findTeam(List<Team> teams) {
+    for (final team in teams) {
+      if (team.id == widget.teamId) return team;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final teamProvider = context.watch<TeamProvider>();
+    final kit = _findTeam(teamProvider.myTeams)?.kit ?? kDefaultKit;
 
-    return Scaffold(
+    return TeamTheme(
+      kit: kit,
+      child: Scaffold(
       appBar: AppBar(
         title: Text(l10n.teamLeaderboard),
         elevation: 0,
@@ -103,6 +121,7 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
           ),
         ],
       ),
+      ),
     );
   }
 
@@ -125,64 +144,21 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
       );
     }
 
-    return ListView.builder(
-      itemCount: entries.length,
-      itemBuilder: (context, index) {
-        final entry = entries[index];
-        final score = _getScoreForMetric(entry);
-        final isMedal = entry.isTopThree;
+    final viewerId = Supabase.instance.client.auth.currentUser?.id;
 
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          elevation: isMedal ? 4 : 1,
-          child: ListTile(
-            leading: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: isMedal
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Center(
-                child: Text(
-                  entry.getRankDisplay(),
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: atlas_leaderboard.AnimatedLeaderboard(
+        entries: [
+          for (final entry in entries)
+            atlas_leaderboard.LeaderboardEntry(
+              id: entry.userId,
+              name: entry.userName ?? l10n.teamMember,
+              metric: _getScoreForMetric(entry),
             ),
-            title: Text(
-              entry.userName ?? l10n.teamMember,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              _getMetricLabel(entry, _selectedMetric, l10n),
-            ),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  score,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 4),
-                _buildTrendIndicator(entry, _selectedMetric),
-              ],
-            ),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => MemberLeaderboardDetailScreen(
-                    leaderboardEntry: entry,
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
+        ],
+        viewerId: viewerId,
+      ),
     );
   }
 
@@ -199,23 +175,6 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
     }
   }
 
-  String _getMetricLabel(LeaderboardEntry entry, String metric, AppLocalizations l10n) {
-    switch (metric) {
-      case 'workouts':
-        return '${entry.workoutCount} ${l10n.leaderboardWorkouts}';
-      case 'weight':
-        return '${entry.totalWeightLifted.toStringAsFixed(1)} kg';
-      case 'calories':
-        return '${entry.totalCalories.toStringAsFixed(0)} kcal';
-      default:
-        return '';
-    }
-  }
-
-  Widget _buildTrendIndicator(LeaderboardEntry entry, String metric) {
-    // Placeholder for trend (would compare with previous period)
-    return Icon(Icons.trending_up, size: 16, color: context.atlas.success);
-  }
 }
 
 /// Screen showing individual member's leaderboard details and history

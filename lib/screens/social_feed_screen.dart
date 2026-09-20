@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -8,6 +9,9 @@ import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
 import '../services/supabase_service.dart';
 import '../theme/atlas_colors.dart';
+import '../theme/team_palette.dart';
+import '../widgets/atlas/feed_item.dart';
+import '../widgets/atlas/team_theme.dart';
 import 'create_team_screen.dart';
 import 'join_team_screen.dart';
 import 'pending_suggestions_screen.dart';
@@ -424,31 +428,35 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
           final user = session['social_users'];
           final isMe = user['id'] == _supabase.auth.currentUser?.id;
 
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            elevation: 2,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: user['avatar_url'] != null
-                    ? NetworkImage(user['avatar_url'])
-                    : null,
-                child: user['avatar_url'] == null
-                    ? const Icon(Icons.person)
-                    : null,
+          final dateValue = session['date'];
+          final timestamp = dateValue is String
+              ? DateFormat('yyyy-MM-dd')
+                  .format(DateTime.tryParse(dateValue) ?? DateTime.now())
+              : '';
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            // This query joins workout_sessions to social_users only; it
+            // carries no team_id or color, so a row cannot know which team's
+            // kit to wear. Falling back to the default kit rather than
+            // inventing a per-row team lookup.
+            child: TeamTheme(
+              kit: kDefaultKit,
+              child: FeedItem(
+                actor: (user['display_name'] as String?) ?? '',
+                action: 'completed a workout!',
+                metric:
+                    '${session['title']} • ${session['duration_minutes']} min • ${session['calories']} kcal',
+                timestamp: timestamp,
+                onTap: isMe
+                    ? null
+                    : () => _showReportBlockModal(
+                          user['id'] as String,
+                          user['display_name'] as String,
+                        ),
               ),
-              title: Text('${user['display_name']} completed a workout!'),
-              subtitle: Text(
-                '${session['title']}\n${session['duration_minutes']} min, ${session['calories']} kcal',
-              ),
-              trailing: isMe
-                  ? null
-                  : IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      onPressed: () =>
-                          _showReportBlockModal(user['id'], user['display_name']),
-                    ),
-              ),
-            );
+            ),
+          );
         },
       ),
     );

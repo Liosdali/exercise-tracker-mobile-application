@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/team.dart';
 import '../providers/team_provider.dart';
+import '../widgets/atlas/team_crest.dart';
+import '../widgets/atlas/team_theme.dart';
 import 'create_team_screen.dart';
 import 'join_team_screen.dart';
 import 'team_detail_screen.dart';
@@ -139,13 +141,9 @@ class _TeamCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor:
-              Theme.of(context).colorScheme.primaryContainer,
-          child: Icon(
-            Icons.group,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+        leading: TeamTheme(
+          kit: team.kit,
+          child: TeamCrest(teamName: team.name),
         ),
         title: Text(team.name),
         subtitle: Text('$memberCount members'),
