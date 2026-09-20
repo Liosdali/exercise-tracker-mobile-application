@@ -1,4 +1,5 @@
 import 'package:exercise_app/theme/atlas_colors.dart';
+import 'package:exercise_app/theme/atlas_tokens.dart';
 import 'package:exercise_app/widgets/atlas/stat_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -54,11 +55,20 @@ void main() {
         ),
       ),
     );
-    // Verify the full text is present and not truncated
+    // The full string must still be there — scaling down is not truncating.
     expect(find.text('1 234 567'), findsOneWidget);
-    final text = tester.widget<Text>(find.text('1 234 567'));
-    // Confirm it's not using overflow ellipsis (which would truncate)
-    expect(text.overflow, isNull);
+    // And it must actually have been scaled to fit: the FittedBox wrapping
+    // the value can be no wider than the tile minus its horizontal padding.
+    // Asserting on `Text.overflow` alone can never fail here — the widget is
+    // built with no `overflow` argument, so it is null regardless of whether
+    // scaling logic exists at all. Rendered geometry is the only signal that
+    // actually depends on the FittedBox being present.
+    final tileWidth = tester.getSize(find.byType(StatTile)).width;
+    final fittedBoxWidth = tester.getSize(find.byType(FittedBox)).width;
+    expect(
+      fittedBoxWidth,
+      lessThanOrEqualTo(tileWidth - 2 * AtlasSpace.lg),
+    );
   });
 
   testWidgets('golden: stat tile in dark', (tester) async {
