@@ -40,7 +40,7 @@ class FeedItem extends StatelessWidget {
       color: atlas.surface,
       borderRadius: BorderRadius.circular(AtlasRadius.card),
       elevation: isDark ? 0 : 2,
-      shadowColor: isDark ? Colors.transparent : const Color(0x1A171B22),
+      shadowColor: isDark ? Colors.transparent : AtlasTokens.lightShadow,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AtlasRadius.card),

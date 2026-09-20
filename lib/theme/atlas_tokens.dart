@@ -22,6 +22,11 @@ abstract final class AtlasTokens {
   static const Color lightTextPrimary = Color(0xFF171B22);
   static const Color lightTextMuted = Color(0xFF5D6675);
 
+  /// Light mode's real-shadow elevation strategy (dark mode separates layers
+  /// with a surface step and a hairline instead — see spec §4). 10% opacity
+  /// `lightTextPrimary`, shared by every component that elevates in light.
+  static const Color lightShadow = Color(0x1A171B22);
+
   // Status hues. Small marks only: a dot, an icon, a line of text.
   static const Color darkSuccess = Color(0xFF3FBF87);
   static const Color darkWarn = Color(0xFFE0A62E);

@@ -37,7 +37,7 @@ class StatTile extends StatelessWidget {
             ? null
             : const [
                 BoxShadow(
-                  color: Color(0x1A171B22),
+                  color: AtlasTokens.lightShadow,
                   blurRadius: 8,
                   offset: Offset(0, 2),
                 ),

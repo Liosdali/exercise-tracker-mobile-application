@@ -77,7 +77,7 @@ ThemeData _build({
       color: atlas.surface,
       surfaceTintColor: Colors.transparent,
       elevation: isDark ? 0 : 2,
-      shadowColor: isDark ? Colors.transparent : const Color(0x1A171B22),
+      shadowColor: isDark ? Colors.transparent : AtlasTokens.lightShadow,
       margin: const EdgeInsets.symmetric(vertical: AtlasSpace.sm),
       shape: cardShape,
     ),
