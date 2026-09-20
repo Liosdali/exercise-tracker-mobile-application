@@ -11,11 +11,16 @@ class LeaderboardEntry {
     required this.id,
     required this.name,
     required this.metric,
+    this.detail,
   });
 
   final String id;
   final String name;
   final String metric;
+
+  /// An optional line beneath the name saying what the metric measures,
+  /// e.g. "12 workouts". Renders nothing when null.
+  final String? detail;
 }
 
 /// A results line: the placing, who earned it, and the number that did.
@@ -25,16 +30,26 @@ class LeaderboardRow extends StatelessWidget {
     required this.rank,
     required this.entry,
     this.isViewer = false,
+    this.onTap,
+    this.trailing,
   });
 
   final int rank;
   final LeaderboardEntry entry;
   final bool isViewer;
 
+  /// Makes the whole row tappable with a visible ink response. Null keeps
+  /// the row exactly as it was before this hook existed.
+  final VoidCallback? onTap;
+
+  /// An optional widget after the metric, e.g. a trend indicator. Null
+  /// renders nothing extra.
+  final Widget? trailing;
+
   @override
   Widget build(BuildContext context) {
     final atlas = context.atlas;
-    return Row(
+    final content = Row(
       children: [
         if (isViewer)
           Container(
@@ -64,12 +79,35 @@ class LeaderboardRow extends StatelessWidget {
         TeamCrest(teamName: entry.name, size: CrestSize.small),
         const SizedBox(width: AtlasSpace.md),
         Expanded(
-          child: Text(
-            entry.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AtlasTypography.body.copyWith(color: atlas.textPrimary),
-          ),
+          child: entry.detail == null
+              ? Text(
+                  entry.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style:
+                      AtlasTypography.body.copyWith(color: atlas.textPrimary),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      entry.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AtlasTypography.body
+                          .copyWith(color: atlas.textPrimary),
+                    ),
+                    const SizedBox(height: AtlasSpace.xs),
+                    Text(
+                      entry.detail!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AtlasTypography.micro
+                          .copyWith(color: atlas.textMuted),
+                    ),
+                  ],
+                ),
         ),
         Text(
           entry.metric,
@@ -77,8 +115,19 @@ class LeaderboardRow extends StatelessWidget {
             color: atlas.textPrimary,
           ),
         ),
+        if (trailing != null) ...[
+          const SizedBox(width: AtlasSpace.md),
+          trailing!,
+        ],
         const SizedBox(width: AtlasSpace.lg),
       ],
+    );
+
+    if (onTap == null) return content;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(onTap: onTap, child: content),
     );
   }
 }
@@ -93,10 +142,20 @@ class AnimatedLeaderboard extends StatelessWidget {
     super.key,
     required this.entries,
     this.viewerId,
+    this.onEntryTap,
+    this.trailingBuilder,
   });
 
   final List<LeaderboardEntry> entries;
   final String? viewerId;
+
+  /// Called with the tapped entry. Null (the default) leaves every row
+  /// non-interactive, exactly as before this hook existed.
+  final void Function(LeaderboardEntry entry)? onEntryTap;
+
+  /// Builds an optional trailing widget per row, e.g. a trend indicator.
+  /// Null (the default) renders nothing extra.
+  final Widget Function(LeaderboardEntry entry)? trailingBuilder;
 
   static const double rowHeight = 72;
 
@@ -120,6 +179,10 @@ class AnimatedLeaderboard extends StatelessWidget {
                 rank: i + 1,
                 entry: entries[i],
                 isViewer: entries[i].id == viewerId,
+                onTap: onEntryTap == null
+                    ? null
+                    : () => onEntryTap!(entries[i]),
+                trailing: trailingBuilder?.call(entries[i]),
               ),
             ),
         ],

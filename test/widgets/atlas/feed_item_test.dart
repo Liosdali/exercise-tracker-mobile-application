@@ -61,6 +61,37 @@ void main() {
     expect(find.byKey(const ValueKey('feed-metric')), findsNothing);
   });
 
+  testWidgets('trailing renders beside the timestamp', (tester) async {
+    await pumpAtlas(
+      tester,
+      const TeamTheme(
+        kit: KitColor.teal,
+        child: FeedItem(
+          actor: 'Deniz',
+          action: 'joined the team',
+          timestamp: 'just now',
+          trailing: Icon(Icons.more_vert, key: ValueKey('feed-trailing')),
+        ),
+      ),
+    );
+    expect(find.byKey(const ValueKey('feed-trailing')), findsOneWidget);
+  });
+
+  testWidgets('trailing is absent when null', (tester) async {
+    await pumpAtlas(
+      tester,
+      const TeamTheme(
+        kit: KitColor.teal,
+        child: FeedItem(
+          actor: 'Deniz',
+          action: 'joined the team',
+          timestamp: 'just now',
+        ),
+      ),
+    );
+    expect(find.byKey(const ValueKey('feed-trailing')), findsNothing);
+  });
+
   testWidgets('calls onTap when tapped', (tester) async {
     var taps = 0;
     await pumpAtlas(

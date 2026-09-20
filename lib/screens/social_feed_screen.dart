@@ -448,12 +448,15 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
                 metric:
                     '${session['title']} • ${session['duration_minutes']} min • ${session['calories']} kcal',
                 timestamp: timestamp,
-                onTap: isMe
+                trailing: isMe
                     ? null
-                    : () => _showReportBlockModal(
+                    : IconButton(
+                        icon: const Icon(Icons.more_vert),
+                        onPressed: () => _showReportBlockModal(
                           user['id'] as String,
                           user['display_name'] as String,
                         ),
+                      ),
               ),
             ),
           );

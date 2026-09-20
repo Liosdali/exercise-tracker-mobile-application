@@ -83,6 +83,108 @@ void main() {
     expect(find.byKey(const ValueKey('leaderboard-rail')), findsNothing);
   });
 
+  testWidgets('a detail renders beneath the name', (tester) async {
+    await pumpAtlas(
+      tester,
+      const TeamTheme(
+        kit: KitColor.royal,
+        child: LeaderboardRow(
+          rank: 1,
+          entry: LeaderboardEntry(
+            id: 'a',
+            name: 'Deniz',
+            metric: '4 210 kg',
+            detail: '12 workouts',
+          ),
+        ),
+      ),
+    );
+    expect(find.text('12 workouts'), findsOneWidget);
+  });
+
+  testWidgets('no detail means nothing extra renders', (tester) async {
+    await pumpAtlas(
+      tester,
+      const TeamTheme(
+        kit: KitColor.royal,
+        child: LeaderboardRow(
+          rank: 1,
+          entry: LeaderboardEntry(id: 'a', name: 'Deniz', metric: '4 210 kg'),
+        ),
+      ),
+    );
+    expect(find.text('12 workouts'), findsNothing);
+  });
+
+  testWidgets('onTap fires when the row is tapped', (tester) async {
+    var taps = 0;
+    await pumpAtlas(
+      tester,
+      TeamTheme(
+        kit: KitColor.royal,
+        child: LeaderboardRow(
+          rank: 1,
+          entry: const LeaderboardEntry(
+              id: 'a', name: 'Deniz', metric: '4 210 kg'),
+          onTap: () => taps++,
+        ),
+      ),
+    );
+    await tester.tap(find.byType(LeaderboardRow));
+    expect(taps, 1);
+  });
+
+  testWidgets('trailing renders after the metric', (tester) async {
+    await pumpAtlas(
+      tester,
+      const TeamTheme(
+        kit: KitColor.royal,
+        child: LeaderboardRow(
+          rank: 1,
+          entry: LeaderboardEntry(id: 'a', name: 'Deniz', metric: '4 210 kg'),
+          trailing: Icon(Icons.trending_up, key: ValueKey('trend-icon')),
+        ),
+      ),
+    );
+    expect(find.byKey(const ValueKey('trend-icon')), findsOneWidget);
+  });
+
+  testWidgets('onEntryTap fires with the tapped entry', (tester) async {
+    LeaderboardEntry? tapped;
+    await pumpAtlas(
+      tester,
+      TeamTheme(
+        kit: KitColor.royal,
+        child: AnimatedLeaderboard(
+          entries: _entries,
+          onEntryTap: (entry) => tapped = entry,
+        ),
+      ),
+      surfaceSize: const Size(390, 320),
+    );
+    await tester.tap(find.text('Mert'));
+    expect(tapped?.id, 'b');
+  });
+
+  testWidgets('trailingBuilder places its widget on every row',
+      (tester) async {
+    await pumpAtlas(
+      tester,
+      TeamTheme(
+        kit: KitColor.royal,
+        child: AnimatedLeaderboard(
+          entries: _entries,
+          trailingBuilder: (entry) =>
+              Icon(Icons.star, key: ValueKey('trend-${entry.id}')),
+        ),
+      ),
+      surfaceSize: const Size(390, 320),
+    );
+    for (final entry in _entries) {
+      expect(find.byKey(ValueKey('trend-${entry.id}')), findsOneWidget);
+    }
+  });
+
   testWidgets('rows move to new positions when the order changes',
       (tester) async {
     await pumpAtlas(

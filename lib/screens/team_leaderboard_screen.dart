@@ -145,6 +145,10 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
     }
 
     final viewerId = Supabase.instance.client.auth.currentUser?.id;
+    // AnimatedLeaderboard's callbacks hand back its own entry type, keyed by
+    // userId; this maps back to the screen's own model to reuse its fields
+    // for navigation and the trend indicator.
+    final byUserId = {for (final entry in entries) entry.userId: entry};
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -155,9 +159,25 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
               id: entry.userId,
               name: entry.userName ?? l10n.teamMember,
               metric: _getScoreForMetric(entry),
+              detail: _getMetricLabel(entry, _selectedMetric, l10n),
             ),
         ],
         viewerId: viewerId,
+        onEntryTap: (atlasEntry) {
+          final entry = byUserId[atlasEntry.id];
+          if (entry == null) return;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) =>
+                  MemberLeaderboardDetailScreen(leaderboardEntry: entry),
+            ),
+          );
+        },
+        trailingBuilder: (atlasEntry) {
+          final entry = byUserId[atlasEntry.id];
+          if (entry == null) return const SizedBox.shrink();
+          return _buildTrendIndicator(entry, _selectedMetric);
+        },
       ),
     );
   }
@@ -173,6 +193,24 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
       default:
         return '0';
     }
+  }
+
+  String _getMetricLabel(LeaderboardEntry entry, String metric, AppLocalizations l10n) {
+    switch (metric) {
+      case 'workouts':
+        return '${entry.workoutCount} ${l10n.leaderboardWorkouts}';
+      case 'weight':
+        return '${entry.totalWeightLifted.toStringAsFixed(1)} kg';
+      case 'calories':
+        return '${entry.totalCalories.toStringAsFixed(0)} kcal';
+      default:
+        return '';
+    }
+  }
+
+  Widget _buildTrendIndicator(LeaderboardEntry entry, String metric) {
+    // Placeholder for trend (would compare with previous period)
+    return Icon(Icons.trending_up, size: 16, color: context.atlas.success);
   }
 
 }

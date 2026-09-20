@@ -18,6 +18,7 @@ class FeedItem extends StatelessWidget {
     required this.timestamp,
     this.metric,
     this.onTap,
+    this.trailing,
   });
 
   final String actor;
@@ -25,6 +26,10 @@ class FeedItem extends StatelessWidget {
   final String timestamp;
   final String? metric;
   final VoidCallback? onTap;
+
+  /// An optional widget at the row's trailing edge, beside the timestamp.
+  /// Null (the default) renders nothing extra.
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +105,10 @@ class FeedItem extends StatelessWidget {
                             color: atlas.textMuted,
                           ),
                         ),
+                        if (trailing != null) ...[
+                          const SizedBox(width: AtlasSpace.sm),
+                          trailing!,
+                        ],
                       ],
                     ),
                   ),
