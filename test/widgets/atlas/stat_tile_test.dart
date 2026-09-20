@@ -1,5 +1,3 @@
-import 'dart:ui' show FontFeature;
-
 import 'package:exercise_app/theme/atlas_colors.dart';
 import 'package:exercise_app/widgets/atlas/stat_tile.dart';
 import 'package:flutter/material.dart';
