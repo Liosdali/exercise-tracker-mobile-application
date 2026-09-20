@@ -9,7 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
 import '../screens/team_detail_screen.dart';
-import '../theme/atlas_colors.dart';
+import '../widgets/atlas/status_mark.dart';
 
 /// Handles `https://atlasworkout.app/join?token=XYZ789` invite links.
 ///
@@ -98,7 +98,6 @@ class DeepLinkService {
     final teamProvider = context.read<TeamProvider>();
     final navigator = Navigator.of(context, rootNavigator: true);
     final messenger = ScaffoldMessenger.of(context);
-    final dangerColor = context.atlas.danger;
 
     _isDialogOpen = true;
     final confirmed = await showDialog<bool>(
@@ -158,7 +157,9 @@ class DeepLinkService {
               : l10n.teamJoinError;
 
       messenger.showSnackBar(
-        SnackBar(content: Text(text), backgroundColor: dangerColor),
+        SnackBar(
+          content: StatusMark(status: AtlasStatus.danger, label: text),
+        ),
       );
     }
   }
