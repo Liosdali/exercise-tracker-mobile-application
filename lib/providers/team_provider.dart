@@ -10,6 +10,7 @@ import '../models/team_activity_log.dart';
 import '../models/team_member.dart';
 import '../services/deep_link_service.dart';
 import '../services/supabase_service.dart';
+import '../theme/team_palette.dart';
 
 /// Why the team features can or cannot be used right now.
 enum TeamAvailability {
@@ -102,7 +103,7 @@ class TeamProvider extends ChangeNotifier {
       // Query groups where user is a member
       final response = await _supabase.from('group_members').select('''
         group_id,
-        groups(id, name, description, owner_id, invite_token, created_at)
+        groups(id, name, description, owner_id, invite_token, created_at, color)
       ''').eq('user_id', userId);
 
       _myTeams = (response as List<dynamic>)
@@ -126,6 +127,7 @@ class TeamProvider extends ChangeNotifier {
   Future<Team> createTeam({
     required String name,
     String? description,
+    KitColor kit = kDefaultKit,
   }) async {
     _isLoading = true;
     _error = null;
@@ -143,6 +145,7 @@ class TeamProvider extends ChangeNotifier {
         'description': description,
         'owner_id': userId,
         'invite_token': inviteToken,
+        'color': swatchOf(kit).slug,
         'created_at': DateTime.now().toIso8601String(),
       }).select().single();
 
@@ -302,6 +305,30 @@ class TeamProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _error = 'Failed to delete team: $e';
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  /// Changes a team's kit colour.
+  ///
+  /// Only admins and the owner may do this; the `Admins can update their
+  /// group` RLS policy enforces it, so a member's attempt fails at the
+  /// database rather than relying on the UI hiding the control.
+  Future<void> setTeamColor(String teamId, KitColor kit) async {
+    try {
+      await _supabase
+          .from('groups')
+          .update({'color': swatchOf(kit).slug})
+          .eq('id', teamId);
+
+      final index = _myTeams.indexWhere((t) => t.id == teamId);
+      if (index != -1) {
+        _myTeams[index] = _myTeams[index].copyWith(color: swatchOf(kit).slug);
+      }
+      notifyListeners();
+    } catch (e) {
+      _error = 'Failed to update team colour: $e';
       notifyListeners();
       rethrow;
     }

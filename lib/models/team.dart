@@ -1,3 +1,5 @@
+import '../theme/team_palette.dart';
+
 /// Represents a team (group) for social features.
 class Team {
   final String id;
@@ -6,6 +8,7 @@ class Team {
   final String? ownerId;
   final String inviteToken;
   final DateTime createdAt;
+  final String color;
 
   Team({
     required this.id,
@@ -14,6 +17,7 @@ class Team {
     this.ownerId,
     required this.inviteToken,
     required this.createdAt,
+    this.color = 'steel',
   });
 
   /// Creates a Team from a Supabase row.
@@ -25,6 +29,7 @@ class Team {
       ownerId: json['owner_id'] as String?,
       inviteToken: json['invite_token'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
+      color: json['color'] as String? ?? kDefaultKit.name,
     );
   }
 
@@ -36,6 +41,7 @@ class Team {
         'owner_id': ownerId,
         'invite_token': inviteToken,
         'created_at': createdAt.toIso8601String(),
+        'color': color,
       };
 
   /// Creates a copy of this Team with optional field updates.
@@ -46,6 +52,7 @@ class Team {
     String? ownerId,
     String? inviteToken,
     DateTime? createdAt,
+    String? color,
   }) {
     return Team(
       id: id ?? this.id,
@@ -54,12 +61,18 @@ class Team {
       ownerId: ownerId ?? this.ownerId,
       inviteToken: inviteToken ?? this.inviteToken,
       createdAt: createdAt ?? this.createdAt,
+      color: color ?? this.color,
     );
   }
 
+  /// The kit colour this team wears. Unknown or missing slugs resolve to the
+  /// default rather than throwing, so a row written by a newer client cannot
+  /// break an older one.
+  KitColor get kit => kitFromSlug(color);
+
   @override
   String toString() =>
-      'Team(id: $id, name: $name, description: $description, ownerId: $ownerId, inviteToken: $inviteToken)';
+      'Team(id: $id, name: $name, description: $description, ownerId: $ownerId, inviteToken: $inviteToken, color: $color)';
 
   @override
   bool operator ==(Object other) =>
@@ -71,7 +84,8 @@ class Team {
           description == other.description &&
           ownerId == other.ownerId &&
           inviteToken == other.inviteToken &&
-          createdAt == other.createdAt;
+          createdAt == other.createdAt &&
+          color == other.color;
 
   @override
   int get hashCode =>
@@ -80,5 +94,6 @@ class Team {
       description.hashCode ^
       ownerId.hashCode ^
       inviteToken.hashCode ^
-      createdAt.hashCode;
+      createdAt.hashCode ^
+      color.hashCode;
 }
