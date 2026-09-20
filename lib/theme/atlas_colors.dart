@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'atlas_tokens.dart';
+import 'team_palette.dart';
 
 /// The colours Material's [ColorScheme] has no slot for.
 ///
@@ -36,9 +37,9 @@ class AtlasColors extends ThemeExtension<AtlasColors> {
         warn = AtlasTokens.darkWarn,
         danger = AtlasTokens.darkDanger,
         info = AtlasTokens.darkInfo,
-        teamFill = const Color(0xFF5A6472),
-        teamOnFill = const Color(0xFFFFFFFF),
-        teamMark = const Color(0xFF7F8A9A);
+        teamFill = kSteelFill,
+        teamOnFill = kSteelOnFill,
+        teamMark = kSteelDarkMark;
 
   const AtlasColors.light()
       : ink = AtlasTokens.lightInk,
@@ -51,9 +52,9 @@ class AtlasColors extends ThemeExtension<AtlasColors> {
         warn = AtlasTokens.lightWarn,
         danger = AtlasTokens.lightDanger,
         info = AtlasTokens.lightInfo,
-        teamFill = const Color(0xFF5A6472),
-        teamOnFill = const Color(0xFFFFFFFF),
-        teamMark = const Color(0xFF5A6472);
+        teamFill = kSteelFill,
+        teamOnFill = kSteelOnFill,
+        teamMark = kSteelLightMark;
 
   final Color ink;
   final Color surface;

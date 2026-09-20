@@ -38,6 +38,14 @@ class KitSwatch {
 const Color _white = Color(0xFFFFFFFF);
 const Color _ink = Color(0xFF161A21);
 
+/// Steel's four values, hoisted so [AtlasColors]'s const constructors can
+/// reference them directly — a const constructor cannot call [swatchOf], but
+/// a const variable reference is still a valid const expression.
+const Color kSteelFill = Color(0xFF5A6472);
+const Color kSteelOnFill = _white;
+const Color kSteelDarkMark = Color(0xFF7F8A9A);
+const Color kSteelLightMark = Color(0xFF5A6472);
+
 /// Ratios are measured in `test/theme/team_palette_test.dart`.
 const Map<KitColor, KitSwatch> kitSwatches = <KitColor, KitSwatch>{
   KitColor.crimson: KitSwatch(
@@ -93,10 +101,10 @@ const Map<KitColor, KitSwatch> kitSwatches = <KitColor, KitSwatch>{
   ),
   KitColor.steel: KitSwatch(
     slug: 'steel',
-    fill: Color(0xFF5A6472),
-    onFill: _white,
-    darkMark: Color(0xFF7F8A9A),
-    lightMark: Color(0xFF5A6472),
+    fill: kSteelFill,
+    onFill: kSteelOnFill,
+    darkMark: kSteelDarkMark,
+    lightMark: kSteelLightMark,
   ),
 };
 
