@@ -10,6 +10,7 @@ import '../models/team_activity_log.dart';
 import '../models/team_member.dart';
 import '../services/deep_link_service.dart';
 import '../services/supabase_service.dart';
+import '../utils/expired_token_retry.dart';
 import '../theme/team_palette.dart';
 
 /// Why the team features can or cannot be used right now.
@@ -101,10 +102,13 @@ class TeamProvider extends ChangeNotifier {
       if (userId == null) throw Exception('User not authenticated');
 
       // Query groups where user is a member
-      final response = await _supabase.from('group_members').select('''
-        group_id,
-        groups(id, name, description, owner_id, invite_token, created_at, color)
-      ''').eq('user_id', userId);
+      final response = await retryOnExpiredToken(
+        action: () async => await _supabase.from('group_members').select('''
+          group_id,
+          groups(id, name, description, owner_id, invite_token, created_at, color)
+        ''').eq('user_id', userId),
+        refresh: _service.refreshSession,
+      );
 
       final teams = <Team>[];
       var unreadable = 0;
@@ -529,15 +533,18 @@ class TeamProvider extends ChangeNotifier {
       final currentUserId = _service.currentUser?.id;
       if (currentUserId == null) throw Exception('User not authenticated');
 
-      final response = await _supabase
-          .from('program_suggestions')
-          .select('''
-            *,
-            social_users:from_user_id(id, display_name, avatar_url)
-          ''')
-          .eq('to_user_id', currentUserId)
-          .eq('status', 'pending')
-          .order('created_at', ascending: false);
+      final response = await retryOnExpiredToken(
+        action: () async => await _supabase
+            .from('program_suggestions')
+            .select('''
+              *,
+              social_users:from_user_id(id, display_name, avatar_url)
+            ''')
+            .eq('to_user_id', currentUserId)
+            .eq('status', 'pending')
+            .order('created_at', ascending: false),
+        refresh: _service.refreshSession,
+      );
 
       _pendingSuggestions = (response as List<dynamic>).map((row) => ProgramSuggestion.fromJson(row)).toList();
 

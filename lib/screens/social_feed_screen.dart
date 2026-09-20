@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
 import '../services/supabase_service.dart';
+import '../utils/expired_token_retry.dart';
 import '../theme/atlas_colors.dart';
 import '../theme/team_palette.dart';
 import '../widgets/atlas/feed_item.dart';
@@ -149,7 +150,11 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
         query = query.inFilter('user_id', memberIds);
       }
 
-      final response = await query.order('date', ascending: false).limit(50);
+      final response = await retryOnExpiredToken(
+        action: () async =>
+            await query.order('date', ascending: false).limit(50),
+        refresh: SupabaseService().refreshSession,
+      );
 
       if (!mounted) return;
       setState(() {
