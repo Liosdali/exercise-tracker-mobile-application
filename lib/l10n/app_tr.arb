@@ -311,6 +311,7 @@
   "workoutSummaryDurationLabel": "Süre",
   "workoutSummaryDurationValue": "{minutes} dk",
   "workoutSummaryCaloriesLabel": "Tahmini kalori",
+  "feedCaloriesValue": "{calories} kcal",
   "workoutSummaryBackHomeButton": "Ana Sayfaya Dön",
   "accountTitle": "Hesap",
   "accountGuest": "Misafir",

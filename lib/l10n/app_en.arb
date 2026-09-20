@@ -341,6 +341,10 @@
     "placeholders": {"minutes": {"type": "int"}}
   },
   "workoutSummaryCaloriesLabel": "Estimated calories",
+  "feedCaloriesValue": "{calories} kcal",
+  "@feedCaloriesValue": {
+    "placeholders": {"calories": {"type": "int"}}
+  },
   "workoutSummaryBackHomeButton": "Back to Home",
   "accountTitle": "Account",
   "accountGuest": "Guest",

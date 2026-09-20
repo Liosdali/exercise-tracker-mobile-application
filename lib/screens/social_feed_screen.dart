@@ -434,6 +434,11 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
                   .format(DateTime.tryParse(dateValue) ?? DateTime.now())
               : '';
 
+          final durationMinutes = (session['duration_minutes'] as num?) ?? 0;
+          final calories = (session['calories'] as num?) ?? 0;
+          final metric = '${l10n.workoutSummaryDurationValue(durationMinutes.round())}, '
+              '${l10n.feedCaloriesValue(calories.round())}';
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             // This query joins workout_sessions to social_users only; it
@@ -444,9 +449,8 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
               kit: kDefaultKit,
               child: FeedItem(
                 actor: (user['display_name'] as String?) ?? '',
-                action: 'completed a workout!',
-                metric:
-                    '${session['title']} • ${session['duration_minutes']} min • ${session['calories']} kcal',
+                action: (session['title'] as String?) ?? '',
+                metric: metric,
                 timestamp: timestamp,
                 trailing: isMe
                     ? null
