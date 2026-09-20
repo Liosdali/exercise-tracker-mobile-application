@@ -1228,7 +1228,8 @@ BEGIN
       ('workout_sessions',         'user_id'),
       ('group_members',            'user_id'),
       ('team_leaderboard_weekly',  'user_id'),
-      ('team_leaderboard_monthly', 'user_id')
+      ('team_leaderboard_monthly', 'user_id'),
+      ('program_suggestions',       'from_user_id')
     ) AS t(tbl, col)
   LOOP
     fk_name := format('%s_%s_social_users_fkey', r.tbl, r.col);
