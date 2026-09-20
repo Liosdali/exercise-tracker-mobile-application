@@ -69,9 +69,9 @@ Set<int> _coveredCodePoints(Uint8List bytes) {
         final start = data.getUint32(group);
         final end = data.getUint32(group + 4);
         final startGlyph = data.getUint32(group + 8);
-        if (startGlyph == 0 && start == 0) continue;
         for (var c = start; c <= end; c++) {
-          covered.add(c);
+          final glyph = startGlyph + (c - start);
+          if (glyph != 0) covered.add(c);
         }
       }
     }
