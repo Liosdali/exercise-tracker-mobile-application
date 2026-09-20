@@ -80,6 +80,9 @@ CREATE TABLE public.groups (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   name TEXT NOT NULL,
   invite_token TEXT UNIQUE NOT NULL,
+  color TEXT NOT NULL DEFAULT 'steel'
+    CHECK (color IN ('crimson', 'claret', 'violet', 'royal',
+                     'teal', 'forest', 'gold', 'steel')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
