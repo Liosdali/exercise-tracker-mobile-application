@@ -25,5 +25,16 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     'assets/fonts/Archivo_Expanded-SemiBold.ttf',
     'assets/fonts/Archivo_Expanded-Bold.ttf',
   ]);
+
+  // Load MaterialIcons from Flutter SDK if available
+  final flutterRoot = Platform.environment['FLUTTER_ROOT'];
+  if (flutterRoot != null) {
+    final materialIconsPath = '$flutterRoot/bin/cache/artifacts/material_fonts/materialicons-regular.otf';
+    final materialIconsFile = File(materialIconsPath);
+    if (materialIconsFile.existsSync()) {
+      await _load('MaterialIcons', <String>[materialIconsPath]);
+    }
+  }
+
   return testMain();
 }

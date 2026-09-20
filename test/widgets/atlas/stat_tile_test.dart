@@ -43,6 +43,24 @@ void main() {
         ctx.atlas.textPrimary);
   });
 
+  testWidgets('long values scale down instead of truncating', (tester) async {
+    await pumpAtlas(
+      tester,
+      const SizedBox(
+        width: 180,
+        child: StatTile(
+          value: '1 234 567',
+          label: 'Large number',
+        ),
+      ),
+    );
+    // Verify the full text is present and not truncated
+    expect(find.text('1 234 567'), findsOneWidget);
+    final text = tester.widget<Text>(find.text('1 234 567'));
+    // Confirm it's not using overflow ellipsis (which would truncate)
+    expect(text.overflow, isNull);
+  });
+
   testWidgets('golden: stat tile in dark', (tester) async {
     await pumpAtlas(
       tester,

@@ -56,12 +56,15 @@ class StatTile extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Flexible(
-                child: Text(
-                  value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AtlasTypography.display.copyWith(
-                    color: atlas.textPrimary,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    value,
+                    maxLines: 1,
+                    style: AtlasTypography.display.copyWith(
+                      color: atlas.textPrimary,
+                    ),
                   ),
                 ),
               ),
