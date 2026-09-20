@@ -175,7 +175,7 @@ ThemeData _build({
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: isDark ? atlas.surface : atlas.surface,
+      backgroundColor: atlas.surface,
       indicatorColor: atlas.teamFill.withValues(alpha: 0.18),
       surfaceTintColor: Colors.transparent,
       elevation: 0,
