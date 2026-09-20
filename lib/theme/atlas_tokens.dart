@@ -1,5 +1,4 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter/painting.dart';
 
 /// Raw colour tokens for both schemes.
 ///
