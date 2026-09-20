@@ -791,6 +791,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get workoutSummaryCaloriesLabel => 'Tahmini kalori';
 
   @override
+  String feedCaloriesValue(int calories) {
+    return '$calories kcal';
+  }
+
+  @override
   String get workoutSummaryBackHomeButton => 'Ana Sayfaya Dön';
 
   @override
@@ -1298,6 +1303,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get teamMembers => 'Üyeler';
+
+  @override
+  String teamMemberCount(num count) {
+    return '$count üye';
+  }
 
   @override
   String get teamNoMembers => 'Henüz üye yok';

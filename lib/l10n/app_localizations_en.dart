@@ -790,6 +790,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutSummaryCaloriesLabel => 'Estimated calories';
 
   @override
+  String feedCaloriesValue(int calories) {
+    return '$calories kcal';
+  }
+
+  @override
   String get workoutSummaryBackHomeButton => 'Back to Home';
 
   @override
@@ -1302,6 +1307,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get teamMembers => 'Members';
+
+  @override
+  String teamMemberCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count members',
+      one: '1 member',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get teamNoMembers => 'No members yet';

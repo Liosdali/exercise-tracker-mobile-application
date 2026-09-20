@@ -1496,6 +1496,12 @@ abstract class AppLocalizations {
   /// **'Estimated calories'**
   String get workoutSummaryCaloriesLabel;
 
+  /// No description provided for @feedCaloriesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{calories} kcal'**
+  String feedCaloriesValue(int calories);
+
   /// No description provided for @workoutSummaryBackHomeButton.
   ///
   /// In en, this message translates to:
@@ -2377,6 +2383,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Members'**
   String get teamMembers;
+
+  /// No description provided for @teamMemberCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 member} other{{count} members}}'**
+  String teamMemberCount(num count);
 
   /// No description provided for @teamNoMembers.
   ///
