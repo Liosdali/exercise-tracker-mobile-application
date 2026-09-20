@@ -15,6 +15,7 @@ import '../providers/workout_provider.dart';
 import '../services/backup_service.dart';
 import '../services/supabase_service.dart';
 import '../services/user_account_service.dart';
+import '../theme/atlas_colors.dart';
 import 'about_screen.dart';
 import 'account_section.dart';
 
@@ -70,7 +71,10 @@ class SettingsScreen extends StatelessWidget {
             child: Text(l10n.commonCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.atlas.danger,
+              foregroundColor: const Color(0xFFFFFFFF),
+            ),
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(l10n.commonConfirm),
           ),
@@ -168,7 +172,10 @@ class SettingsScreen extends StatelessWidget {
             child: Text(l10n.commonCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.atlas.danger,
+              foregroundColor: const Color(0xFFFFFFFF),
+            ),
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(l10n.commonConfirm),
           ),
@@ -242,7 +249,10 @@ class SettingsScreen extends StatelessWidget {
             child: Text(l10n.commonCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.atlas.danger,
+              foregroundColor: const Color(0xFFFFFFFF),
+            ),
             onPressed: () => Navigator.pop(context, true),
             child: Text(l10n.accountDelete),
           ),
@@ -443,10 +453,10 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           if (auth.signedIn)
             ListTile(
-              leading: const Icon(Icons.delete_forever, color: Colors.red),
+              leading: Icon(Icons.delete_forever, color: context.atlas.danger),
               title: Text(
                 l10n.accountDelete,
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(color: context.atlas.danger),
               ),
               subtitle: Text(l10n.accountDeleteSummary),
               onTap: auth.busy ? null : () => _deleteAccount(context),
@@ -461,7 +471,10 @@ class SettingsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FilledButton.icon(
-              style: FilledButton.styleFrom(backgroundColor: Colors.red),
+              style: FilledButton.styleFrom(
+                backgroundColor: context.atlas.danger,
+                foregroundColor: const Color(0xFFFFFFFF),
+              ),
               onPressed: () => _confirmReset(context),
               icon: const Icon(Icons.delete_forever),
               label: Text(l10n.settingsResetDataButton),

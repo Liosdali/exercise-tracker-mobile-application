@@ -11,6 +11,7 @@ import '../providers/routine_provider.dart';
 import '../providers/settings_provider.dart';
 import '../services/program_localizer.dart';
 import '../services/program_share_service.dart';
+import '../theme/atlas_colors.dart';
 import 'active_workout_screen.dart';
 import 'categories_screen.dart';
 import 'program_builder_screen.dart';
@@ -260,7 +261,7 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> with SingleTickerProvid
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (settings.activeProgramKey == program.key)
-                      const Icon(Icons.check_circle, color: Colors.green),
+                      Icon(Icons.check_circle, color: context.atlas.success),
                     PopupMenuButton<String>(
                       onSelected: (value) async {
                         if (value == 'edit') {

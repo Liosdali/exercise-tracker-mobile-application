@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
+import '../theme/atlas_colors.dart';
 
 /// Screen for joining a team using an invite code/token.
 class JoinTeamScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.teamCodeRequired),
-          backgroundColor: Colors.red,
+          backgroundColor: context.atlas.danger,
         ),
       );
       return;
@@ -59,7 +60,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             AppLocalizations.of(context)!
                 .teamJoinedSuccess(team.name),
           ),
-          backgroundColor: Colors.green,
+          backgroundColor: context.atlas.success,
         ),
       );
 
@@ -79,7 +80,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(errorMessage),
-          backgroundColor: Colors.red,
+          backgroundColor: context.atlas.danger,
         ),
       );
     } finally {

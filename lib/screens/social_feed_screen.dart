@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
 import '../services/supabase_service.dart';
+import '../theme/atlas_colors.dart';
 import 'create_team_screen.dart';
 import 'join_team_screen.dart';
 import 'pending_suggestions_screen.dart';
@@ -188,7 +189,7 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                leading: Icon(Icons.warning_amber_rounded, color: context.atlas.warn),
                 title: Text('Report $userName'),
                 onTap: () async {
                   Navigator.pop(ctx);
@@ -200,8 +201,8 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.block, color: Colors.red),
-                title: Text('Block $userName', style: const TextStyle(color: Colors.red)),
+                leading: Icon(Icons.block, color: context.atlas.danger),
+                title: Text('Block $userName', style: TextStyle(color: context.atlas.danger)),
                 onTap: () async {
                   Navigator.pop(ctx);
                   await SupabaseService().blockUser(userId);

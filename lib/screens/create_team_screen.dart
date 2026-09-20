@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
+import '../theme/atlas_colors.dart';
 
 /// Screen for creating a new team.
 class CreateTeamScreen extends StatefulWidget {
@@ -37,7 +38,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.teamNameRequired),
-          backgroundColor: Colors.red,
+          backgroundColor: context.atlas.danger,
         ),
       );
       return;
@@ -60,7 +61,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
         SnackBar(
           content:
               Text(AppLocalizations.of(context)!.teamCreatedSuccess),
-          backgroundColor: Colors.green,
+          backgroundColor: context.atlas.success,
         ),
       );
 
@@ -72,7 +73,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: context.atlas.danger,
         ),
       );
     } finally {

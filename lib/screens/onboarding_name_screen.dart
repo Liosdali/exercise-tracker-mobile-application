@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/settings_provider.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/atlas_colors.dart';
 
 /// First-launch welcome screen: lets the user optionally enter their name,
 /// which is then used for the Dashboard greeting. Skipping is allowed.
@@ -52,10 +53,10 @@ class _OnboardingNameScreenState extends State<OnboardingNameScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Icon(
+              Icon(
                 Icons.fitness_center,
                 size: 72,
-                color: Colors.deepPurple,
+                color: context.atlas.teamMark,
               ),
               const SizedBox(height: 24),
               Text(

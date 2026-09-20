@@ -7,6 +7,7 @@ import '../l10n/app_localizations.dart';
 import '../models/team.dart';
 import '../providers/team_provider.dart';
 import '../services/deep_link_service.dart';
+import '../theme/atlas_colors.dart';
 import 'team_activity_screen.dart';
 import 'team_leaderboard_screen.dart';
 
@@ -71,7 +72,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               l10n.teamLeave,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: context.atlas.danger),
             ),
           ),
         ],
@@ -95,7 +96,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.teamLeaveError),
-          backgroundColor: Colors.red,
+          backgroundColor: context.atlas.danger,
         ),
       );
     }
@@ -117,7 +118,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               l10n.commonDelete,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: context.atlas.danger),
             ),
           ),
         ],
@@ -141,7 +142,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.teamDeleteError),
-          backgroundColor: Colors.red,
+          backgroundColor: context.atlas.danger,
         ),
       );
     }
@@ -177,7 +178,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                   value: 'delete',
                   child: Text(
                     l10n.commonDelete,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(color: context.atlas.danger),
                   ),
                 ),
             ],
@@ -241,7 +242,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                                 widget.team.inviteToken,
                                 style: Theme.of(context)
                                     .textTheme.headlineSmall,
-                                selectionColor: Colors.grey,
+                                selectionColor: context.atlas.line,
                               ),
                             ],
                           ),

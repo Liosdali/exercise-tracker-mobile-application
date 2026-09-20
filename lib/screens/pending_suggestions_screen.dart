@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../models/program_suggestion.dart';
 import '../providers/team_provider.dart';
+import '../theme/atlas_colors.dart';
 
 class PendingSuggestionsScreen extends StatefulWidget {
   const PendingSuggestionsScreen({Key? key}) : super(key: key);
@@ -122,10 +123,10 @@ class _PendingSuggestionsScreenState extends State<PendingSuggestionsScreen>
 
   Widget _buildSuggestionCard(ProgramSuggestion suggestion, AppLocalizations l10n) {
     final statusColor = suggestion.status == SuggestionStatus.accepted
-        ? Colors.green
+        ? context.atlas.success
         : suggestion.status == SuggestionStatus.rejected
-            ? Colors.red
-            : Colors.orange;
+            ? context.atlas.danger
+            : context.atlas.warn;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -153,7 +154,7 @@ class _PendingSuggestionsScreenState extends State<PendingSuggestionsScreen>
             const SizedBox(height: 4),
             Text(
               _formatDate(suggestion.createdAt),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(fontSize: 12, color: context.atlas.textMuted),
             ),
           ],
         ),
@@ -319,9 +320,9 @@ class _SuggestionDetailScreenState extends State<SuggestionDetailScreen> {
                           Text(
                             DateFormat('MMM d, yyyy – h:mm a')
                                 .format(suggestion.createdAt),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey,
+                              color: context.atlas.textMuted,
                             ),
                           ),
                         ],

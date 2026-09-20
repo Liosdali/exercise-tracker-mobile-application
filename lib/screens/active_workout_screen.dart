@@ -11,6 +11,7 @@ import '../providers/program_progress_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
 import '../services/calorie_calculator_service.dart';
+import '../theme/atlas_colors.dart';
 import '../widgets/category_style.dart';
 import '../widgets/rest_timer_sheet.dart';
 
@@ -359,7 +360,7 @@ class WorkoutSummaryScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.emoji_events, size: 64, color: Colors.amber),
+              Icon(Icons.emoji_events, size: 64, color: context.atlas.warn),
               const SizedBox(height: 16),
               Text(
                 title,

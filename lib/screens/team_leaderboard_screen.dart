@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/leaderboard_entry.dart';
 import '../providers/team_provider.dart';
+import '../theme/atlas_colors.dart';
 
 class TeamLeaderboardScreen extends StatefulWidget {
   final String teamId;
@@ -213,7 +214,7 @@ class _TeamLeaderboardScreenState extends State<TeamLeaderboardScreen>
 
   Widget _buildTrendIndicator(LeaderboardEntry entry, String metric) {
     // Placeholder for trend (would compare with previous period)
-    return const Icon(Icons.trending_up, size: 16, color: Colors.green);
+    return Icon(Icons.trending_up, size: 16, color: context.atlas.success);
   }
 }
 
@@ -309,14 +310,14 @@ class MemberLeaderboardDetailScreen extends StatelessWidget {
                 label: l10n.leaderboardMetricWeight,
                 value: '${leaderboardEntry.totalWeightLifted.toStringAsFixed(1)} kg',
                 icon: Icons.trending_up,
-                color: Colors.orange,
+                color: context.atlas.warn,
               ),
               const SizedBox(height: 8),
               _statCard(
                 label: l10n.leaderboardMetricCalories,
                 value: '${leaderboardEntry.totalCalories.toStringAsFixed(0)} kcal',
                 icon: Icons.local_fire_department,
-                color: Colors.red,
+                color: context.atlas.danger,
               ),
             ],
           ),

@@ -12,6 +12,7 @@ import '../providers/settings_provider.dart';
 import '../providers/workout_provider.dart';
 import '../services/program_localizer.dart';
 import '../services/program_share_service.dart';
+import '../theme/atlas_colors.dart';
 import 'active_workout_screen.dart';
 
 /// A single training day, normalized from either a built-in [WorkoutProgram]
@@ -229,9 +230,9 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                 padding: const EdgeInsets.only(left: 8, bottom: 8),
                 child: Row(
                   children: [
-                    const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                    Icon(Icons.check_circle, color: context.atlas.success, size: 16),
                     const SizedBox(width: 4),
-                    Text(l10n.programDetailTodayDoneLabel, style: const TextStyle(color: Colors.green)),
+                    Text(l10n.programDetailTodayDoneLabel, style: TextStyle(color: context.atlas.success)),
                   ],
                 ),
               ),

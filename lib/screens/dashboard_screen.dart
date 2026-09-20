@@ -15,6 +15,7 @@ import '../utils/duration_formatter.dart';
 import '../utils/program_resolver.dart';
 import '../utils/tutorial_keys.dart';
 import '../services/notification_scheduler.dart';
+import '../theme/atlas_colors.dart';
 import 'active_workout_screen.dart';
 
 /// "Ana Sayfa" tab: greeting, streak, weekly goal progress, suggested
@@ -134,7 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  const Icon(Icons.local_fire_department, size: 36, color: Colors.deepOrange),
+                  Icon(Icons.local_fire_department, size: 36, color: context.atlas.warn),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -170,9 +171,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Text(l10n.dashboardTodaysWorkoutTitle, style: Theme.of(context).textTheme.titleLarge),
               if (todayCompleted) ...[
                 const SizedBox(width: 8),
-                const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                Icon(Icons.check_circle, color: context.atlas.success, size: 20),
                 const SizedBox(width: 4),
-                Text(l10n.dashboardCompletedLabel, style: const TextStyle(color: Colors.green)),
+                Text(l10n.dashboardCompletedLabel, style: TextStyle(color: context.atlas.success)),
               ],
             ],
           ),

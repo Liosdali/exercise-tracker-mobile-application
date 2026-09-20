@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../models/achievement.dart';
 import '../providers/stats_provider.dart';
 import '../services/achievement_localizer.dart';
+import '../theme/atlas_colors.dart';
 import 'body_measurement_form.dart';
 import 'measurement_history_screen.dart';
 import 'account_section.dart';
@@ -287,7 +288,7 @@ class _AchievementCard extends StatelessWidget {
                 achievement.unlocked
                     ? _achievementIcon(achievement.iconName)
                     : Icons.lock_outline,
-                color: achievement.unlocked ? Colors.amber : null,
+                color: achievement.unlocked ? context.atlas.warn : null,
               ),
               const SizedBox(height: 4),
               Flexible(
