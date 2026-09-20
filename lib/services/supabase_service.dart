@@ -379,10 +379,19 @@ class SupabaseService implements AuthGateway {
     try {
       await client.auth.signOut(scope: SignOutScope.local);
     } catch (_) {
-      _expectedSignOut = false;
       // GoTrue removes its local session before attempting the remote logout.
       // A removed user or offline logout must not undo successful local cleanup.
-      if (client.auth.currentSession != null) rethrow;
+      if (client.auth.currentSession != null) {
+        // The session survived, so the sign-out genuinely failed and any
+        // `signedOut` that follows was not requested by us.
+        _expectedSignOut = false;
+        rethrow;
+      }
+      // Otherwise the local session is already gone: this IS the sign-out the
+      // user asked for. Keep the flag set, because GoTrue's `signedOut` event
+      // is delivered on a later microtask — clearing it here would make the
+      // event stream report a deliberate offline sign-out as an expired
+      // session, and the user would be told their session ran out.
     }
     await _sessionStorage?.removePersistedSession();
   }

@@ -1156,6 +1156,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get syncConflictCollectionOrder => 'Sıra değişti';
 
   @override
+  String syncConflictCollectionMembers(String removed, String added) {
+    return '$removed yerine $added';
+  }
+
+  @override
   String syncConflictCollectionContent(int count, String names) {
     return '$count tanesi değişti ($names)';
   }
@@ -1235,6 +1240,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get teamColorUpdated => 'Takım rengi güncellendi';
+
+  @override
+  String get teamColorUpdateError => 'Takım rengi güncellenemedi';
 
   @override
   String get kitColorCrimson => 'Kızıl';

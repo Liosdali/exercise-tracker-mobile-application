@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -34,6 +35,17 @@ class DeepLinkService {
 
   void initDeepLinks(BuildContext context) {
     if (_appLinks != null) return;
+    // `app_links` ships no web or desktop implementation. Where the plugin is
+    // absent, activating its event channel raises a MissingPluginException
+    // that surfaces through FlutterError.onError rather than the
+    // subscription's `onError`, so it cannot be caught at the call site — it
+    // just becomes an uncaught framework error. This project builds for
+    // Windows as well as mobile, so the guard is not hypothetical.
+    if (kIsWeb ||
+        (defaultTargetPlatform != TargetPlatform.android &&
+            defaultTargetPlatform != TargetPlatform.iOS)) {
+      return;
+    }
     final appLinks = AppLinks();
     _appLinks = appLinks;
 

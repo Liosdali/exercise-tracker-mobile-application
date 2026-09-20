@@ -455,6 +455,8 @@
   "syncConflictCollectionCount": "{from} to {to}",
   "@syncConflictCollectionCount": {"placeholders": {"from": {"type": "String"}, "to": {"type": "String"}}},
   "syncConflictCollectionOrder": "Order changed",
+  "syncConflictCollectionMembers": "{removed} replaced by {added}",
+  "@syncConflictCollectionMembers": {"placeholders": {"removed": {"type": "String"}, "added": {"type": "String"}}},
   "syncConflictCollectionContent": "{count} changed ({names})",
   "@syncConflictCollectionContent": {"placeholders": {"count": {"type": "int"}, "names": {"type": "String"}}},
   "syncConflictGroupSummary": "This choice applies to all {count} related records.",
@@ -490,6 +492,9 @@
 
   "teamColorUpdated": "Team color updated",
   "@teamColorUpdated": {"description": "Confirmation after saving a new team color"},
+
+  "teamColorUpdateError": "Team color could not be updated",
+  "@teamColorUpdateError": {"description": "Shown when saving a new team color fails or is not permitted"},
 
   "kitColorCrimson": "Crimson",
   "@kitColorCrimson": {"description": "Name of the crimson kit color"},

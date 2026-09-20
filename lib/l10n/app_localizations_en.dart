@@ -1161,6 +1161,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncConflictCollectionOrder => 'Order changed';
 
   @override
+  String syncConflictCollectionMembers(String removed, String added) {
+    return '$removed replaced by $added';
+  }
+
+  @override
   String syncConflictCollectionContent(int count, String names) {
     return '$count changed ($names)';
   }
@@ -1240,6 +1245,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get teamColorUpdated => 'Team color updated';
+
+  @override
+  String get teamColorUpdateError => 'Team color could not be updated';
 
   @override
   String get kitColorCrimson => 'Crimson';

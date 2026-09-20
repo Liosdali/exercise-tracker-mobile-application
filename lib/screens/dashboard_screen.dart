@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../data/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/custom_program_provider.dart';
 import '../providers/exercise_provider.dart';
@@ -41,10 +42,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final builtinPrograms = context.read<ProgramProvider>();
     final customPrograms = context.read<CustomProgramProvider>();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await stats.load();
-      await settings.load();
-      await progress.load();
-      await workoutProvider.init();
+      try {
+        await stats.load();
+        await settings.load();
+        await progress.load();
+        await workoutProvider.init();
+      } on WorkspaceChangedError {
+        // Signing in or out while the dashboard was loading. The reads were
+        // deliberately refused to keep the previous account's data out of the
+        // new workspace, and this screen is about to be rebuilt for it, so
+        // there is nothing to recover here. Without this the whole callback
+        // aborted as an unhandled async error and settings, progress and the
+        // workout provider were silently left uninitialised.
+        return;
+      }
       if (!mounted) return;
       final l10n = AppLocalizations.of(context)!;
       await NotificationScheduler.reschedule(

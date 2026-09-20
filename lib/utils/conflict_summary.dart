@@ -32,7 +32,16 @@ enum ChangeOrigin {
 }
 
 /// How a nested collection differs between the two sides.
-enum CollectionChange { none, countDiffers, contentDiffers, orderDiffers }
+enum CollectionChange {
+  none,
+  countDiffers,
+  /// Same number of items, but not the same items: one was swapped for
+  /// another. Reporting this as [countDiffers] rendered "3 to 3", which
+  /// reads as though nothing happened.
+  membershipDiffers,
+  contentDiffers,
+  orderDiffers,
+}
 
 /// One field that differs between the local and remote versions.
 ///
@@ -311,7 +320,8 @@ CollectionDelta? collectionDelta(
   if (localCount != remoteCount) {
     change = CollectionChange.countDiffers;
   } else if (added.isNotEmpty || removed.isNotEmpty) {
-    change = CollectionChange.countDiffers;
+    // Counts are equal here, so every addition is matched by a removal.
+    change = CollectionChange.membershipDiffers;
   } else if (edited.isNotEmpty) {
     change = CollectionChange.contentDiffers;
   } else if (!_sameOrder(local, remote, identityKey)) {
@@ -751,6 +761,11 @@ String conflictCollectionText(
       return l10n.syncConflictCollectionCount(
         '${delta.localCount}',
         '${delta.remoteCount}',
+      );
+    case CollectionChange.membershipDiffers:
+      return l10n.syncConflictCollectionMembers(
+        _capped(delta.removedNames),
+        _capped(delta.addedNames),
       );
     case CollectionChange.orderDiffers:
       return l10n.syncConflictCollectionOrder;

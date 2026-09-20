@@ -27,6 +27,9 @@ class UserAccountService extends ChangeNotifier with WidgetsBindingObserver {
   int _conflictCount = 0;
   String _pendingFingerprint = '';
   String _lastAttemptFingerprint = '';
+  /// Raw form of the last profile row read, so [refresh] can tell a real
+  /// change from a poll that found nothing new. `UserProfile` has no equality.
+  String? _profileFingerprint;
   Future<void>? _syncing;
   Future<void> _lifecycle = Future.value();
   Timer? _poll;
@@ -161,13 +164,29 @@ class UserAccountService extends ChangeNotifier with WidgetsBindingObserver {
       'SELECT COALESCE(sum(version),0) AS total FROM sync_records WHERE version>acknowledged',
     );
     if (generation != _helper.generation) return;
+
+    final fingerprint = '$pending:${versions.single['total']}';
+    final profileFingerprint =
+        rows.isEmpty ? 'none:$_userId' : '$_userId|${rows.first}';
+
+    // This method runs on a five-second poll. Notifying unconditionally
+    // rebuilt every listening widget twelve times a minute for the lifetime
+    // of the process, including in guest mode where the caller returns
+    // immediately afterwards. Only publish when something actually moved.
+    final changed = _profile == null ||
+        _pendingCount != pending ||
+        _conflictCount != conflicts ||
+        _pendingFingerprint != fingerprint ||
+        _profileFingerprint != profileFingerprint;
+
     _profile = rows.isEmpty
         ? UserProfile(id: _userId)
         : UserProfile.fromMap(rows.first, userId: _userId);
     _pendingCount = pending;
     _conflictCount = conflicts;
-    _pendingFingerprint = '$pending:${versions.single['total']}';
-    notifyListeners();
+    _pendingFingerprint = fingerprint;
+    _profileFingerprint = profileFingerprint;
+    if (changed) notifyListeners();
   }
 
   Future<void> updateProfile({
@@ -368,7 +387,12 @@ class UserAccountService extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _retryAt = DateTime.fromMillisecondsSinceEpoch(0);
+      // Deliberately does NOT clear `_retryAt`. That backoff exists to stop
+      // hammering a failing server, and resetting it here meant a user
+      // switching between apps triggered a fresh full sync on every resume
+      // while `_failures` climbed without ever throttling anything. When
+      // sync is healthy `_retryAt` is already in the past, so a resume still
+      // syncs immediately; only a failing server keeps its cooldown.
       _automaticSync();
     }
   }

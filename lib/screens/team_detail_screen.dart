@@ -141,11 +141,28 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     );
 
     if (picked == null || picked == team.kit) return;
-    await provider.setTeamColor(team.id, picked);
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.teamColorUpdated)),
-    );
+
+    // `setTeamColor` rethrows, and nothing awaits this method, so without a
+    // catch here a rejected write becomes an unhandled async error and the
+    // user is told nothing at all. Every other action on this screen reports
+    // its failure the same way.
+    try {
+      await provider.setTeamColor(team.id, picked);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.teamColorUpdated)),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: StatusMark(
+            status: AtlasStatus.danger,
+            label: l10n.teamColorUpdateError,
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _deleteTeam() async {
@@ -200,20 +217,28 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final teamProvider = context.watch<TeamProvider>();
-    final members = teamProvider.getTeamMembers(widget.team.id);
+    // `widget.team` is the snapshot captured when this route was pushed, so it
+    // never sees a later edit. Read the live row from the provider instead,
+    // falling back to the snapshot when the list has not been loaded. Without
+    // this the colour picker keeps re-seeding from the stale kit, and picking
+    // the original colour back is treated as "no change" and never sent.
+    final team = teamProvider.myTeams.firstWhere(
+      (t) => t.id == widget.team.id,
+      orElse: () => widget.team,
+    );
+    final members = teamProvider.getTeamMembers(team.id);
     final currentUserId = Supabase.instance.client.auth.currentUser?.id;
-    final isOwner =
-        widget.team.ownerId != null && widget.team.ownerId == currentUserId;
+    final isOwner = team.ownerId != null && team.ownerId == currentUserId;
     // The RLS policy already restricts the write to admins and owners; this
     // only decides whether the control is worth showing.
     final isAdmin = isOwner ||
         members.any((m) => m.userId == currentUserId && m.isAdmin);
 
     return TeamTheme(
-      kit: widget.team.kit,
+      kit: team.kit,
       child: Scaffold(
       appBar: AppBar(
-        title: Text(widget.team.name),
+        title: Text(team.name),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
@@ -247,15 +272,15 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
           children: [
             // Team Info Header
             TeamHeader(
-              teamName: widget.team.name,
+              teamName: team.name,
               memberSummary: l10n.teamMemberCount(members.length),
-              description: widget.team.description,
+              description: team.description,
             ),
             if (isAdmin)
               Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton(
-                  onPressed: () => _editColor(context, widget.team),
+                  onPressed: () => _editColor(context, team),
                   child: Text(l10n.teamColorChangeAction),
                 ),
               ),
@@ -286,7 +311,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                widget.team.inviteToken,
+                                team.inviteToken,
                                 style: Theme.of(context)
                                     .textTheme.headlineSmall,
                                 selectionColor: context.atlas.line,
@@ -298,7 +323,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                           icon: const Icon(Icons.copy),
                           tooltip: l10n.teamInviteCode,
                           onPressed: () => _copy(
-                            widget.team.inviteToken,
+                            team.inviteToken,
                             l10n.teamCodeCopied,
                           ),
                         ),
@@ -320,7 +345,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 teamProvider
-                                    .getInviteLink(widget.team),
+                                    .getInviteLink(team),
                                 style: Theme.of(context)
                                     .textTheme.bodySmall,
                                 maxLines: 2,
@@ -333,7 +358,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                           icon: const Icon(Icons.copy),
                           tooltip: l10n.teamInviteLink,
                           onPressed: () => _copy(
-                            teamProvider.getInviteLink(widget.team),
+                            teamProvider.getInviteLink(team),
                             l10n.teamLinkCopied,
                           ),
                         ),
@@ -355,7 +380,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _open(
-                      TeamLeaderboardScreen(teamId: widget.team.id),
+                      TeamLeaderboardScreen(teamId: team.id),
                     ),
                     icon: const Icon(Icons.leaderboard_outlined),
                     label: Text(
@@ -368,7 +393,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _open(
-                      TeamActivityScreen(teamId: widget.team.id),
+                      TeamActivityScreen(teamId: team.id),
                     ),
                     icon: const Icon(Icons.insights_outlined),
                     label: Text(

@@ -42,12 +42,22 @@ class ExerciseApp extends StatelessWidget {
         accounts: UserAccountService.instance,
         beforeWorkspaceSwitch: () async {
           await WidgetsBinding.instance.endOfFrame;
-          if (!kIsWeb &&
-              (defaultTargetPlatform == TargetPlatform.android ||
-                  defaultTargetPlatform == TargetPlatform.iOS)) {
-            await NotificationService.instance.init();
+          // Notifications are peripheral; the account workspace is not.
+          // A plugin that fails to initialise — an unsupported platform, a
+          // revoked permission, an OEM quirk, a test binding with no plugin
+          // registered — must not stop the workspace from opening, because
+          // AuthProvider treats a throw from this hook as a failed switch
+          // and leaves the app with no account store at all.
+          try {
+            if (!kIsWeb &&
+                (defaultTargetPlatform == TargetPlatform.android ||
+                    defaultTargetPlatform == TargetPlatform.iOS)) {
+              await NotificationService.instance.init();
+            }
+            await NotificationService.instance.cancelAll();
+          } catch (error) {
+            debugPrint('[notifications] setup skipped: $error');
           }
-          await NotificationService.instance.cancelAll();
         },
       )..initialize(),
       child: const _AccountRoot(),

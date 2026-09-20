@@ -13,6 +13,18 @@ import '../models/workout_session.dart';
 /// Manages the local SQLite database that stores logged workout entries,
 /// user-created custom routines/programs, body measurements, and workout
 /// program progress/calendar assignments.
+/// Thrown when a database handle outlives the account workspace it was bound
+/// to, after a sign-in, sign-out or account switch.
+///
+/// This is a deliberate guard against stale reads, not a failure: work that
+/// was loading for the previous workspace should be abandoned quietly,
+/// because the UI is about to be rebuilt for the new one. It extends
+/// [StateError] so existing handlers keep working.
+class WorkspaceChangedError extends StateError {
+  WorkspaceChangedError()
+      : super('This account workspace is no longer active');
+}
+
 class DatabaseHelper {
   DatabaseHelper._internal();
   DatabaseHelper._workspace(this._boundGeneration);
@@ -97,11 +109,11 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_boundGeneration != null) {
       if (_boundGeneration != instance.generation) {
-        throw StateError('This account workspace is no longer active');
+        throw WorkspaceChangedError();
       }
       final db = await instance.database;
       if (_boundGeneration != instance.generation) {
-        throw StateError('This account workspace is no longer active');
+        throw WorkspaceChangedError();
       }
       return db;
     }

@@ -292,9 +292,16 @@ class TeamProvider extends ChangeNotifier {
       final currentUserId = _service.currentUser?.id;
       if (currentUserId == null) throw Exception('User not authenticated');
 
-      // Verify current user is owner
-      final team = _myTeams.firstWhere((t) => t.id == teamId);
-      if (team.ownerId != currentUserId) {
+      // Verify current user is owner. The team may be absent from the cache
+      // entirely — after a sign-out `clear()`, or when this screen was reached
+      // by deep link without a prior `fetchMyTeams` — and a bare `firstWhere`
+      // would then throw `Bad state: No element`, which reads to the caller as
+      // a permission failure rather than an unloaded list.
+      final index = _myTeams.indexWhere((t) => t.id == teamId);
+      if (index == -1) {
+        throw Exception('Team is not loaded; refresh your teams and try again');
+      }
+      if (_myTeams[index].ownerId != currentUserId) {
         throw Exception('Only the team owner can delete this team');
       }
 
@@ -312,15 +319,25 @@ class TeamProvider extends ChangeNotifier {
 
   /// Changes a team's kit colour.
   ///
-  /// Only admins and the owner may do this; the `Admins can update their
-  /// group` RLS policy enforces it, so a member's attempt fails at the
-  /// database rather than relying on the UI hiding the control.
+  /// Only admins and the owner may do this. The `Admins can update their
+  /// group` policy is a `FOR UPDATE ... USING (...)` rule, which does NOT
+  /// raise for a caller who fails the check — the statement simply matches
+  /// zero rows and PostgREST answers 204. Asking for the updated row back is
+  /// therefore the only way to tell a real write from a silently discarded
+  /// one; without it a member's attempt would report success.
   Future<void> setTeamColor(String teamId, KitColor kit) async {
     try {
-      await _supabase
+      final updated = await _supabase
           .from('groups')
           .update({'color': swatchOf(kit).slug})
-          .eq('id', teamId);
+          .eq('id', teamId)
+          .select();
+
+      if ((updated as List).isEmpty) {
+        throw Exception(
+          'Not permitted to change this team\'s colour, or the team no longer exists',
+        );
+      }
 
       final index = _myTeams.indexWhere((t) => t.id == teamId);
       if (index != -1) {

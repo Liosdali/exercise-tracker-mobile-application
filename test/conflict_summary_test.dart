@@ -182,6 +182,28 @@ void main() {
     expect(summary.remoteDeleted, isTrue);
   });
 
+  test('a swap of equal length names both sides instead of "3 to 3"', () {
+    final summary = summarizeConflict(
+      conflict(
+        'custom_programs',
+        local: {
+          'name': 'P',
+          'days': [day('a', 'Push', 0), day('b', 'Pull', 1)],
+        },
+        remote: {
+          'name': 'P',
+          'days': [day('a', 'Push', 0), day('c', 'Legs', 1)],
+        },
+      ),
+    );
+    final delta = summary.changes.single.collection!;
+    // Reporting countDiffers here rendered "2 to 2", which reads as no change.
+    expect(delta.change, CollectionChange.membershipDiffers);
+    expect(delta.localCount, delta.remoteCount);
+    expect(delta.removedNames, ['Pull']);
+    expect(delta.addedNames, ['Legs']);
+  });
+
   test('a collection with a different length reports the counts', () {
     final summary = summarizeConflict(
       conflict(

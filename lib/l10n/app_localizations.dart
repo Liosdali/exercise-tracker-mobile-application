@@ -2126,6 +2126,12 @@ abstract class AppLocalizations {
   /// **'Order changed'**
   String get syncConflictCollectionOrder;
 
+  /// No description provided for @syncConflictCollectionMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'{removed} replaced by {added}'**
+  String syncConflictCollectionMembers(String removed, String added);
+
   /// No description provided for @syncConflictCollectionContent.
   ///
   /// In en, this message translates to:
@@ -2263,6 +2269,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Team color updated'**
   String get teamColorUpdated;
+
+  /// Shown when saving a new team color fails or is not permitted
+  ///
+  /// In en, this message translates to:
+  /// **'Team color could not be updated'**
+  String get teamColorUpdateError;
 
   /// Name of the crimson kit color
   ///

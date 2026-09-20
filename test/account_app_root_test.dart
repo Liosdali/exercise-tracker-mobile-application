@@ -39,10 +39,15 @@ void main() {
         // Start the app
         await tester.pumpWidget(const ExerciseApp());
         
-        // Wait for workspace to be ready (max 10 seconds)
-        for (var attempt = 0; attempt < 100; attempt++) {
-          await tester.pump(const Duration(milliseconds: 100));
+        // Opening the workspace is real database and asset I/O, which does
+        // not progress under fake async. Pumping alone therefore never
+        // reached HomeShell; the gaps have to be real ones via `runAsync`.
+        for (var attempt = 0; attempt < 40; attempt++) {
           if (find.byType(HomeShell).evaluate().isNotEmpty) break;
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 100)),
+          );
+          await tester.pump();
         }
         
         // Verify app is ready
@@ -50,27 +55,43 @@ void main() {
         expect(UserAccountService.instance.userId, isNull);
         expect(UserAccountService.instance.profile?.name, 'Existing guest');
       } finally {
-        // Clean shutdown
-        try {
-          await tester.pumpWidget(const SizedBox.shrink());
-          // Let pending operations settle
-          for (var i = 0; i < 10; i++) {
-            await tester.pump(const Duration(milliseconds: 50));
-          }
-          UserAccountService.instance.dispose();
-          // Clear any remaining timers
-          await Future.delayed(const Duration(milliseconds: 100));
-        } catch (e) {
-          // Ignore errors during cleanup
-        } finally {
-          debugDefaultTargetPlatformOverride = null;
+        // `testWidgets` runs inside a fake-async zone. A bare
+        // `await Future.delayed(...)` never completes there because no timer
+        // is pumped, and real file/database I/O does not complete either —
+        // which is why this block used to hang until the ten-minute timeout
+        // and reported the test as "did not complete". Fake-async work uses
+        // `tester.pump`; anything touching the real event loop goes through
+        // `tester.runAsync`.
+        // Let the dashboard's in-flight loads finish while the database is
+        // still open. Unmounting first only detaches the widgets; the queries
+        // they started keep running and would land after teardown.
+        for (var i = 0; i < 10; i++) {
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 200)),
+          );
+          await tester.pump();
+        }
+        await tester.pumpWidget(const SizedBox.shrink());
+        for (var i = 0; i < 10; i++) {
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        UserAccountService.instance.dispose();
+        debugDefaultTargetPlatformOverride = null;
+        // Let the provider loads the unmounted tree started actually finish.
+        // Closing the workspace underneath an in-flight query makes sqflite
+        // raise "This database has already been closed", and fake-async pumps
+        // cannot drain real database work.
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 500)),
+        );
+        await tester.runAsync(() async {
           try {
             await DatabaseHelper.instance.closeWorkspace();
           } catch (_) {}
           try {
             await temporary.delete(recursive: true);
           } catch (_) {}
-        }
+        });
       }
     },
   );
