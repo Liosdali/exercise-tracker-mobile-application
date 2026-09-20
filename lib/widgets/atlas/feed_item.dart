@@ -34,6 +34,8 @@ class FeedItem extends StatelessWidget {
     return Material(
       color: atlas.surface,
       borderRadius: BorderRadius.circular(AtlasRadius.card),
+      elevation: isDark ? 0 : 2,
+      shadowColor: isDark ? Colors.transparent : const Color(0x1A171B22),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AtlasRadius.card),
@@ -41,15 +43,6 @@ class FeedItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AtlasRadius.card),
             border: isDark ? Border.all(color: atlas.line) : null,
-            boxShadow: isDark
-                ? null
-                : const [
-                    BoxShadow(
-                      color: Color(0x1A171B22),
-                      blurRadius: 8,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
           ),
           clipBehavior: Clip.antiAlias,
           child: IntrinsicHeight(
