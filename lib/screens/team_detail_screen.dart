@@ -248,7 +248,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
             // Team Info Header
             TeamHeader(
               teamName: widget.team.name,
-              memberSummary: '${members.length} ${l10n.teamMembers}',
+              memberSummary: l10n.teamMemberCount(members.length),
               description: widget.team.description,
             ),
             if (isAdmin)

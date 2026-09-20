@@ -522,6 +522,8 @@
     "placeholders": {"teamName": {"type": "String"}}
   },
   "teamMembers": "Members",
+  "teamMemberCount": "{count, plural, =1{1 member} other{{count} members}}",
+  "@teamMemberCount": {"placeholders": {"count": {"type": "num"}}},
   "teamNoMembers": "No members yet",
   "teamAdmin": "Admin",
   "teamInviteMembers": "Invite Members",
