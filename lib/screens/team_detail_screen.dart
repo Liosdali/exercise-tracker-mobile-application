@@ -11,6 +11,7 @@ import '../theme/atlas_colors.dart';
 import '../theme/atlas_tokens.dart';
 import '../theme/team_palette.dart';
 import '../widgets/atlas/kit_picker.dart';
+import '../widgets/atlas/status_mark.dart';
 import '../widgets/atlas/team_header.dart';
 import '../widgets/atlas/team_theme.dart';
 import 'team_activity_screen.dart';
@@ -100,8 +101,10 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(l10n.teamLeaveError),
-          backgroundColor: context.atlas.danger,
+          content: StatusMark(
+            status: AtlasStatus.danger,
+            label: l10n.teamLeaveError,
+          ),
         ),
       );
     }
@@ -184,8 +187,10 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(l10n.teamDeleteError),
-          backgroundColor: context.atlas.danger,
+          content: StatusMark(
+            status: AtlasStatus.danger,
+            label: l10n.teamDeleteError,
+          ),
         ),
       );
     }

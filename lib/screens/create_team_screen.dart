@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
-import '../theme/atlas_colors.dart';
 import '../theme/atlas_tokens.dart';
 import '../theme/team_palette.dart';
 import '../widgets/atlas/kit_picker.dart';
+import '../widgets/atlas/status_mark.dart';
 
 /// Screen for creating a new team.
 class CreateTeamScreen extends StatefulWidget {
@@ -41,8 +41,10 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.teamNameRequired),
-          backgroundColor: context.atlas.danger,
+          content: StatusMark(
+            status: AtlasStatus.danger,
+            label: AppLocalizations.of(context)!.teamNameRequired,
+          ),
         ),
       );
       return;
@@ -64,9 +66,10 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text(AppLocalizations.of(context)!.teamCreatedSuccess),
-          backgroundColor: context.atlas.success,
+          content: StatusMark(
+            status: AtlasStatus.success,
+            label: AppLocalizations.of(context)!.teamCreatedSuccess,
+          ),
         ),
       );
 
@@ -77,8 +80,10 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
-          backgroundColor: context.atlas.danger,
+          content: StatusMark(
+            status: AtlasStatus.danger,
+            label: 'Error: $e',
+          ),
         ),
       );
     } finally {

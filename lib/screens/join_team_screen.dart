@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
-import '../theme/atlas_colors.dart';
+import '../widgets/atlas/status_mark.dart';
 
 /// Screen for joining a team using an invite code/token.
 class JoinTeamScreen extends StatefulWidget {
@@ -39,8 +39,10 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
     if (token.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.teamCodeRequired),
-          backgroundColor: context.atlas.danger,
+          content: StatusMark(
+            status: AtlasStatus.danger,
+            label: AppLocalizations.of(context)!.teamCodeRequired,
+          ),
         ),
       );
       return;
@@ -56,11 +58,11 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            AppLocalizations.of(context)!
+          content: StatusMark(
+            status: AtlasStatus.success,
+            label: AppLocalizations.of(context)!
                 .teamJoinedSuccess(team.name),
           ),
-          backgroundColor: context.atlas.success,
         ),
       );
 
@@ -79,8 +81,10 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: context.atlas.danger,
+          content: StatusMark(
+            status: AtlasStatus.danger,
+            label: errorMessage,
+          ),
         ),
       );
     } finally {

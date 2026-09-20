@@ -71,10 +71,6 @@ class SettingsScreen extends StatelessWidget {
             child: Text(l10n.commonCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: context.atlas.danger,
-              foregroundColor: const Color(0xFFFFFFFF),
-            ),
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(l10n.commonConfirm),
           ),
@@ -172,10 +168,6 @@ class SettingsScreen extends StatelessWidget {
             child: Text(l10n.commonCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: context.atlas.danger,
-              foregroundColor: const Color(0xFFFFFFFF),
-            ),
             onPressed: () => Navigator.of(dialogContext).pop(true),
             child: Text(l10n.commonConfirm),
           ),
@@ -249,10 +241,6 @@ class SettingsScreen extends StatelessWidget {
             child: Text(l10n.commonCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: context.atlas.danger,
-              foregroundColor: const Color(0xFFFFFFFF),
-            ),
             onPressed: () => Navigator.pop(context, true),
             child: Text(l10n.accountDelete),
           ),
@@ -471,10 +459,6 @@ class SettingsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FilledButton.icon(
-              style: FilledButton.styleFrom(
-                backgroundColor: context.atlas.danger,
-                foregroundColor: const Color(0xFFFFFFFF),
-              ),
               onPressed: () => _confirmReset(context),
               icon: const Icon(Icons.delete_forever),
               label: Text(l10n.settingsResetDataButton),
