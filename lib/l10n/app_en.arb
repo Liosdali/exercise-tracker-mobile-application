@@ -618,5 +618,13 @@
   "feedReportSuccess": "User reported. We review reports within 24 hours.",
   "feedBlockSuccess": "User blocked. You won't see their activity anymore.",
   "feedReportError": "Couldn't send the report. Please try again.",
-  "feedBlockError": "Couldn't block this user. Please try again."
+  "feedBlockError": "Couldn't block this user. Please try again.",
+  "settingsPrivacyPolicy": "Privacy policy",
+  "settingsTermsOfUse": "Terms of use",
+  "legalLinkOpenError": "Couldn't open the page. Check your connection and try again.",
+  "communityTermsTitle": "Community terms",
+  "communityTermsBody": "Teams let you share activity with other people. Before you continue, you agree to the terms of use: no abusive, hateful, sexual or otherwise objectionable content, and no harassment. Content that breaks these rules is removed, and the accounts behind it can be banned. You can report or block any user from their post in the feed.",
+  "communityTermsRead": "Read the terms of use",
+  "communityTermsAccept": "I agree",
+  "communityTermsDecline": "Not now"
 }

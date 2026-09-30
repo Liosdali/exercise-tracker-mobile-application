@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/team_provider.dart';
 import '../widgets/atlas/status_mark.dart';
+import '../widgets/community_terms_gate.dart';
 
 /// Screen for joining a team using an invite code/token.
 class JoinTeamScreen extends StatefulWidget {
@@ -47,6 +48,9 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
       );
       return;
     }
+
+    if (!await ensureCommunityTermsAccepted(context)) return;
+    if (!mounted) return;
 
     setState(() => _isSubmitting = true);
 

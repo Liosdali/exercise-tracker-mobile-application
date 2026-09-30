@@ -551,5 +551,13 @@
   "feedReportSuccess": "Kullanıcı şikayet edildi. Şikayetler 24 saat içinde incelenir.",
   "feedBlockSuccess": "Kullanıcı engellendi. Artık etkinliklerini görmeyeceksin.",
   "feedReportError": "Şikayet gönderilemedi. Lütfen tekrar dene.",
-  "feedBlockError": "Kullanıcı engellenemedi. Lütfen tekrar dene."
+  "feedBlockError": "Kullanıcı engellenemedi. Lütfen tekrar dene.",
+  "settingsPrivacyPolicy": "Gizlilik politikası",
+  "settingsTermsOfUse": "Kullanım koşulları",
+  "legalLinkOpenError": "Sayfa açılamadı. Bağlantını kontrol edip tekrar dene.",
+  "communityTermsTitle": "Topluluk kuralları",
+  "communityTermsBody": "Ekipler, etkinliklerini başka kişilerle paylaşmanı sağlar. Devam etmeden önce kullanım koşullarını kabul edersin: taciz edici, nefret içeren, cinsel ya da başka şekilde uygunsuz içerik ve taciz kesinlikle yasaktır. Bu kuralları ihlal eden içerik kaldırılır, ilgili hesaplar kapatılabilir. Akıştaki herhangi bir kullanıcıyı, gönderisinden şikayet edebilir veya engelleyebilirsin.",
+  "communityTermsRead": "Kullanım koşullarını oku",
+  "communityTermsAccept": "Kabul ediyorum",
+  "communityTermsDecline": "Şimdi değil"
 }

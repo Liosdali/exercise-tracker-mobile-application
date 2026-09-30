@@ -7,6 +7,7 @@ import '../theme/atlas_tokens.dart';
 import '../theme/team_palette.dart';
 import '../widgets/atlas/kit_picker.dart';
 import '../widgets/atlas/status_mark.dart';
+import '../widgets/community_terms_gate.dart';
 
 /// Screen for creating a new team.
 class CreateTeamScreen extends StatefulWidget {
@@ -49,6 +50,9 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
       );
       return;
     }
+
+    if (!await ensureCommunityTermsAccepted(context)) return;
+    if (!mounted) return;
 
     setState(() => _isSubmitting = true);
 

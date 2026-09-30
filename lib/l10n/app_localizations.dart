@@ -2851,6 +2851,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t block this user. Please try again.'**
   String get feedBlockError;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsTermsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of use'**
+  String get settingsTermsOfUse;
+
+  /// No description provided for @legalLinkOpenError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the page. Check your connection and try again.'**
+  String get legalLinkOpenError;
+
+  /// No description provided for @communityTermsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community terms'**
+  String get communityTermsTitle;
+
+  /// No description provided for @communityTermsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Teams let you share activity with other people. Before you continue, you agree to the terms of use: no abusive, hateful, sexual or otherwise objectionable content, and no harassment. Content that breaks these rules is removed, and the accounts behind it can be banned. You can report or block any user from their post in the feed.'**
+  String get communityTermsBody;
+
+  /// No description provided for @communityTermsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the terms of use'**
+  String get communityTermsRead;
+
+  /// No description provided for @communityTermsAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree'**
+  String get communityTermsAccept;
+
+  /// No description provided for @communityTermsDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get communityTermsDecline;
 }
 
 class _AppLocalizationsDelegate

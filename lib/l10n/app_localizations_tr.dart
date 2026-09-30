@@ -1559,4 +1559,30 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get feedBlockError => 'Kullanıcı engellenemedi. Lütfen tekrar dene.';
+
+  @override
+  String get settingsPrivacyPolicy => 'Gizlilik politikası';
+
+  @override
+  String get settingsTermsOfUse => 'Kullanım koşulları';
+
+  @override
+  String get legalLinkOpenError =>
+      'Sayfa açılamadı. Bağlantını kontrol edip tekrar dene.';
+
+  @override
+  String get communityTermsTitle => 'Topluluk kuralları';
+
+  @override
+  String get communityTermsBody =>
+      'Ekipler, etkinliklerini başka kişilerle paylaşmanı sağlar. Devam etmeden önce kullanım koşullarını kabul edersin: taciz edici, nefret içeren, cinsel ya da başka şekilde uygunsuz içerik ve taciz kesinlikle yasaktır. Bu kuralları ihlal eden içerik kaldırılır, ilgili hesaplar kapatılabilir. Akıştaki herhangi bir kullanıcıyı, gönderisinden şikayet edebilir veya engelleyebilirsin.';
+
+  @override
+  String get communityTermsRead => 'Kullanım koşullarını oku';
+
+  @override
+  String get communityTermsAccept => 'Kabul ediyorum';
+
+  @override
+  String get communityTermsDecline => 'Şimdi değil';
 }

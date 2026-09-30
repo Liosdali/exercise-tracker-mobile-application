@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../config/legal_links.dart';
 import '../data/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/custom_program_provider.dart';
@@ -16,6 +17,7 @@ import '../services/backup_service.dart';
 import '../services/supabase_service.dart';
 import '../services/user_account_service.dart';
 import '../theme/atlas_colors.dart';
+import '../widgets/community_terms_gate.dart';
 import 'about_screen.dart';
 import 'account_section.dart';
 
@@ -493,6 +495,18 @@ class SettingsScreen extends StatelessWidget {
             title: Text(l10n.settingsDisclaimerButton),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _showDisclaimer(context),
+          ),
+          ListTile(
+            leading: const Icon(Icons.privacy_tip_outlined),
+            title: Text(l10n.settingsPrivacyPolicy),
+            trailing: const Icon(Icons.open_in_new),
+            onTap: () => openLegalPage(context, LegalLinks.privacyPolicy),
+          ),
+          ListTile(
+            leading: const Icon(Icons.gavel_outlined),
+            title: Text(l10n.settingsTermsOfUse),
+            trailing: const Icon(Icons.open_in_new),
+            onTap: () => openLegalPage(context, LegalLinks.termsOfUse),
           ),
         ],
       ),

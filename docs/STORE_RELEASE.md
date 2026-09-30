@@ -12,16 +12,25 @@ Durum işaretleri: ✅ depoda hazır · ⬜ senin yapman gereken · ⚠️ red r
 
 Bunlar olmadan iki mağazadan da büyük olasılıkla red gelir.
 
-- ⬜ ⚠️ **Gizlilik politikası URL'si.** Herkese açık bir sayfa gerekli (GitHub
-  Pages, Notion public sayfası vb.). Hem App Store Connect'e hem Play
-  Console'a girilir, uygulama içinden de erişilebilmeli (App Store 5.1.1(i)).
-  Uygulamada şu an böyle bir bağlantı **yok**. URL'yi bulduğunda Ayarlar'a
-  `url_launcher` ile bir satır eklenecek (paket zaten projede).
-- ⬜ ⚠️ **Kullanım koşulları / EULA ve kabulü.** Takımlar, akış ve öneriler
-  kullanıcı içeriği (UGC) sayılır. Apple 1.2 ve Play UGC politikası,
-  kullanıcıların uygunsuz içeriğe sıfır tolerans içeren koşulları kabul
-  etmesini ister. Kabul, ekibe katılmadan veya ekip oluşturmadan önce alınmalı.
-  Koşul metni ve bir onay adımı henüz **yok**.
+- ✅ **Gizlilik politikası, kullanım koşulları, hesap silme sayfası.**
+  `site/` altında TR+EN olarak hazır. `.github/workflows/pages.yml` bunları
+  GitHub Pages'e yayınlıyor:
+  - https://liosdali.github.io/exercise-tracker-mobile-application/privacy.html
+  - https://liosdali.github.io/exercise-tracker-mobile-application/terms.html
+  - https://liosdali.github.io/exercise-tracker-mobile-application/delete-account.html
+
+  Uygulamada Ayarlar'ın en altında Gizlilik politikası ve Kullanım koşulları
+  bağlantıları var (`lib/config/legal_links.dart`).
+  ⬜ Yayından önce yapman gerekenler:
+  1. `site/*.html` içindeki `CONTACT_EMAIL` yer tutucusunu gerçek destek
+     adresinle değiştir. Değiştirmezsen iş akışı yayını bilerek durdurur.
+  2. GitHub repo → Settings → Pages → Source: **GitHub Actions**.
+  3. Değişiklikleri `master`'a birleştir; Pages yalnızca oradan yayınlar.
+  4. Metinleri oku. Bunlar taslaktır, hukuki danışmanlık yerine geçmez.
+- ✅ **Topluluk kuralları kabulü.** Kullanıcı ekip oluşturmadan veya bir
+  ekibe katılmadan önce koşulları (sıfır tolerans maddesi dahil) kabul
+  ediyor. Kabul, cihaz ve koşul sürümü başına bir kez isteniyor;
+  koşullar esaslı şekilde değişirse `communityTermsVersion` artırılır.
 - ⬜ ⚠️ **Şikayetlerin 24 saat içinde ele alınması.** Şikayet ve engelleme
   uygulamada var ✅ (`user_reports`, `user_blocks`). Şikayetleri okuyan bir
   süreç ise yok: şu an kayıtları yalnızca Supabase panelinden görebilirsin.
@@ -36,7 +45,8 @@ Bunlar olmadan iki mağazadan da büyük olasılıkla red gelir.
   Play fikri mülkiyet politikası kapsamında red veya kaldırma sebebidir. App
   Store Connect'teki "Content Rights" sorusu da bunu doğrudan sorar.
 - ⬜ **Destek URL'si / iletişim e-postası.** App Store'da destek URL'si
-  zorunlu, Play'de iletişim e-postası zorunlu.
+  zorunlu: `https://liosdali.github.io/exercise-tracker-mobile-application/`
+  kullanılabilir. Play'de iletişim e-postası zorunlu.
 
 ---
 
@@ -187,8 +197,7 @@ Bunlar olmadan iki mağazadan da büyük olasılıkla red gelir.
      diğer kullanıcı içeriği. Hepsi uygulama işlevi için, paylaşılmıyor,
      aktarımda şifreli. Kullanıcı silme isteyebiliyor: evet.
    - **Hesap silme web bağlantısı:** Play, uygulama dışından da silme
-     isteği yapılabilen bir **web URL'si** ister. Gizlilik politikası
-     sayfasına "Hesabımı sil" bölümü (e-posta ile talep) eklemek yeterli.
+     isteği yapılabilen bir **web URL'si** ister: `delete-account.html` ✅
    - **Health apps** beyanı: fitness/antrenman uygulaması olarak işaretle.
      Tıbbi iddia yok.
    - News / Government / Financial features: Hayır
@@ -205,8 +214,6 @@ Bunlar olmadan iki mağazadan da büyük olasılıkla red gelir.
 
 ## 3. Ortak içerik hazırlığı
 
-- ⬜ Gizlilik politikası + kullanım koşulları + hesap silme talebi sayfası
-  (TR + EN). Hepsi tek bir statik sitede toplanabilir.
 - ⬜ Mağaza metinleri TR + EN. Tıbbi iddia içermemeli (Apple 1.4.1): "kilo
   verdirir" gibi vaatlerden kaçın.
 - ⬜ Ekran görüntüleri: iPhone 6.9" ve Android telefon. İkisi de gerçek

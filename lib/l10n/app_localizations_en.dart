@@ -1567,4 +1567,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedBlockError => 'Couldn\'t block this user. Please try again.';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get settingsTermsOfUse => 'Terms of use';
+
+  @override
+  String get legalLinkOpenError =>
+      'Couldn\'t open the page. Check your connection and try again.';
+
+  @override
+  String get communityTermsTitle => 'Community terms';
+
+  @override
+  String get communityTermsBody =>
+      'Teams let you share activity with other people. Before you continue, you agree to the terms of use: no abusive, hateful, sexual or otherwise objectionable content, and no harassment. Content that breaks these rules is removed, and the accounts behind it can be banned. You can report or block any user from their post in the feed.';
+
+  @override
+  String get communityTermsRead => 'Read the terms of use';
+
+  @override
+  String get communityTermsAccept => 'I agree';
+
+  @override
+  String get communityTermsDecline => 'Not now';
 }
