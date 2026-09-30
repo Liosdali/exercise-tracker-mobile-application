@@ -13,6 +13,7 @@ import '../utils/expired_token_retry.dart';
 import '../theme/atlas_colors.dart';
 import '../theme/team_palette.dart';
 import '../widgets/atlas/feed_item.dart';
+import '../widgets/atlas/status_mark.dart';
 import '../widgets/atlas/team_theme.dart';
 import 'create_team_screen.dart';
 import 'join_team_screen.dart';
@@ -209,6 +210,7 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
   }
 
   void _showReportBlockModal(String userId, String userName) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       builder: (ctx) {
@@ -218,27 +220,31 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
             children: [
               ListTile(
                 leading: Icon(Icons.warning_amber_rounded, color: context.atlas.warn),
-                title: Text('Report $userName'),
-                onTap: () async {
+                title: Text(l10n.feedReportUser(userName)),
+                onTap: () {
                   Navigator.pop(ctx);
-                  await SupabaseService().reportUser(userId, 'Inappropriate content');
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('User reported and under review.')),
+                  _runModerationAction(
+                    () => SupabaseService().reportUser(userId, 'Inappropriate content'),
+                    success: l10n.feedReportSuccess,
+                    failure: l10n.feedReportError,
                   );
                 },
               ),
               ListTile(
                 leading: Icon(Icons.block, color: context.atlas.danger),
-                title: Text('Block $userName', style: TextStyle(color: context.atlas.danger)),
-                onTap: () async {
+                title: Text(
+                  l10n.feedBlockUser(userName),
+                  style: TextStyle(color: context.atlas.danger),
+                ),
+                onTap: () {
                   Navigator.pop(ctx);
-                  await SupabaseService().blockUser(userId);
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('User blocked. You will no longer see their posts.')),
+                  _runModerationAction(
+                    () => SupabaseService().blockUser(userId),
+                    success: l10n.feedBlockSuccess,
+                    failure: l10n.feedBlockError,
+                    // Refresh the feed so the block takes effect immediately.
+                    then: _fetchFeed,
                   );
-                  _fetchFeed(); // Refresh feed to apply block immediately
                 },
               ),
             ],
@@ -246,6 +252,37 @@ class SocialFeedScreenState extends State<SocialFeedScreen> {
         );
       },
     );
+  }
+
+  /// Runs a report or block request and tells the user how it went. Both are
+  /// App Store / Play moderation requirements, so a failure must be visible
+  /// rather than an unhandled exception the user never hears about.
+  Future<void> _runModerationAction(
+    Future<void> Function() action, {
+    required String success,
+    required String failure,
+    Future<void> Function()? then,
+  }) async {
+    try {
+      await retryOnExpiredToken(
+        action: action,
+        refresh: SupabaseService().refreshSession,
+      );
+    } catch (e) {
+      debugPrint('[feed] moderation action FAILED: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: StatusMark(status: AtlasStatus.danger, label: failure),
+        ),
+      );
+      return;
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(success)),
+    );
+    if (then != null) await then();
   }
 
   @override

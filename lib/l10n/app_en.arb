@@ -610,5 +610,13 @@
   "suggestionRejectedSuccess": "Suggestion rejected!",
   "suggestionTypeExercise": "Exercise",
   "suggestionTypeProgram": "Program Change",
-  "suggestionTypeFeedback": "Feedback"
+  "suggestionTypeFeedback": "Feedback",
+  "feedReportUser": "Report {userName}",
+  "@feedReportUser": {"placeholders": {"userName": {"type": "String"}}},
+  "feedBlockUser": "Block {userName}",
+  "@feedBlockUser": {"placeholders": {"userName": {"type": "String"}}},
+  "feedReportSuccess": "User reported. We review reports within 24 hours.",
+  "feedBlockSuccess": "User blocked. You won't see their activity anymore.",
+  "feedReportError": "Couldn't send the report. Please try again.",
+  "feedBlockError": "Couldn't block this user. Please try again."
 }

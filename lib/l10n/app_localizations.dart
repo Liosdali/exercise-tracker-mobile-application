@@ -2815,6 +2815,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Feedback'**
   String get suggestionTypeFeedback;
+
+  /// No description provided for @feedReportUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Report {userName}'**
+  String feedReportUser(String userName);
+
+  /// No description provided for @feedBlockUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Block {userName}'**
+  String feedBlockUser(String userName);
+
+  /// No description provided for @feedReportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User reported. We review reports within 24 hours.'**
+  String get feedReportSuccess;
+
+  /// No description provided for @feedBlockSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User blocked. You won\'t see their activity anymore.'**
+  String get feedBlockSuccess;
+
+  /// No description provided for @feedReportError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send the report. Please try again.'**
+  String get feedReportError;
+
+  /// No description provided for @feedBlockError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t block this user. Please try again.'**
+  String get feedBlockError;
 }
 
 class _AppLocalizationsDelegate

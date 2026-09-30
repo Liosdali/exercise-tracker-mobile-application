@@ -116,7 +116,7 @@ kullanır; Google istemci sırrı Flutter uygulamasına eklenmez.
 ### Apple
 
 Apple Developer hesabında iOS App ID için **Sign in with Apple** yeteneğini
-etkinleştirin. Depodaki iOS bundle ID `com.exerciseapp.exerciseApp` değerindedir;
+etkinleştirin. Depodaki iOS bundle ID `com.mythosforgelabs.atlasworkout` değerindedir;
 imzalama/provisioning profilinin bu kimlik ve yetenekle eşleşmesi gerekir.
 `ios\Runner\Runner.entitlements` Debug, Profile ve Release yapılandırmalarına bağlıdır.
 

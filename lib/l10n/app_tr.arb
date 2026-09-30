@@ -545,5 +545,11 @@
   "suggestionRejectedSuccess": "Öneri reddedildi!",
   "suggestionTypeExercise": "Egzersiz",
   "suggestionTypeProgram": "Program Değişikliği",
-  "suggestionTypeFeedback": "Geri Bildirim"
+  "suggestionTypeFeedback": "Geri Bildirim",
+  "feedReportUser": "{userName} kullanıcısını şikayet et",
+  "feedBlockUser": "{userName} kullanıcısını engelle",
+  "feedReportSuccess": "Kullanıcı şikayet edildi. Şikayetler 24 saat içinde incelenir.",
+  "feedBlockSuccess": "Kullanıcı engellendi. Artık etkinliklerini görmeyeceksin.",
+  "feedReportError": "Şikayet gönderilemedi. Lütfen tekrar dene.",
+  "feedBlockError": "Kullanıcı engellenemedi. Lütfen tekrar dene."
 }

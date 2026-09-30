@@ -1543,4 +1543,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get suggestionTypeFeedback => 'Feedback';
+
+  @override
+  String feedReportUser(String userName) {
+    return 'Report $userName';
+  }
+
+  @override
+  String feedBlockUser(String userName) {
+    return 'Block $userName';
+  }
+
+  @override
+  String get feedReportSuccess =>
+      'User reported. We review reports within 24 hours.';
+
+  @override
+  String get feedBlockSuccess =>
+      'User blocked. You won\'t see their activity anymore.';
+
+  @override
+  String get feedReportError => 'Couldn\'t send the report. Please try again.';
+
+  @override
+  String get feedBlockError => 'Couldn\'t block this user. Please try again.';
 }

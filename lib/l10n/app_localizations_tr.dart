@@ -1535,4 +1535,28 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get suggestionTypeFeedback => 'Geri Bildirim';
+
+  @override
+  String feedReportUser(String userName) {
+    return '$userName kullanıcısını şikayet et';
+  }
+
+  @override
+  String feedBlockUser(String userName) {
+    return '$userName kullanıcısını engelle';
+  }
+
+  @override
+  String get feedReportSuccess =>
+      'Kullanıcı şikayet edildi. Şikayetler 24 saat içinde incelenir.';
+
+  @override
+  String get feedBlockSuccess =>
+      'Kullanıcı engellendi. Artık etkinliklerini görmeyeceksin.';
+
+  @override
+  String get feedReportError => 'Şikayet gönderilemedi. Lütfen tekrar dene.';
+
+  @override
+  String get feedBlockError => 'Kullanıcı engellenemedi. Lütfen tekrar dene.';
 }
