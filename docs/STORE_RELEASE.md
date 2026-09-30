@@ -22,8 +22,8 @@ Bunlar olmadan iki mağazadan da büyük olasılıkla red gelir.
   Uygulamada Ayarlar'ın en altında Gizlilik politikası ve Kullanım koşulları
   bağlantıları var (`lib/config/legal_links.dart`).
   ⬜ Yayından önce yapman gerekenler:
-  1. `site/*.html` içindeki `CONTACT_EMAIL` yer tutucusunu gerçek destek
-     adresinle değiştir. Değiştirmezsen iş akışı yayını bilerek durdurur.
+  1. ✅ İletişim adresi: baykal246@gmail.com. (İş akışı, `CONTACT_EMAIL`
+     yer tutucusu yeniden eklenirse yayını durdurur.)
   2. GitHub repo → Settings → Pages → Source: **GitHub Actions**.
   3. Değişiklikleri `master`'a birleştir; Pages yalnızca oradan yayınlar.
   4. Metinleri oku. Bunlar taslaktır, hukuki danışmanlık yerine geçmez.
