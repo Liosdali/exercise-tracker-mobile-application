@@ -11,12 +11,15 @@ import '../providers/routine_provider.dart';
 import '../providers/settings_provider.dart';
 import '../services/program_localizer.dart';
 import '../services/program_share_service.dart';
+import '../theme/atlas_colors.dart';
 import 'active_workout_screen.dart';
+import 'categories_screen.dart';
 import 'program_builder_screen.dart';
 import 'program_detail_screen.dart';
 import 'routine_builder_screen.dart';
 
 /// "Antrenmanlar" tab: built-in programs + the user's custom routines.
+/// Also includes an "Exercises" tab with the exercise library (CategoriesScreen).
 class WorkoutsScreen extends StatefulWidget {
   const WorkoutsScreen({super.key});
 
@@ -24,14 +27,23 @@ class WorkoutsScreen extends StatefulWidget {
   State<WorkoutsScreen> createState() => _WorkoutsScreenState();
 }
 
-class _WorkoutsScreenState extends State<WorkoutsScreen> {
+class _WorkoutsScreenState extends State<WorkoutsScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RoutineProvider>().load();
       context.read<CustomProgramProvider>().load();
     });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<void> _startRoutine(CustomRoutine routine) async {
@@ -140,7 +152,16 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.navWorkouts)),
+      appBar: AppBar(
+        title: Text(l10n.navWorkouts),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(text: l10n.navWorkouts),
+            Tab(text: l10n.navExercises),
+          ],
+        ),
+      ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -159,123 +180,149 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          Text(l10n.workoutsProgramsSectionTitle, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 8),
-          for (final program in programProvider.programs)
+          // Workouts Tab
+          _buildWorkoutsContent(
+            context,
+            programProvider,
+            routineProvider,
+            customProgramProvider,
+            settings,
+            l10n,
+          ),
+          // Exercises Tab
+          const CategoriesScreen(isEmbedded: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWorkoutsContent(
+    BuildContext context,
+    ProgramProvider programProvider,
+    RoutineProvider routineProvider,
+    CustomProgramProvider customProgramProvider,
+    SettingsProvider settings,
+    AppLocalizations l10n,
+  ) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Text(l10n.workoutsProgramsSectionTitle, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8),
+        for (final program in programProvider.programs)
+          Card(
+            child: ListTile(
+              title: Text(ProgramLocalizer.name(l10n, program.id, program.name)),
+              subtitle: Text(
+                ProgramLocalizer.description(l10n, program.id, program.description),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: Chip(label: Text(ProgramLocalizer.levelLabel(l10n, program.level))),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ProgramDetailScreen.builtin(program, l10n: l10n),
+                  ),
+                );
+              },
+            ),
+          ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l10n.workoutsMyProgramsSectionTitle, style: Theme.of(context).textTheme.titleLarge),
+            TextButton.icon(
+              onPressed: _importProgramWithCode,
+              icon: const Icon(Icons.qr_code),
+              label: Text(l10n.workoutsImportCodeButton),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (!customProgramProvider.isLoaded)
+          const Center(child: CircularProgressIndicator())
+        else if (customProgramProvider.programs.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Text(l10n.workoutsNoCustomProgramsMessage),
+          )
+        else
+          for (final program in customProgramProvider.programs)
             Card(
               child: ListTile(
-                title: Text(ProgramLocalizer.name(l10n, program.id, program.name)),
-                subtitle: Text(
-                  ProgramLocalizer.description(l10n, program.id, program.description),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                title: Text(program.name),
+                subtitle: Text(l10n.workoutsDaysCountLabel(program.days.length)),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (settings.activeProgramKey == program.key)
+                      Icon(Icons.check_circle, color: context.atlas.success),
+                    PopupMenuButton<String>(
+                      onSelected: (value) async {
+                        if (value == 'edit') {
+                          await _editProgram(program);
+                        } else if (value == 'delete') {
+                          await context.read<CustomProgramProvider>().deleteProgram(program.id!);
+                        } else if (value == 'activate') {
+                          await settings.setActiveProgramKey(program.key);
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(value: 'activate', child: Text(l10n.workoutsActivateProgramMenuItem)),
+                        PopupMenuItem(value: 'edit', child: Text(l10n.workoutsEditMenuItem)),
+                        PopupMenuItem(value: 'delete', child: Text(l10n.workoutsDeleteMenuItem)),
+                      ],
+                    ),
+                  ],
                 ),
-                trailing: Chip(label: Text(ProgramLocalizer.levelLabel(l10n, program.level))),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => ProgramDetailScreen.builtin(program, l10n: l10n),
+                      builder: (_) => ProgramDetailScreen.custom(program, l10n: l10n),
                     ),
                   );
                 },
               ),
             ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(l10n.workoutsMyProgramsSectionTitle, style: Theme.of(context).textTheme.titleLarge),
-              TextButton.icon(
-                onPressed: _importProgramWithCode,
-                icon: const Icon(Icons.qr_code),
-                label: Text(l10n.workoutsImportCodeButton),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          if (!customProgramProvider.isLoaded)
-            const Center(child: CircularProgressIndicator())
-          else if (customProgramProvider.programs.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(l10n.workoutsNoCustomProgramsMessage),
-            )
-          else
-            for (final program in customProgramProvider.programs)
-              Card(
-                child: ListTile(
-                  title: Text(program.name),
-                  subtitle: Text(l10n.workoutsDaysCountLabel(program.days.length)),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (settings.activeProgramKey == program.key)
-                        const Icon(Icons.check_circle, color: Colors.green),
-                      PopupMenuButton<String>(
-                        onSelected: (value) async {
-                          if (value == 'edit') {
-                            await _editProgram(program);
-                          } else if (value == 'delete') {
-                            await context.read<CustomProgramProvider>().deleteProgram(program.id!);
-                          } else if (value == 'activate') {
-                            await settings.setActiveProgramKey(program.key);
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(value: 'activate', child: Text(l10n.workoutsActivateProgramMenuItem)),
-                          PopupMenuItem(value: 'edit', child: Text(l10n.workoutsEditMenuItem)),
-                          PopupMenuItem(value: 'delete', child: Text(l10n.workoutsDeleteMenuItem)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => ProgramDetailScreen.custom(program, l10n: l10n),
-                      ),
-                    );
+        const SizedBox(height: 24),
+        Text(l10n.workoutsMyRoutinesSectionTitle, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8),
+        if (!routineProvider.isLoaded)
+          const Center(child: CircularProgressIndicator())
+        else if (routineProvider.routines.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Text(l10n.workoutsNoCustomRoutinesMessage),
+          )
+        else
+          for (final routine in routineProvider.routines)
+            Card(
+              child: ListTile(
+                title: Text(routine.name),
+                subtitle: Text(l10n.workoutsExerciseCountLabel(routine.exercises.length)),
+                onTap: () => _startRoutine(routine),
+                trailing: PopupMenuButton<String>(
+                  onSelected: (value) async {
+                    if (value == 'edit') {
+                      await _editRoutine(routine);
+                    } else if (value == 'delete') {
+                      await context.read<RoutineProvider>().deleteRoutine(routine.id!);
+                    }
                   },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(value: 'edit', child: Text(l10n.workoutsEditMenuItem)),
+                    PopupMenuItem(value: 'delete', child: Text(l10n.workoutsDeleteMenuItem)),
+                  ],
                 ),
               ),
-          const SizedBox(height: 24),
-          Text(l10n.workoutsMyRoutinesSectionTitle, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 8),
-          if (!routineProvider.isLoaded)
-            const Center(child: CircularProgressIndicator())
-          else if (routineProvider.routines.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(l10n.workoutsNoCustomRoutinesMessage),
-            )
-          else
-            for (final routine in routineProvider.routines)
-              Card(
-                child: ListTile(
-                  title: Text(routine.name),
-                  subtitle: Text(l10n.workoutsExerciseCountLabel(routine.exercises.length)),
-                  onTap: () => _startRoutine(routine),
-                  trailing: PopupMenuButton<String>(
-                    onSelected: (value) async {
-                      if (value == 'edit') {
-                        await _editRoutine(routine);
-                      } else if (value == 'delete') {
-                        await context.read<RoutineProvider>().deleteRoutine(routine.id!);
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(value: 'edit', child: Text(l10n.workoutsEditMenuItem)),
-                      PopupMenuItem(value: 'delete', child: Text(l10n.workoutsDeleteMenuItem)),
-                    ],
-                  ),
-                ),
-              ),
-          const SizedBox(height: 80),
-        ],
-      ),
+            ),
+        const SizedBox(height: 80),
+      ],
     );
   }
 }

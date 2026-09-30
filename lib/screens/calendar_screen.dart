@@ -11,6 +11,7 @@ import '../providers/program_progress_provider.dart';
 import '../providers/program_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
+import '../theme/atlas_colors.dart';
 import '../utils/program_resolver.dart';
 import '../widgets/category_style.dart';
 import 'exercise_picker_screen.dart';
@@ -189,7 +190,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   child: Icon(
                     completed ? Icons.check_circle : Icons.event_note,
                     size: 14,
-                    color: completed ? Colors.green : Colors.orange,
+                    color: completed ? context.atlas.success : context.atlas.warn,
                   ),
                 );
               },
@@ -211,7 +212,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     if (workoutProvider.loggedDates.contains(selectedKey))
                       Chip(
-                        avatar: const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                        avatar: Icon(Icons.check_circle, color: context.atlas.success, size: 18),
                         label: Text(l10n.calendarCompletedChip),
                       ),
                   ],
@@ -221,7 +222,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     padding: const EdgeInsets.only(top: 4),
                     child: Row(
                       children: [
-                        const Icon(Icons.event_note, size: 16, color: Colors.orange),
+                        Icon(Icons.event_note, size: 16, color: context.atlas.warn),
                         const SizedBox(width: 4),
                         Expanded(child: Text(l10n.calendarAssignedLabel(planned.dayName))),
                         TextButton(

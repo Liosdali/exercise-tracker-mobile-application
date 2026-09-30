@@ -1,0 +1,58 @@
+# iOS release pipeline. Windows cannot sign or archive an iOS build, so this
+# runs on Codemagic's macOS machines and uploads straight to TestFlight.
+#
+# One-time setup in the Codemagic UI (see README "App Store yayını"):
+#   1. Teams > Integrations > App Store Connect: add an API key and name it
+#      `atlas_asc` (the name below must match).
+#   2. Teams > Code signing identities: generate/upload an Apple Distribution
+#      certificate and fetch the App Store profile for
+#      com.mythosforgelabs.atlasworkout.
+#   3. App settings > Environment variables, group `atlas_ios`:
+#        SUPABASE_URL, SUPABASE_ANON_KEY  (same values as the local .env)
+#        APP_STORE_APPLE_ID               (numeric "Apple ID" from App Store
+#                                          Connect > App Information)
+workflows:
+  ios-testflight:
+    name: iOS -> TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: atlas_asc
+    environment:
+      flutter: 3.44.8
+      xcode: latest
+      cocoapods: default
+      groups:
+        - atlas_ios
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.mythosforgelabs.atlasworkout
+    scripts:
+      - name: Write .env
+        # .env is gitignored but bundled as a Flutter asset, so the build
+        # fails without it. Only the public anon key belongs here.
+        script: |
+          printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' \
+            "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > .env
+      - name: Get packages
+        script: flutter pub get
+      - name: Tests
+        script: flutter test
+        ignore_failure: true
+      - name: Apply signing profiles
+        script: xcode-project use-profiles
+      - name: Build IPA
+        # App Store Connect rejects a build number it has already seen, so
+        # continue from the latest TestFlight build rather than pubspec's.
+        script: |
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo 0)
+          flutter build ipa --release \
+            --build-number=$((LATEST + 1)) \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

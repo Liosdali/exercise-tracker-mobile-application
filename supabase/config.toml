@@ -1,0 +1,11 @@
+project_id = "exercise-app"
+
+[functions.delete-account]
+# The handler verifies the bearer token against Auth itself, including projects
+# using asymmetric JWT signing keys that the legacy gateway cannot verify.
+verify_jwt = false
+
+[functions.report-notify]
+# Called by the notify_new_user_report trigger, not by users. The handler
+# authenticates it with the x-webhook-secret header instead of a JWT.
+verify_jwt = false

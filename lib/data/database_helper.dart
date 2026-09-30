@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'account_store.dart';
 import '../models/body_measurement.dart';
 import '../models/custom_program.dart';
 import '../models/custom_routine.dart';
@@ -10,14 +13,93 @@ import '../models/workout_session.dart';
 /// Manages the local SQLite database that stores logged workout entries,
 /// user-created custom routines/programs, body measurements, and workout
 /// program progress/calendar assignments.
+/// Thrown when a database handle outlives the account workspace it was bound
+/// to, after a sign-in, sign-out or account switch.
+///
+/// This is a deliberate guard against stale reads, not a failure: work that
+/// was loading for the previous workspace should be abandoned quietly,
+/// because the UI is about to be rebuilt for the new one. It extends
+/// [StateError] so existing handlers keep working.
+class WorkspaceChangedError extends StateError {
+  WorkspaceChangedError()
+      : super('This account workspace is no longer active');
+}
+
 class DatabaseHelper {
   DatabaseHelper._internal();
+  DatabaseHelper._workspace(this._boundGeneration);
   static final DatabaseHelper instance = DatabaseHelper._internal();
+  int? _boundGeneration;
 
-  static const int _dbVersion = 5;
+  DatabaseHelper workspace() => DatabaseHelper._workspace(instance.generation);
+
+  static const int _dbVersion = 7;
 
   Database? _db;
   Future<Database>? _dbOpening;
+  String? _userId;
+  int _generation = 0;
+  Future<void> _switching = Future.value();
+  final _changes = StreamController<void>.broadcast();
+
+  String? get userId => _userId;
+  int get generation => _generation;
+  Stream<void> get changes => _changes.stream;
+  void notifyChanged() => _changes.add(null);
+
+  /// Serializes closes behind outstanding SQLite transactions. Callers keep
+  /// their database handle, never look up a different account mid-transaction.
+  Future<void> switchAccount(String? userId) {
+    if (userId != null && !RegExp(r'^[0-9a-fA-F-]{36}$').hasMatch(userId)) {
+      throw ArgumentError('Invalid account UUID');
+    }
+    final next = _switching.then((_) async {
+      if (_userId == userId && _db != null) return;
+      if (_dbOpening != null) await _dbOpening;
+      await _db?.close();
+      _db = null;
+      _dbOpening = null;
+      _userId = userId;
+      _generation++;
+      _db = await (_dbOpening = _initDatabase());
+      notifyChanged();
+    });
+    _switching = next.catchError((Object _) {});
+    return next;
+  }
+
+  Future<Database> openGuestDatabase() async {
+    if (_userId == null) return database;
+    return _initDatabase(guest: true);
+  }
+
+  Future<void> deleteAccountDatabase(String userId) async {
+    if (_userId == userId) await switchAccount(null);
+    await deleteDatabase(join(await getDatabasesPath(), 'account_$userId.db'));
+  }
+
+  Future<void> closeWorkspace() async {
+    await _switching;
+    if (_dbOpening != null) {
+      try {
+        await _dbOpening!.timeout(const Duration(seconds: 5));
+      } on TimeoutException {
+        _dbOpening = null;
+        _db = null;
+      } catch (e) {
+        _dbOpening = null;
+        _db = null;
+      }
+    }
+    try {
+      await _db?.close();
+    } catch (e) {
+      // Ignore close errors if database is already closed or invalid
+    }
+    _db = null;
+    _dbOpening = null;
+    _generation++;
+  }
 
   /// Returns the shared database instance, opening it on first use. Caches
   /// the in-flight opening [Future] (not just the resolved [Database]) so
@@ -25,25 +107,41 @@ class DatabaseHelper {
   /// startup) all await the same open/migration instead of racing to open
   /// the same file multiple times.
   Future<Database> get database async {
+    if (_boundGeneration != null) {
+      if (_boundGeneration != instance.generation) {
+        throw WorkspaceChangedError();
+      }
+      final db = await instance.database;
+      if (_boundGeneration != instance.generation) {
+        throw WorkspaceChangedError();
+      }
+      return db;
+    }
     if (_db != null) return _db!;
     _dbOpening ??= _initDatabase();
     _db = await _dbOpening;
     return _db!;
   }
 
-  Future<Database> _initDatabase() async {
+  Future<Database> _initDatabase({bool guest = false}) async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'exercise_app.db');
+    final path = join(
+      dbPath,
+      guest || _userId == null ? 'exercise_app.db' : 'account_$_userId.db',
+    );
     return openDatabase(
       path,
       version: _dbVersion,
+      onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
       onCreate: (db, version) async {
         await _createV1Tables(db);
         await _createV2Tables(db);
         await _createV3Tables(db);
         await _createV4Tables(db);
         await _createV5Migration(db);
-        // await _createV6Migration(db); // <- add new versions here too.
+        await AccountStore.migrateV7(db);
       },
       // Standard safe-migration recipe for this project (no data loss):
       // 1. Bump `_dbVersion` above by exactly 1.
@@ -74,9 +172,7 @@ class DatabaseHelper {
         if (oldVersion < 5) {
           await _createV5Migration(db);
         }
-        // if (oldVersion < 6) {
-        //   await _createV6Migration(db);
-        // }
+        if (oldVersion < 7) await AccountStore.migrateV7(db);
       },
     );
   }
@@ -252,7 +348,9 @@ class DatabaseHelper {
     };
     for (final entry in columns.entries) {
       try {
-        await db.execute('ALTER TABLE body_measurements ADD COLUMN ${entry.key} ${entry.value}');
+        await db.execute(
+          'ALTER TABLE body_measurements ADD COLUMN ${entry.key} ${entry.value}',
+        );
       } on DatabaseException {
         // Column already present (e.g. onCreate ran this once already) -
         // safe to ignore.
@@ -264,15 +362,21 @@ class DatabaseHelper {
 
   Future<int> insertEntry(WorkoutEntry entry) async {
     final db = await database;
-    final map = entry.toMap()..remove('id');
+    final map = entry.toMap()
+      ..remove('id')
+      ..['created_at'] = DateTime.parse(
+        entry.createdAt,
+      ).toUtc().toIso8601String();
     return db.insert('workout_entries', map);
   }
 
   Future<int> updateEntry(WorkoutEntry entry) async {
     final db = await database;
+    final data = entry.toMap();
+    if (entry.sessionId == null) data.remove('session_id');
     return db.update(
       'workout_entries',
-      entry.toMap(),
+      data,
       where: 'id = ?',
       whereArgs: [entry.id],
     );
@@ -297,13 +401,20 @@ class DatabaseHelper {
   /// All distinct dates (yyyy-MM-dd) that have at least one logged entry.
   Future<Set<String>> loggedDates() async {
     final db = await database;
-    final rows = await db.query('workout_entries', distinct: true, columns: ['date']);
+    final rows = await db.query(
+      'workout_entries',
+      distinct: true,
+      columns: ['date'],
+    );
     return rows.map((r) => r['date'] as String).toSet();
   }
 
   Future<List<WorkoutEntry>> allEntries() async {
     final db = await database;
-    final rows = await db.query('workout_entries', orderBy: 'date DESC, id ASC');
+    final rows = await db.query(
+      'workout_entries',
+      orderBy: 'date DESC, id ASC',
+    );
     return rows.map(WorkoutEntry.fromMap).toList();
   }
 
@@ -402,18 +513,53 @@ class DatabaseHelper {
 
   Future<int> insertMeasurement(BodyMeasurement measurement) async {
     final db = await database;
-    final map = measurement.toMap()..remove('id');
-    return db.insert('body_measurements', map);
+    final map = measurement.toMap()
+      ..remove('id')
+      ..['created_at'] = DateTime.parse(
+        measurement.createdAt,
+      ).toUtc().toIso8601String();
+    for (final value in [
+      measurement.weightKg,
+      measurement.heightCm,
+      measurement.neckCm,
+      measurement.hipCm,
+      measurement.chestCm,
+      measurement.waistCm,
+    ]) {
+      if (value != null && (!value.isFinite || value <= 0)) {
+        throw ArgumentError('Measurements must be positive');
+      }
+    }
+    final id = await db.transaction((txn) async {
+      final id = await txn.insert('body_measurements', map);
+      await AccountStore.updateCurrentMeasurements(txn);
+      return id;
+    });
+    instance.notifyChanged();
+    return id;
   }
 
   Future<int> deleteMeasurement(int id) async {
     final db = await database;
-    return db.delete('body_measurements', where: 'id = ?', whereArgs: [id]);
+    final count = await db.transaction((txn) async {
+      final count = await txn.delete(
+        'body_measurements',
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+      await AccountStore.updateCurrentMeasurements(txn);
+      return count;
+    });
+    instance.notifyChanged();
+    return count;
   }
 
   Future<List<BodyMeasurement>> allMeasurements() async {
     final db = await database;
-    final rows = await db.query('body_measurements', orderBy: 'date DESC, id DESC');
+    final rows = await db.query(
+      'body_measurements',
+      orderBy: 'date DESC, id DESC',
+    );
     return rows.map(BodyMeasurement.fromMap).toList();
   }
 
@@ -431,6 +577,7 @@ class DatabaseHelper {
           'program_id': programId,
           'name': day.name,
           'position': day.position,
+          'sync_id': day.syncId,
         });
         for (final exercise in day.exercises) {
           final map = exercise.toMap()
@@ -470,10 +617,14 @@ class DatabaseHelper {
         whereArgs: [program.id],
       );
       for (final day in program.days) {
+        final previous = oldDayRows.where((row) => row['id'] == day.id);
         final dayId = await txn.insert('custom_program_days', {
           'program_id': program.id,
           'name': day.name,
           'position': day.position,
+          'sync_id':
+              day.syncId ??
+              (previous.isEmpty ? null : previous.first['sync_id']),
         });
         for (final exercise in day.exercises) {
           final map = exercise.toMap()
@@ -482,7 +633,25 @@ class DatabaseHelper {
           await txn.insert('custom_program_exercises', map);
         }
       }
+      await txn.rawUpdate(
+        '''
+        UPDATE planned_workouts SET
+          day_index=(SELECT position FROM custom_program_days WHERE sync_id=planned_workouts.day_sync_id),
+          day_name=(SELECT name FROM custom_program_days WHERE sync_id=planned_workouts.day_sync_id)
+        WHERE program_key=? AND day_sync_id IS NOT NULL
+          AND EXISTS(SELECT 1 FROM custom_program_days WHERE sync_id=planned_workouts.day_sync_id)
+      ''',
+        ['custom:${program.id}'],
+      );
+      await txn.rawDelete(
+        '''
+        DELETE FROM planned_workouts WHERE program_key=? AND day_sync_id IS NOT NULL
+          AND NOT EXISTS(SELECT 1 FROM custom_program_days WHERE sync_id=planned_workouts.day_sync_id)
+      ''',
+        ['custom:${program.id}'],
+      );
     });
+    instance.notifyChanged();
   }
 
   Future<void> deleteProgram(int id) async {
@@ -500,10 +669,28 @@ class DatabaseHelper {
           whereArgs: [row['id']],
         );
       }
-      await txn.delete('custom_program_days', where: 'program_id = ?', whereArgs: [id]);
+      await txn.delete(
+        'custom_program_days',
+        where: 'program_id = ?',
+        whereArgs: [id],
+      );
       await txn.delete('custom_programs', where: 'id = ?', whereArgs: [id]);
-      await txn.delete('program_progress', where: 'program_key = ?', whereArgs: ['custom:$id']);
+      await txn.delete(
+        'program_progress',
+        where: 'program_key = ?',
+        whereArgs: ['custom:$id'],
+      );
+      await txn.delete(
+        'planned_workouts',
+        where: 'program_key = ?',
+        whereArgs: ['custom:$id'],
+      );
+      await txn.rawUpdate(
+        "UPDATE account_preferences SET value = 'null' WHERE key = 'active_program_key' AND value = ?",
+        ['"custom:$id"'],
+      );
     });
+    instance.notifyChanged();
   }
 
   Future<List<CustomProgram>> allPrograms() async {
@@ -530,6 +717,7 @@ class DatabaseHelper {
         days.add(
           CustomProgramDay(
             id: dayId,
+            syncId: dayRow['sync_id'] as String?,
             programId: id,
             name: dayRow['name'] as String,
             position: dayRow['position'] as int,
@@ -568,7 +756,13 @@ class DatabaseHelper {
       if (lastCompleted != null) {
         final today = DateTime.now();
         final daysSince = DateTime(today.year, today.month, today.day)
-            .difference(DateTime(lastCompleted.year, lastCompleted.month, lastCompleted.day))
+            .difference(
+              DateTime(
+                lastCompleted.year,
+                lastCompleted.month,
+                lastCompleted.day,
+              ),
+            )
             .inDays;
         if (daysSince >= 7) return 0;
       }
@@ -576,17 +770,17 @@ class DatabaseHelper {
     return rows.first['next_day_index'] as int;
   }
 
-  Future<void> setNextDayIndex(String programKey, int nextDayIndex, String completedDate) async {
+  Future<void> setNextDayIndex(
+    String programKey,
+    int nextDayIndex,
+    String completedDate,
+  ) async {
     final db = await database;
-    await db.insert(
-      'program_progress',
-      {
-        'program_key': programKey,
-        'next_day_index': nextDayIndex,
-        'last_completed_date': completedDate,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('program_progress', {
+      'program_key': programKey,
+      'next_day_index': nextDayIndex,
+      'last_completed_date': completedDate,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   // ---- Planned workouts / calendar assignment (v3) ----
@@ -604,16 +798,28 @@ class DatabaseHelper {
     String dayName,
   ) async {
     final db = await database;
-    await db.insert(
-      'planned_workouts',
-      {
+    await db.transaction((txn) async {
+      String? daySyncId;
+      if (programKey.startsWith('custom:')) {
+        final days = await txn.query(
+          'custom_program_days',
+          where: 'program_id=?',
+          whereArgs: [programKey.substring(7)],
+          orderBy: 'position',
+        );
+        if (dayIndex < 0 || dayIndex >= days.length) {
+          throw ArgumentError('Custom program day does not exist');
+        }
+        daySyncId = days[dayIndex]['sync_id'] as String?;
+      }
+      await txn.insert('planned_workouts', {
         'date': date,
         'program_key': programKey,
         'day_index': dayIndex,
         'day_name': dayName,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+        'day_sync_id': daySyncId,
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
+    });
   }
 
   Future<void> clearPlannedWorkout(String date) async {
@@ -628,37 +834,79 @@ class DatabaseHelper {
     final db = await database;
     final rows = await db.query('achievements_unlocked');
     return {
-      for (final row in rows) row['achievement_id'] as String: row['unlocked_at'] as String,
+      for (final row in rows)
+        row['achievement_id'] as String: row['unlocked_at'] as String,
     };
   }
 
   /// Records [achievementId] as unlocked at [unlockedAt] if not already
   /// recorded (keeps the original first-unlock date on repeated calls).
-  Future<void> markAchievementUnlocked(String achievementId, String unlockedAt) async {
+  Future<void> markAchievementUnlocked(
+    String achievementId,
+    String unlockedAt,
+  ) async {
     final db = await database;
-    await db.insert(
-      'achievements_unlocked',
-      {'achievement_id': achievementId, 'unlocked_at': unlockedAt},
-      conflictAlgorithm: ConflictAlgorithm.ignore,
-    );
+    await db.insert('achievements_unlocked', {
+      'achievement_id': achievementId,
+      'unlocked_at': unlockedAt,
+    }, conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
   // ---- Workout sessions (v4) ----
 
   Future<int> insertWorkoutSession(WorkoutSession session) async {
     final db = await database;
-    final map = session.toMap()..remove('id');
+    final map = session.toMap()
+      ..remove('id')
+      ..['created_at'] = DateTime.parse(
+        session.createdAt,
+      ).toUtc().toIso8601String();
     return db.insert('workout_sessions', map);
+  }
+
+  Future<int> insertCompletedWorkout(
+    WorkoutSession session,
+    List<WorkoutEntry> entries,
+  ) async {
+    final db = await database;
+    return db.transaction((txn) async {
+      final id = await txn.insert(
+        'workout_sessions',
+        session.toMap()
+          ..remove('id')
+          ..['created_at'] = DateTime.parse(
+            session.createdAt,
+          ).toUtc().toIso8601String(),
+      );
+      for (final entry in entries) {
+        await txn.insert(
+          'workout_entries',
+          entry.toMap()
+            ..remove('id')
+            ..['created_at'] = DateTime.parse(
+              entry.createdAt,
+            ).toUtc().toIso8601String()
+            ..['session_id'] = id,
+        );
+      }
+      return id;
+    });
   }
 
   Future<List<WorkoutSession>> allWorkoutSessions() async {
     final db = await database;
-    final rows = await db.query('workout_sessions', orderBy: 'date DESC, id DESC');
+    final rows = await db.query(
+      'workout_sessions',
+      orderBy: 'date DESC, id DESC',
+    );
     return rows.map(WorkoutSession.fromMap).toList();
   }
 
   /// Sessions with date within [start, end] (inclusive, yyyy-MM-dd strings).
-  Future<List<WorkoutSession>> workoutSessionsBetween(String start, String end) async {
+  Future<List<WorkoutSession>> workoutSessionsBetween(
+    String start,
+    String end,
+  ) async {
     final db = await database;
     final rows = await db.query(
       'workout_sessions',
@@ -690,6 +938,8 @@ class DatabaseHelper {
       await txn.delete('achievements_unlocked');
       await txn.delete('workout_sessions');
       await txn.delete('user_profile');
+      await txn.delete('account_preferences');
     });
+    instance.notifyChanged();
   }
 }

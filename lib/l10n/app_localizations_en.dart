@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navWorkouts => 'Workouts';
 
   @override
+  String get navTeam => 'Team';
+
+  @override
   String get navCalendar => 'Calendar';
 
   @override
@@ -43,6 +46,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonConfirm => 'Confirm';
+
+  @override
+  String get commonCopy => 'Copy';
+
+  @override
+  String get errorDetailsCopied => 'Error details copied to clipboard';
 
   @override
   String get commonClose => 'Close';
@@ -126,6 +135,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileNoMeasurements => 'No measurements logged yet.';
+
+  @override
+  String measurementWeightValue(String value) {
+    return '$value kg';
+  }
+
+  @override
+  String measurementHeightValue(String value) {
+    return '$value cm tall';
+  }
+
+  @override
+  String measurementBodyFatValue(String value) {
+    return '$value% fat';
+  }
+
+  @override
+  String measurementChestValue(String value) {
+    return 'Chest $value cm';
+  }
+
+  @override
+  String measurementWaistValue(String value) {
+    return 'Waist $value cm';
+  }
+
+  @override
+  String get accountViewMeasurementHistory => 'View measurement history';
 
   @override
   String get settingsTitle => 'Settings';
@@ -274,6 +311,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tutorialWorkoutsTabDescription =>
       'Browse ready-made programs, or build your own custom routines and multi-day programs.';
+
+  @override
+  String get tutorialTeamTabTitle => 'Team';
+
+  @override
+  String get tutorialTeamTabDescription =>
+      'Connect with friends, share your progress, and find motivation in our community.';
 
   @override
   String get tutorialCalendarTabTitle => 'Calendar';
@@ -752,5 +796,801 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutSummaryCaloriesLabel => 'Estimated calories';
 
   @override
+  String feedCaloriesValue(int calories) {
+    return '$calories kcal';
+  }
+
+  @override
   String get workoutSummaryBackHomeButton => 'Back to Home';
+
+  @override
+  String get accountTitle => 'Account';
+
+  @override
+  String get accountGuest => 'Guest';
+
+  @override
+  String get accountGuestDescription =>
+      'Your guest data stays on this device. Sign in to privately sync across devices.';
+
+  @override
+  String get accountSignedIn => 'Signed in';
+
+  @override
+  String get accountEditProfile => 'Edit personal profile';
+
+  @override
+  String get accountGoogle => 'Continue with Google';
+
+  @override
+  String get accountApple => 'Continue with Apple';
+
+  @override
+  String get accountConfigurationError =>
+      'Accounts are unavailable: SUPABASE_URL and SUPABASE_ANON_KEY must be configured correctly. You can still use guest mode offline.';
+
+  @override
+  String get accountMobileOnly =>
+      'Google and Apple sign-in is available on Android and iOS.';
+
+  @override
+  String get accountLoginError =>
+      'Sign-in failed. Check your connection and try again.';
+
+  @override
+  String get accountLoginCancelled =>
+      'Sign-in was cancelled or timed out. Your local data is unchanged.';
+
+  @override
+  String get accountSessionExpired =>
+      'Your session needs renewal. Sign in again to sync; your saved data remains available offline.';
+
+  @override
+  String get accountOperationError =>
+      'The operation could not be completed. Your saved data is retained. Please try again.';
+
+  @override
+  String get accountWorkspaceError =>
+      'Your local workspace could not be opened. Retry to safely load your data.';
+
+  @override
+  String get accountRetry => 'Retry';
+
+  @override
+  String get accountBrowserWaiting =>
+      'Complete sign-in in your browser. If you closed it, cancel here to try again.';
+
+  @override
+  String get accountGuestImportTitle => 'Import guest data?';
+
+  @override
+  String get accountGuestImportMessage =>
+      'Copy this device\'s guest workouts, programs, profile and history into this account? Only import data that belongs to you. Guest data is kept separately, and importing may upload it to your private account.';
+
+  @override
+  String get accountGuestImportAccept => 'Import my guest data';
+
+  @override
+  String get accountGuestImportDecline => 'Keep guest data separate';
+
+  @override
+  String get accountSyncing => 'Syncing private account data…';
+
+  @override
+  String accountPending(int count) {
+    return '$count pending changes';
+  }
+
+  @override
+  String get accountSyncError =>
+      'Sync failed. Your changes are saved on this device. Check your connection and retry.';
+
+  @override
+  String get accountSyncNow => 'Sync / retry';
+
+  @override
+  String accountConflicts(int count) {
+    return 'Resolve conflicts ($count)';
+  }
+
+  @override
+  String get accountSignOut => 'Sign out';
+
+  @override
+  String accountSignOutWarning(int count, int conflicts) {
+    return 'There are $count pending changes and $conflicts unresolved conflicts. Unsynced data and both conflict versions stay in this account\'s workspace on this device, but may not yet be available elsewhere. Sign out and return to the separate guest workspace?';
+  }
+
+  @override
+  String get accountProfileOptional =>
+      'All fields are optional. Age and measurements are not required for sign-in. Changes are saved in your current workspace.';
+
+  @override
+  String get accountName => 'Name';
+
+  @override
+  String get accountAge => 'Age (optional)';
+
+  @override
+  String get accountWeight => 'Weight (kg, optional)';
+
+  @override
+  String get accountHeight => 'Height (cm, optional)';
+
+  @override
+  String get accountGender => 'Gender (optional)';
+
+  @override
+  String get accountGenderUnspecified => 'Prefer not to say';
+
+  @override
+  String get accountGenderFemale => 'Female';
+
+  @override
+  String get accountGenderMale => 'Male';
+
+  @override
+  String get accountGenderOther => 'Other';
+
+  @override
+  String get accountAgeInvalid =>
+      'Enter a nonnegative whole number or leave blank.';
+
+  @override
+  String get accountMeasurementInvalid =>
+      'Enter a finite number greater than zero or leave blank.';
+
+  @override
+  String get accountDelete => 'Delete account';
+
+  @override
+  String get accountDeleteSummary =>
+      'Permanently remove your account and server data.';
+
+  @override
+  String get accountDeleteWarning =>
+      'Permanently delete this account and all its private and social server data? Pending local changes will also be removed. Guest data is separate. This cannot be undone and requires a connection. If linked to Apple, its authorization must be revoked by the server before deletion can complete.';
+
+  @override
+  String get accountDeleteError =>
+      'Account deletion could not be completed. No success has been confirmed. Reconnect and retry; contact support if Apple authorization cannot be revoked.';
+
+  @override
+  String get accountCloudResetWarning =>
+      'This resets only the signed-in account\'s workspace. Deletions will sync to this account on your other devices. Guest data and other accounts are unaffected.';
+
+  @override
+  String get accountCloudImportWarning =>
+      'This replaces data in the signed-in account\'s workspace. The imported changes and deletions will sync to this account on other devices. Guest data and other accounts are unaffected.';
+
+  @override
+  String accountPendingLossWarning(int count, int conflicts) {
+    return '$count changes have not reached the cloud yet, and $conflicts conflicts are unresolved. They are discarded here and will never reach your other devices. Sync first if you want to keep them.';
+  }
+
+  @override
+  String get accountGuestResetWarning =>
+      'Only this device\'s guest workspace is affected. Signed-in account workspaces are unchanged.';
+
+  @override
+  String get accountBackupScope =>
+      'Exports contain only the current workspace, never sign-in tokens or credentials. Keep backups private: they may include personal profile and health data.';
+
+  @override
+  String get accountWelcome => 'Welcome!';
+
+  @override
+  String get accountOnboardingName => 'What should we call you? (Optional)';
+
+  @override
+  String get accountContinue => 'Continue';
+
+  @override
+  String get accountSkip => 'Skip';
+
+  @override
+  String get accountDeletionCleanupError =>
+      'Your server account was deleted, but device cleanup did not finish. Retry to remove its local data and credentials safely.';
+
+  @override
+  String get syncConflictsTitle => 'Resolve sync conflicts';
+
+  @override
+  String get syncConflictResolveError =>
+      'The conflict could not be resolved. Both versions are retained; reconnect and retry.';
+
+  @override
+  String get syncNoConflicts => 'No unresolved conflicts.';
+
+  @override
+  String get syncConflictDeleted => 'Deleted record';
+
+  @override
+  String get syncLocalVersion => 'This device\'s version';
+
+  @override
+  String get syncRemoteVersion => 'Account\'s server version';
+
+  @override
+  String get syncKeepLocal => 'Use device version';
+
+  @override
+  String get syncKeepRemote => 'Use server version';
+
+  @override
+  String get accountDeletedSuccess =>
+      'Your account has been deleted from the server and its local data has been removed. Your separate guest data is unchanged.';
+
+  @override
+  String get accountContinueAsGuest => 'Continue as guest';
+
+  @override
+  String get accountAppleReauthentication =>
+      'Apple authorization must be revoked before deletion. Sign in with Apple again on Android, then retry deleting your account. If Apple does not supply a refresh token, use an iOS device or contact support. No account data has been deleted.';
+
+  @override
+  String get accountAppleReauthenticateButton => 'Reauthenticate with Apple';
+
+  @override
+  String get accountDeletionCancelled =>
+      'Account deletion was cancelled. Your account and data are unchanged.';
+
+  @override
+  String get accountDeletionUnavailable =>
+      'Account deletion is not configured on the server. Contact support to complete deletion. Your account and data have not been deleted.';
+
+  @override
+  String get accountAppleMismatch =>
+      'This Apple account does not match the Apple identity linked to your current account. Reauthenticate with the correct Apple account and retry. Nothing has been deleted.';
+
+  @override
+  String get syncRelatedRecordsNotice =>
+      'This conflict includes related workout records. Choosing a version applies to the whole group.';
+
+  @override
+  String get conflictFieldName => 'Name';
+
+  @override
+  String get conflictFieldTitle => 'Title';
+
+  @override
+  String get conflictFieldNotes => 'Notes';
+
+  @override
+  String get conflictFieldWeight => 'Weight';
+
+  @override
+  String get conflictFieldHeight => 'Height';
+
+  @override
+  String get conflictFieldAge => 'Age';
+
+  @override
+  String get conflictFieldGender => 'Gender';
+
+  @override
+  String get conflictFieldBodyFat => 'Body fat';
+
+  @override
+  String get conflictFieldChest => 'Chest';
+
+  @override
+  String get conflictFieldWaist => 'Waist';
+
+  @override
+  String get conflictFieldNeck => 'Neck';
+
+  @override
+  String get conflictFieldHip => 'Hip';
+
+  @override
+  String get conflictFieldExercise => 'Exercise';
+
+  @override
+  String get conflictFieldCategory => 'Category';
+
+  @override
+  String get conflictFieldDuration => 'Duration (minutes)';
+
+  @override
+  String get conflictFieldDays => 'Days';
+
+  @override
+  String get conflictFieldExercises => 'Exercises';
+
+  @override
+  String get conflictFieldDayName => 'Day';
+
+  @override
+  String get conflictFieldValue => 'Value';
+
+  @override
+  String get conflictFieldUnlockedAt => 'Unlocked';
+
+  @override
+  String get conflictFieldProgram => 'Program';
+
+  @override
+  String get conflictFieldNextDay => 'Next day';
+
+  @override
+  String get conflictFieldLastCompleted => 'Last completed';
+
+  @override
+  String get syncConflictOriginBoth =>
+      'Both versions changed since the last sync.';
+
+  @override
+  String get syncConflictOriginLocalOnly =>
+      'Only this device changed this record.';
+
+  @override
+  String get syncConflictOriginRemoteOnly =>
+      'Only the server changed this record.';
+
+  @override
+  String syncConflictFieldsDiffer(int count, String fields) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fields differ ($fields)',
+      one: '1 field differs ($fields)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncConflictNoVisibleDifference =>
+      'The visible details match; only internal sync data differs.';
+
+  @override
+  String get syncConflictDeletedLocally =>
+      'Deleted on this device · Still on the server';
+
+  @override
+  String get syncConflictDeletedRemotely =>
+      'Deleted on the server · Still on this device';
+
+  @override
+  String get syncConflictDeletedBoth => 'Both versions delete this record.';
+
+  @override
+  String get syncConflictDeleteWarning =>
+      'Choosing the deleted version removes this record permanently.';
+
+  @override
+  String syncConflictCollectionCount(String from, String to) {
+    return '$from to $to';
+  }
+
+  @override
+  String get syncConflictCollectionOrder => 'Order changed';
+
+  @override
+  String syncConflictCollectionMembers(String removed, String added) {
+    return '$removed replaced by $added';
+  }
+
+  @override
+  String syncConflictCollectionContent(int count, String names) {
+    return '$count changed ($names)';
+  }
+
+  @override
+  String syncConflictGroupSummary(int count) {
+    return 'This choice applies to all $count related records.';
+  }
+
+  @override
+  String get syncConflictShowDetails => 'Show details';
+
+  @override
+  String syncConflictDetailsWithCount(int count) {
+    return 'Details ($count records)';
+  }
+
+  @override
+  String get syncConflictRawData => 'Raw data';
+
+  @override
+  String syncConflictModifiedOn(String date) {
+    return 'Edited $date';
+  }
+
+  @override
+  String get syncConflictNewer => 'newer';
+
+  @override
+  String get syncConflictValueOn => 'On';
+
+  @override
+  String get syncConflictValueOff => 'Off';
+
+  @override
+  String get teamCreateTeam => 'Create Team';
+
+  @override
+  String get teamJoinTeam => 'Join Team';
+
+  @override
+  String get teamEmptyTitle => 'No Teams Yet';
+
+  @override
+  String get teamEmptyDescription =>
+      'Create a new team to start connecting with friends, or join an existing one with an invite code.';
+
+  @override
+  String get teamCreateDescription =>
+      'Create a new team to collaborate with friends and track workouts together.';
+
+  @override
+  String get teamNameLabel => 'Team Name';
+
+  @override
+  String get teamNameRequired => 'Please enter a team name';
+
+  @override
+  String get teamDescriptionLabel => 'Team Description';
+
+  @override
+  String get teamCreatedSuccess => 'Team created successfully!';
+
+  @override
+  String get teamCreateNote =>
+      'You\'ll be automatically added as the team admin with an invite code to share.';
+
+  @override
+  String get teamColorLabel => 'Team color';
+
+  @override
+  String get teamColorHint =>
+      'Pick the color your team wears in leaderboards and the feed.';
+
+  @override
+  String get teamColorChangeAction => 'Change color';
+
+  @override
+  String get teamColorUpdated => 'Team color updated';
+
+  @override
+  String get teamColorUpdateError => 'Team color could not be updated';
+
+  @override
+  String get kitColorCrimson => 'Crimson';
+
+  @override
+  String get kitColorClaret => 'Claret';
+
+  @override
+  String get kitColorViolet => 'Violet';
+
+  @override
+  String get kitColorRoyal => 'Royal';
+
+  @override
+  String get kitColorTeal => 'Teal';
+
+  @override
+  String get kitColorForest => 'Forest';
+
+  @override
+  String get kitColorGold => 'Gold';
+
+  @override
+  String get kitColorSteel => 'Steel';
+
+  @override
+  String get teamJoinDescription =>
+      'Enter the invite code to join an existing team. You can get this code from the team owner.';
+
+  @override
+  String get teamInviteCodeLabel => 'Invite Code';
+
+  @override
+  String get teamCodeRequired => 'Please enter an invite code';
+
+  @override
+  String get teamInviteCodeHint =>
+      'Share this code with others to invite them to your team';
+
+  @override
+  String get teamInviteCodeTip => 'Tips for finding your invite code:';
+
+  @override
+  String get teamInviteCodeTip1 =>
+      'Ask the team owner to share the invite code from team settings';
+
+  @override
+  String get teamInviteCodeTip2 =>
+      'The code is typically 8 characters long and all uppercase';
+
+  @override
+  String get teamCodeInvalid =>
+      'Invalid invite code. Please check and try again.';
+
+  @override
+  String get teamAlreadyMember => 'You are already a member of this team.';
+
+  @override
+  String get teamJoinError => 'Error joining team. Please try again.';
+
+  @override
+  String teamJoinedSuccess(String teamName) {
+    return 'Successfully joined $teamName!';
+  }
+
+  @override
+  String get teamMembers => 'Members';
+
+  @override
+  String teamMemberCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count members',
+      one: '1 member',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get teamNoMembers => 'No members yet';
+
+  @override
+  String get teamAdmin => 'Admin';
+
+  @override
+  String get teamInviteMembers => 'Invite Members';
+
+  @override
+  String get teamInviteCode => 'Invite Code';
+
+  @override
+  String get teamInviteLink => 'Invite Link';
+
+  @override
+  String get teamCodeCopied => 'Invite code copied to clipboard';
+
+  @override
+  String get teamLeave => 'Leave Team';
+
+  @override
+  String get teamLeaveConfirmTitle => 'Leave Team';
+
+  @override
+  String teamLeaveConfirmMessage(String teamName) {
+    return 'Are you sure you want to leave $teamName?';
+  }
+
+  @override
+  String get teamLeftSuccess => 'You have left the team';
+
+  @override
+  String get teamLeaveError => 'Error leaving team. Please try again.';
+
+  @override
+  String get teamDeleteConfirmTitle => 'Delete Team';
+
+  @override
+  String teamDeleteConfirmMessage(String teamName) {
+    return 'Are you sure you want to delete $teamName? This action cannot be undone.';
+  }
+
+  @override
+  String get teamDeletedSuccess => 'Team deleted successfully';
+
+  @override
+  String get teamDeleteError => 'Error deleting team. Please try again.';
+
+  @override
+  String get teamSelectTeam => 'Select a team';
+
+  @override
+  String get teamSignInRequired =>
+      'Sign in to create or join a team. Your guest workouts stay on this device.';
+
+  @override
+  String get teamLoadError =>
+      'Couldn\'t load your teams. Check your connection and try again.';
+
+  @override
+  String get teamFeedError =>
+      'Couldn\'t load the activity feed. Check your connection and try again.';
+
+  @override
+  String get teamMyTeams => 'My Teams';
+
+  @override
+  String get teamShareInvite => 'Share Invite Link';
+
+  @override
+  String get teamLinkCopied => 'Invite link copied to clipboard';
+
+  @override
+  String get suggestionInbox => 'Suggestions';
+
+  @override
+  String teamInviteMessage(String teamName) {
+    return 'Join my team $teamName on Atlas Workout!';
+  }
+
+  @override
+  String get teamAllMembers => 'All Members';
+
+  @override
+  String get teamNoActivity =>
+      'No social activity yet.\nJoin a team or invite friends!';
+
+  @override
+  String get teamActivity => 'Team Activity';
+
+  @override
+  String get teamActivityWorkouts => 'Workouts';
+
+  @override
+  String get teamActivityCalories => 'Calories';
+
+  @override
+  String get teamActivityMinutes => 'Minutes';
+
+  @override
+  String get memberActivityDetail => 'Member Activity Details';
+
+  @override
+  String get teamMember => 'Team Member';
+
+  @override
+  String get actionSuggest => 'Suggest';
+
+  @override
+  String get suggestionTitle => 'Suggest Program Change';
+
+  @override
+  String get teamLeaderboard => 'Leaderboard';
+
+  @override
+  String get leaderboardWeekly => 'Weekly';
+
+  @override
+  String get leaderboardMonthly => 'Monthly';
+
+  @override
+  String get leaderboardMetricWorkouts => 'Workouts';
+
+  @override
+  String get leaderboardMetricWeight => 'Weight Lifted';
+
+  @override
+  String get leaderboardMetricCalories => 'Calories';
+
+  @override
+  String get leaderboardEmpty => 'Leaderboard is empty';
+
+  @override
+  String get leaderboardWorkouts => 'workouts';
+
+  @override
+  String get leaderboardRank => 'Rank';
+
+  @override
+  String get leaderboardStats => 'Statistics';
+
+  @override
+  String get actionCancel => 'Cancel';
+
+  @override
+  String get suggestionPending => 'Pending';
+
+  @override
+  String get suggestionAccepted => 'Accepted';
+
+  @override
+  String get suggestionRejected => 'Rejected';
+
+  @override
+  String get suggestionNoPending => 'No pending suggestions';
+
+  @override
+  String get suggestionNone => 'No suggestions';
+
+  @override
+  String get suggestionNoMessage => '(No message provided)';
+
+  @override
+  String get suggestionStatusPending => 'Pending';
+
+  @override
+  String get suggestionStatusAccepted => 'Accepted';
+
+  @override
+  String get suggestionStatusRejected => 'Rejected';
+
+  @override
+  String get suggestionDetail => 'Suggestion Details';
+
+  @override
+  String get suggestionType => 'Type';
+
+  @override
+  String get suggestionMessage => 'Message';
+
+  @override
+  String get suggestionYourResponse => 'Your Response';
+
+  @override
+  String get suggestionResponseHint => 'Add an optional response (optional)';
+
+  @override
+  String get suggestionTheirResponse => 'Their Response';
+
+  @override
+  String get suggestionReject => 'Reject';
+
+  @override
+  String get suggestionAccept => 'Accept';
+
+  @override
+  String get suggestionAcceptedSuccess => 'Suggestion accepted!';
+
+  @override
+  String get suggestionRejectedSuccess => 'Suggestion rejected!';
+
+  @override
+  String get suggestionTypeExercise => 'Exercise';
+
+  @override
+  String get suggestionTypeProgram => 'Program Change';
+
+  @override
+  String get suggestionTypeFeedback => 'Feedback';
+
+  @override
+  String feedReportUser(String userName) {
+    return 'Report $userName';
+  }
+
+  @override
+  String feedBlockUser(String userName) {
+    return 'Block $userName';
+  }
+
+  @override
+  String get feedReportSuccess =>
+      'User reported. We review reports within 24 hours.';
+
+  @override
+  String get feedBlockSuccess =>
+      'User blocked. You won\'t see their activity anymore.';
+
+  @override
+  String get feedReportError => 'Couldn\'t send the report. Please try again.';
+
+  @override
+  String get feedBlockError => 'Couldn\'t block this user. Please try again.';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get settingsTermsOfUse => 'Terms of use';
+
+  @override
+  String get legalLinkOpenError =>
+      'Couldn\'t open the page. Check your connection and try again.';
+
+  @override
+  String get communityTermsTitle => 'Community terms';
+
+  @override
+  String get communityTermsBody =>
+      'Teams let you share activity with other people. Before you continue, you agree to the terms of use: no abusive, hateful, sexual or otherwise objectionable content, and no harassment. Content that breaks these rules is removed, and the accounts behind it can be banned. You can report or block any user from their post in the feed.';
+
+  @override
+  String get communityTermsRead => 'Read the terms of use';
+
+  @override
+  String get communityTermsAccept => 'I agree';
+
+  @override
+  String get communityTermsDecline => 'Not now';
 }

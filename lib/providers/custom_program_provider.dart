@@ -1,12 +1,15 @@
-import 'package:flutter/foundation.dart';
+import 'account_change_notifier.dart';
 
 import '../data/database_helper.dart';
 import '../models/custom_program.dart';
 
 /// CRUD for user-created, multi-day custom workout programs, backed by the
 /// local database.
-class CustomProgramProvider extends ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+class CustomProgramProvider extends AccountChangeNotifier {
+  final DatabaseHelper _db = DatabaseHelper.instance.workspace();
+
+  @override
+  Future<void> reloadAccount() => load();
 
   List<CustomProgram> _programs = [];
   bool _loaded = false;

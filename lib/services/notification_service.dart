@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
@@ -12,8 +13,26 @@ class NotificationService {
   NotificationService._();
   static final NotificationService instance = NotificationService._();
 
-  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
   bool _initialized = false;
+  int _accountGeneration = 0;
+  Future<void> _pending = Future<void>.value();
+
+  int get accountGeneration => _accountGeneration;
+
+  Future<void> _enqueue(int generation, Future<void> Function() action) {
+    final operation = _pending.then((_) async {
+      if (generation != _accountGeneration || !_initialized) return;
+      await action();
+    });
+    // Keep the queue usable after failure; the returned future still propagates
+    // the error to its caller.
+    _pending = operation.onError((Object error, StackTrace stack) {
+      debugPrint('Notification operation failed: ${error.runtimeType}');
+    });
+    return operation;
+  }
 
   // Fixed notification ids so re-scheduling can cleanly replace any
   // previously scheduled instance of the same notification.
@@ -49,7 +68,9 @@ class NotificationService {
     );
 
     final androidImpl = _plugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     await androidImpl?.createNotificationChannel(
       const AndroidNotificationChannel(
         _channelId,
@@ -61,22 +82,24 @@ class NotificationService {
     await androidImpl?.requestNotificationsPermission();
 
     final iosImpl = _plugin
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >();
     await iosImpl?.requestPermissions(alert: true, badge: true, sound: true);
 
     _initialized = true;
   }
 
   NotificationDetails get _details => const NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      );
+    android: AndroidNotificationDetails(
+      _channelId,
+      _channelName,
+      channelDescription: _channelDescription,
+      importance: Importance.high,
+      priority: Priority.high,
+    ),
+    iOS: DarwinNotificationDetails(),
+  );
 
   /// Schedules a one-off notification at [dateTime] (local time). If
   /// [dateTime] is already in the past, this is a no-op (nothing scheduled).
@@ -85,29 +108,34 @@ class NotificationService {
     required String title,
     required String body,
     required DateTime dateTime,
+    int? accountGeneration,
   }) async {
     if (!_initialized) return;
     if (dateTime.isBefore(DateTime.now())) return;
     final scheduled = tz.TZDateTime.from(dateTime, tz.local);
-    await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduled,
-      _details,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+    await _enqueue(
+      accountGeneration ?? _accountGeneration,
+      () => _plugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduled,
+        _details,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      ),
     );
   }
 
-  Future<void> cancel(int id) async {
-    if (!_initialized) return;
-    await _plugin.cancel(id);
+  Future<void> cancel(int id, {int? accountGeneration}) {
+    return _enqueue(
+      accountGeneration ?? _accountGeneration,
+      () => _plugin.cancel(id),
+    );
   }
 
-  Future<void> cancelAll() async {
-    if (!_initialized) return;
-    await _plugin.cancelAll();
+  Future<void> cancelAll() {
+    return _enqueue(++_accountGeneration, _plugin.cancelAll);
   }
 }

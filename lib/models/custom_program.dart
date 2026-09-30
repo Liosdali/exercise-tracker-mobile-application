@@ -1,6 +1,7 @@
 /// A single exercise entry within a [CustomProgramDay].
 class CustomProgramExercise {
   final int? id;
+  final String? syncId;
   final int? dayId;
   final String exerciseId;
   final String exerciseName;
@@ -11,6 +12,7 @@ class CustomProgramExercise {
 
   const CustomProgramExercise({
     this.id,
+    this.syncId,
     this.dayId,
     required this.exerciseId,
     required this.exerciseName,
@@ -23,6 +25,7 @@ class CustomProgramExercise {
   Map<String, Object?> toMap() {
     return {
       'id': id,
+      'sync_id': syncId,
       'day_id': dayId,
       'exercise_id': exerciseId,
       'exercise_name': exerciseName,
@@ -36,6 +39,7 @@ class CustomProgramExercise {
   factory CustomProgramExercise.fromMap(Map<String, Object?> map) {
     return CustomProgramExercise(
       id: map['id'] as int?,
+      syncId: map['sync_id'] as String?,
       dayId: map['day_id'] as int?,
       exerciseId: map['exercise_id'] as String,
       exerciseName: map['exercise_name'] as String,
@@ -50,6 +54,7 @@ class CustomProgramExercise {
 /// One training day within a user-created [CustomProgram] (e.g. "Gün 1").
 class CustomProgramDay {
   final int? id;
+  final String? syncId;
   final int? programId;
   final String name;
   final int position;
@@ -57,6 +62,7 @@ class CustomProgramDay {
 
   const CustomProgramDay({
     this.id,
+    this.syncId,
     this.programId,
     required this.name,
     required this.position,
@@ -65,6 +71,7 @@ class CustomProgramDay {
 
   CustomProgramDay copyWith({
     int? id,
+    String? syncId,
     int? programId,
     String? name,
     int? position,
@@ -72,6 +79,7 @@ class CustomProgramDay {
   }) {
     return CustomProgramDay(
       id: id ?? this.id,
+      syncId: syncId ?? this.syncId,
       programId: programId ?? this.programId,
       name: name ?? this.name,
       position: position ?? this.position,

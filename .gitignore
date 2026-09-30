@@ -17,6 +17,13 @@ android/key.properties
 android/**/*.jks
 android/**/*.keystore
 
+# Local OAuth/server configuration
+.env
+.env.*
+!.env.example
+*.p8
+supabase/.temp/
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -51,3 +58,6 @@ app.*.map.json
 
 *.jks
 **/key.properties
+
+# Claude teshis ciktilari (makineye ozel, paylasilmaz)
+claude-out/

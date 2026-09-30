@@ -1,15 +1,15 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../data/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../models/achievement.dart';
-import '../models/body_measurement.dart';
 import '../providers/stats_provider.dart';
 import '../services/achievement_localizer.dart';
+import '../theme/atlas_colors.dart';
 import 'body_measurement_form.dart';
+import 'measurement_history_screen.dart';
+import 'account_section.dart';
 import 'settings_screen.dart';
 
 IconData _achievementIcon(String iconName) {
@@ -45,20 +45,18 @@ class ProfileStatsScreen extends StatefulWidget {
 }
 
 class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
-  List<BodyMeasurement> _measurements = [];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<StatsProvider>().load();
-      _loadMeasurements();
     });
   }
 
-  Future<void> _loadMeasurements() async {
-    final measurements = await DatabaseHelper.instance.allMeasurements();
-    if (mounted) setState(() => _measurements = measurements);
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -71,7 +69,10 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
     }
 
     final weeklySeries = stats.weeklyDurationSeries;
-    final maxMinutes = weeklySeries.fold<double>(1, (m, w) => w.minutes > m ? w.minutes.toDouble() : m);
+    final maxMinutes = weeklySeries.fold<double>(
+      1,
+      (m, w) => w.minutes > m ? w.minutes.toDouble() : m,
+    );
     final achievements = stats.achievements;
 
     return Scaffold(
@@ -81,9 +82,9 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
           ),
         ],
@@ -91,24 +92,38 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          const AccountSection(),
+          const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: _StatTile(label: l10n.dashboardTotalWorkoutsLabel, value: '${stats.totalWorkouts}'),
+                child: _StatTile(
+                  label: l10n.dashboardTotalWorkoutsLabel,
+                  value: '${stats.totalWorkouts}',
+                ),
               ),
               const SizedBox(width: 8),
-              Expanded(child: _StatTile(label: l10n.profileStreakLabel, value: '${stats.currentStreak}')),
+              Expanded(
+                child: _StatTile(
+                  label: l10n.profileStreakLabel,
+                  value: '${stats.currentStreak}',
+                ),
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: _StatTile(
                   label: l10n.profileBadgesLabel,
-                  value: '${achievements.where((a) => a.unlocked).length}/${achievements.length}',
+                  value:
+                      '${achievements.where((a) => a.unlocked).length}/${achievements.length}',
                 ),
               ),
             ],
           ),
           const SizedBox(height: 24),
-          Text(l10n.profileWeeklyVolumeChartTitle, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            l10n.profileWeeklyVolumeChartTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           SizedBox(
             height: 180,
@@ -117,18 +132,29 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
                 maxY: maxMinutes * 1.2,
                 barTouchData: BarTouchData(enabled: false),
                 titlesData: FlTitlesData(
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
-                        if (index < 0 || index >= weeklySeries.length) return const SizedBox.shrink();
+                        if (index < 0 || index >= weeklySeries.length) {
+                          return const SizedBox.shrink();
+                        }
                         return Padding(
                           padding: const EdgeInsets.only(top: 4),
-                          child: Text(weeklySeries[index].dayLabel, style: const TextStyle(fontSize: 10)),
+                          child: Text(
+                            weeklySeries[index].dayLabel,
+                            style: const TextStyle(fontSize: 10),
+                          ),
                         );
                       },
                     ),
@@ -159,7 +185,10 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 24),
-          Text(l10n.profileAchievementsTitle, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            l10n.profileAchievementsTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           SizedBox(
             height: 116,
@@ -181,37 +210,24 @@ class _ProfileStatsScreenState extends State<ProfileStatsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(l10n.profileBodyMeasurementsTitle, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                l10n.profileBodyMeasurementsTitle,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               TextButton.icon(
-                onPressed: () async {
-                  final saved = await Navigator.of(context).push<bool>(
-                    MaterialPageRoute(builder: (_) => const BodyMeasurementForm()),
-                  );
-                  if (saved == true) _loadMeasurements();
-                },
+                // No reload here: MeasurementHistoryList refreshes itself
+                // when the save updates the account service.
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<bool>(
+                    builder: (_) => const BodyMeasurementForm(),
+                  ),
+                ),
                 icon: const Icon(Icons.add),
                 label: Text(l10n.commonAdd),
               ),
             ],
           ),
-          if (_measurements.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(l10n.profileNoMeasurements),
-            )
-          else
-            for (final m in _measurements)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(DateFormat.yMMMd().format(DateTime.parse(m.date))),
-                subtitle: Text([
-                  if (m.weightKg != null) '${m.weightKg} kg',
-                  if (m.heightCm != null) '${m.heightCm} cm boy',
-                  if (m.calculatedBodyFat != null) '%${m.calculatedBodyFat!.toStringAsFixed(1)} yağ',
-                  if (m.chestCm != null) 'Göğüs ${m.chestCm} cm',
-                  if (m.waistCm != null) 'Bel ${m.waistCm} cm',
-                ].join(' • ')),
-              ),
+          const MeasurementHistoryList(),
         ],
       ),
     );
@@ -232,7 +248,11 @@ class _StatTile extends StatelessWidget {
         child: Column(
           children: [
             Text(value, style: Theme.of(context).textTheme.titleMedium),
-            Text(label, style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
@@ -265,8 +285,10 @@ class _AchievementCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
-                achievement.unlocked ? _achievementIcon(achievement.iconName) : Icons.lock_outline,
-                color: achievement.unlocked ? Colors.amber : null,
+                achievement.unlocked
+                    ? _achievementIcon(achievement.iconName)
+                    : Icons.lock_outline,
+                color: achievement.unlocked ? context.atlas.warn : null,
               ),
               const SizedBox(height: 4),
               Flexible(
@@ -292,4 +314,3 @@ class _AchievementCard extends StatelessWidget {
     );
   }
 }
-

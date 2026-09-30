@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'account_change_notifier.dart';
 import 'package:intl/intl.dart';
 
 import '../data/achievement_definitions.dart';
@@ -28,13 +28,24 @@ class WeeklyDuration {
   const WeeklyDuration(this.dayLabel, this.minutes);
 }
 
-const List<String> _turkishWeekdayLabels = ['Pzt', 'Sal', 'Çar', 'Perş', 'Cum', 'Cmt', 'Paz'];
+const List<String> _turkishWeekdayLabels = [
+  'Pzt',
+  'Sal',
+  'Çar',
+  'Perş',
+  'Cum',
+  'Cmt',
+  'Paz',
+];
 
 /// Computes gamification/progress stats (streaks, volume, calories,
 /// achievements, weekly chart data) from the logged workout entries and
 /// completed workout sessions.
-class StatsProvider extends ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+class StatsProvider extends AccountChangeNotifier {
+  final DatabaseHelper _db = DatabaseHelper.instance.workspace();
+
+  @override
+  Future<void> reloadAccount() => load();
 
   List<WorkoutEntry> _entries = [];
   List<WorkoutSession> _sessions = [];
@@ -62,9 +73,9 @@ class StatsProvider extends ChangeNotifier {
   int get totalWorkouts => _workoutDates.length;
 
   double get totalVolume => _entries.fold<double>(
-        0,
-        (sum, e) => sum + (e.sets ?? 0) * (e.reps ?? 0) * (e.weight ?? 0),
-      );
+    0,
+    (sum, e) => sum + (e.sets ?? 0) * (e.reps ?? 0) * (e.weight ?? 0),
+  );
 
   int get totalSets => _entries.fold<int>(0, (sum, e) => sum + (e.sets ?? 0));
 
@@ -74,18 +85,22 @@ class StatsProvider extends ChangeNotifier {
   double get estimatedCalories => totalSets * 6 + totalVolume * 0.05;
 
   /// Sum of MET-based calorie estimates across all completed sessions.
-  double get totalCaloriesBurned => _sessions.fold<double>(0, (sum, s) => sum + s.calories);
+  double get totalCaloriesBurned =>
+      _sessions.fold<double>(0, (sum, s) => sum + s.calories);
 
   /// Sum of tracked workout durations (minutes) across all completed
   /// sessions.
-  int get totalWorkoutMinutes => _sessions.fold<int>(0, (sum, s) => sum + s.durationMinutes);
+  int get totalWorkoutMinutes =>
+      _sessions.fold<int>(0, (sum, s) => sum + s.durationMinutes);
 
   /// Number of distinct workout days within the current calendar week
   /// (Monday-Sunday).
   int get thisWeekCount {
     final now = DateTime.now();
     final monday = now.subtract(Duration(days: now.weekday - 1));
-    final mondayStr = _dateFmt.format(DateTime(monday.year, monday.month, monday.day));
+    final mondayStr = _dateFmt.format(
+      DateTime(monday.year, monday.month, monday.day),
+    );
     final todayStr = _dateFmt.format(now);
     return _workoutDates
         .where((d) => d.compareTo(mondayStr) >= 0 && d.compareTo(todayStr) <= 0)
@@ -119,7 +134,9 @@ class StatsProvider extends ChangeNotifier {
     if (dates.isEmpty) return 0;
 
     final lastDate = _dateFmt.parse(dates.last);
-    final daysSinceLast = DateTime.now().difference(DateTime(lastDate.year, lastDate.month, lastDate.day)).inDays;
+    final daysSinceLast = DateTime.now()
+        .difference(DateTime(lastDate.year, lastDate.month, lastDate.day))
+        .inDays;
     if (daysSinceLast >= 7) return 0;
 
     int streak = 1;
@@ -166,8 +183,11 @@ class StatsProvider extends ChangeNotifier {
   /// for compatibility with any other consumers.
   List<WeeklyVolume> get weeklyVolumeSeries {
     final now = DateTime.now();
-    final currentMonday = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: now.weekday - 1));
+    final currentMonday = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(Duration(days: now.weekday - 1));
     final result = <WeeklyVolume>[];
     for (int i = 7; i >= 0; i--) {
       final weekStart = currentMonday.subtract(Duration(days: 7 * i));
@@ -175,8 +195,15 @@ class StatsProvider extends ChangeNotifier {
       final startStr = _dateFmt.format(weekStart);
       final endStr = _dateFmt.format(weekEnd);
       final volume = _entries
-          .where((e) => e.date.compareTo(startStr) >= 0 && e.date.compareTo(endStr) <= 0)
-          .fold<double>(0, (sum, e) => sum + (e.sets ?? 0) * (e.reps ?? 0) * (e.weight ?? 0));
+          .where(
+            (e) =>
+                e.date.compareTo(startStr) >= 0 &&
+                e.date.compareTo(endStr) <= 0,
+          )
+          .fold<double>(
+            0,
+            (sum, e) => sum + (e.sets ?? 0) * (e.reps ?? 0) * (e.weight ?? 0),
+          );
       result.add(WeeklyVolume('${weekStart.day}/${weekStart.month}', volume));
     }
     return result;
@@ -187,7 +214,11 @@ class StatsProvider extends ChangeNotifier {
   /// with no completed session show 0 minutes.
   List<WeeklyDuration> get weeklyDurationSeries {
     final now = DateTime.now();
-    final monday = DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1));
+    final monday = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(Duration(days: now.weekday - 1));
     final result = <WeeklyDuration>[];
     for (int i = 0; i < 7; i++) {
       final day = monday.add(Duration(days: i));
@@ -203,11 +234,19 @@ class StatsProvider extends ChangeNotifier {
   /// Calories burned within the current calendar week (Monday-Sunday).
   double get weeklyCalories {
     final now = DateTime.now();
-    final monday = DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1));
+    final monday = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(Duration(days: now.weekday - 1));
     final mondayStr = _dateFmt.format(monday);
     final todayStr = _dateFmt.format(now);
     return _sessions
-        .where((s) => s.date.compareTo(mondayStr) >= 0 && s.date.compareTo(todayStr) <= 0)
+        .where(
+          (s) =>
+              s.date.compareTo(mondayStr) >= 0 &&
+              s.date.compareTo(todayStr) <= 0,
+        )
         .fold<double>(0, (sum, s) => sum + s.calories);
   }
 
@@ -217,18 +256,22 @@ class StatsProvider extends ChangeNotifier {
     final monthStart = _dateFmt.format(DateTime(now.year, now.month, 1));
     final todayStr = _dateFmt.format(now);
     return _sessions
-        .where((s) => s.date.compareTo(monthStart) >= 0 && s.date.compareTo(todayStr) <= 0)
+        .where(
+          (s) =>
+              s.date.compareTo(monthStart) >= 0 &&
+              s.date.compareTo(todayStr) <= 0,
+        )
         .fold<double>(0, (sum, s) => sum + s.calories);
   }
 
   StatsSnapshot get _snapshot => StatsSnapshot(
-        totalWorkouts: totalWorkouts,
-        totalSets: totalSets,
-        totalVolume: totalVolume,
-        currentStreak: currentStreak,
-        totalCaloriesBurned: totalCaloriesBurned,
-        totalWorkoutMinutes: totalWorkoutMinutes,
-      );
+    totalWorkouts: totalWorkouts,
+    totalSets: totalSets,
+    totalVolume: totalVolume,
+    currentStreak: currentStreak,
+    totalCaloriesBurned: totalCaloriesBurned,
+    totalWorkoutMinutes: totalWorkoutMinutes,
+  );
 
   /// Full achievement list (locked + unlocked), built from the extensible
   /// [achievementDefinitions] registry. Unlock dates come from the
@@ -258,7 +301,8 @@ class StatsProvider extends ChangeNotifier {
     final snapshot = _snapshot;
     final now = DateTime.now().toIso8601String();
     for (final def in achievementDefinitions) {
-      if (def.isUnlocked(snapshot) && !_unlockedAchievements.containsKey(def.id)) {
+      if (def.isUnlocked(snapshot) &&
+          !_unlockedAchievements.containsKey(def.id)) {
         await _db.markAchievementUnlocked(def.id, now);
         _unlockedAchievements[def.id] = now;
       }

@@ -1,6 +1,7 @@
 # Exercise App
 
-Tamamen çevrimdışı (offline) çalışan bir Flutter egzersiz/antrenman uygulaması.
+Çevrimdışı (offline) kullanılabilen, isteğe bağlı Google/Apple hesabı ve
+Supabase bulut senkronizasyonu sunan bir Flutter egzersiz/antrenman uygulaması.
 Egzersizleri kategoriye (vücut bölgesine) göre listeler, her egzersiz için
 GIF/resim ve talimatlar gösterir; ayrıca bir takvim üzerinden antrenman
 yaptığınız günleri ve o gün yaptığınız egzersizleri kaydetmenizi sağlar.
@@ -16,9 +17,15 @@ yaptığınız günleri ve o gün yaptığınız egzersizleri kaydetmenizi sağl
 - **Antrenman takvimi**: Takvimde antrenman yapılan günler işaretlenir;
   bir güne dokunarak o gün yapılan egzersizleri (set/tekrar/ağırlık/not ile)
   ekleyebilir, düzenleyebilir veya silebilirsiniz.
-- **Tamamen çevrimdışı**: Egzersiz verisi ve medya (resim/GIF) uygulamaya
+- **Çevrimdışı kullanım**: Egzersiz verisi ve medya (resim/GIF) uygulamaya
   gömülüdür; antrenman kayıtları cihazda yerel SQLite veritabanında
-  saklanır. İnternet bağlantısı gerekmez.
+  saklanır. Misafir kullanım için internet bağlantısı gerekmez.
+- **İsteğe bağlı hesap**: Android/iOS'ta Google veya Apple ile giriş;
+  ad, yaş, kilo, boy ve isteğe bağlı cinsiyet içeren özel profil.
+- **Hesaba özel bulut verileri**: Planlanan spor günleri, aktif/özel programlar,
+  hareket ve antrenman geçmişi, ölçümler ve ilerleme cihazlar arasında korunur.
+  İlk girişte mevcut misafir kayıtlarını aktarmak için onay istenir.
+  Çakışan değişiklikler sessizce ezilmez; kullanıcı hangi sürümü koruyacağını seçer.
 
 ## Gereksinimler
 
@@ -37,6 +44,168 @@ flutter pub get
 
 Bu komut `pubspec.yaml` içindeki tüm bağımlılıkları (provider, sqflite,
 table_calendar, intl vb.) indirir.
+
+## Google/Apple girişi ve Supabase kurulumu
+
+Hesap yapılandırması verilmeden uygulama misafir modunda kullanılabilir.
+İlk giriş ve bulut senkronizasyonu internet gerektirir; mevcut hesabın cihazdaki
+kayıtları çevrimdışı kullanılabilir. Yeni OAuth akışlarının kapsamı Android/iOS'tur.
+Marka adı ve mevcut Android/iOS uygulama kimlikleri bu entegrasyonla değiştirilmez.
+
+### Veritabanı ve hesap silme servisi
+
+Sıralama önemlidir. Kök dizindeki `supabase_schema.sql` sosyal tabloları
+(`social_users`, `groups`, `group_members`, `workout_sessions`, `user_blocks`,
+`user_reports`) kuran **yalnızca sıfırdan kurulum** dosyasıdır; migration
+klasöründe karşılığı yoktur. `supabase/migrations/202609071000_team_content_features.sql`
+ise `public.groups` tablosuna foreign key verir. Dolayısıyla boş bir projede
+doğrudan `supabase db push` çalıştırmak, `groups` tablosu henüz olmadığı için
+hata verir.
+
+**Yeni (boş) bir Supabase projesinde:**
+
+1. Önce `supabase_schema.sql` dosyasını çalıştırın. Supabase SQL Editor
+   kullanıyorsanız dosyanın en sonundaki `\ir ...` satırını atlayın ve ardından
+   `supabase/migrations/202609070001_private_accounts.sql` dosyasını elle
+   çalıştırın. `psql` kullanıyorsanız `\ir` satırı bunu kendisi halleder:
+
+   ```powershell
+   psql "<connection-string>" -v ON_ERROR_STOP=1 -f supabase_schema.sql
+   ```
+
+2. Ardından kalan migration'ları uygulayın:
+
+   ```powershell
+   supabase login
+   supabase link --project-ref <project-ref>
+   supabase db push
+   supabase functions deploy delete-account
+   ```
+
+**Mevcut bir veritabanında:** eski başlangıç şemasını tekrar çalıştırmayın,
+yalnızca `supabase db push` ile yeni migration'ları uygulayın.
+
+`202609160001_team_rls_and_schema_fixes.sql` ekip özelliklerinin çalışması için
+gereklidir: `groups` tablosuna `description`/`owner_id` sütunlarını ekler,
+`group_members` üzerindeki kendine referans veren (sonsuz döngüye giren) RLS
+politikasını değiştirir, ekip oluşturma/katılma/ayrılma/silme için eksik
+INSERT/UPDATE/DELETE politikalarını tanımlar ve davet koduyla katılma işlemini
+`join_team_by_invite_token` fonksiyonuna taşır. Bu migration uygulanmadan ekip
+ekranları çalışmaz.
+
+`delete-account` fonksiyonu istekteki kullanıcı kimliğine güvenmez; Bearer
+oturumunu Supabase Auth ile doğrular ve yalnızca o hesabı siler. Fonksiyonun
+`verify_jwt = false` ayarı anonim silme izni değildir: yeni JWT imza anahtarlarıyla
+uyumluluk için doğrulama fonksiyonun içinde yapılır. Silme işleminde profil ve
+ilişkili özel veriler veritabanı ilişkileri üzerinden temizlenir.
+
+### Google
+
+Google Cloud Console'da OAuth onay ekranını ve **Web application** OAuth
+istemcisini oluşturun. Geliştirme sırasında gerekli test kullanıcılarını ekleyin.
+Yetkili yönlendirme adresi:
+
+```text
+https://<project-ref>.supabase.co/auth/v1/callback
+```
+
+Supabase Dashboard > Authentication > Providers > Google altında istemci
+kimliği ve sırrını girin. Uygulama sistem tarayıcısıyla Supabase PKCE akışını
+kullanır; Google istemci sırrı Flutter uygulamasına eklenmez.
+
+### Apple
+
+Apple Developer hesabında iOS App ID için **Sign in with Apple** yeteneğini
+etkinleştirin. Depodaki iOS bundle ID `com.mythosforgelabs.atlasworkout` değerindedir;
+imzalama/provisioning profilinin bu kimlik ve yetenekle eşleşmesi gerekir.
+`ios\Runner\Runner.entitlements` Debug, Profile ve Release yapılandırmalarına bağlıdır.
+
+Android'deki tarayıcı akışı için aynı uygulamayla ilişkili bir **Services ID**
+oluşturun. Apple web yapılandırmasına `<project-ref>.supabase.co` alan adını ve
+yukarıdaki HTTPS Supabase callback adresini ekleyin. Supabase Apple provider
+ayarlarına Services ID ve native iOS bundle ID'yi izin verilen istemci
+kimlikleri olarak girin; Apple imzalama anahtarıyla üretilen OAuth istemci sırrını
+yalnızca sunucu/provider ayarlarında saklayın. Apple web OAuth sırrını süresi
+dolmadan yenileyin (en fazla altı ay); `.p8` anahtarını depoya eklemeyin.
+
+Apple hesap silme sırasında yetkilendirme de iptal edilir. Bunun için
+Supabase Edge Function secrets bölümünde şu değerleri tanımlayın:
+
+| Değişken | Değer |
+| --- | --- |
+| `APPLE_TEAM_ID` | Apple Developer Team ID |
+| `APPLE_KEY_ID` | Sign in with Apple anahtarının Key ID'si |
+| `APPLE_PRIVATE_KEY` | `.p8` dosyasının PEM içeriği |
+| `APPLE_NATIVE_CLIENT_ID` | iOS bundle ID |
+| `APPLE_WEB_CLIENT_ID` | Android tarayıcı girişinde kullanılan Services ID |
+
+`SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` dağıtılmış Edge Function ortamında
+Supabase tarafından sağlanır. **Service-role anahtarı ve Apple sırları hiçbir
+zaman Flutter yapılandırmasına konmaz.** iOS'ta silme için yeni Apple
+yetkilendirmesi, Android'de Apple sağlayıcı refresh token'ı gerekir; gerekirse
+Apple ile yeniden giriş yapılır. Apple doğrulaması veya iptal işlemi başarısızsa
+hesap silinmiş gibi gösterilmez.
+
+### Mobil callback ve çalıştırma
+
+Supabase Dashboard > Authentication > URL Configuration > Redirect URLs
+izin listesine tam olarak şu adresi ekleyin:
+
+```text
+com.mythosforgelabs.atlasworkout://login-callback
+```
+
+Bu adres hem Android manifestinde hem iOS URL scheme ayarlarında kayıtlıdır.
+Flutter'ın yerleşik deep-link yönlendirmesi kapalıdır; auth callback'lerini
+Supabase/app_links işler. Callback'i değiştirirseniz Flutter yapılandırmasını,
+iki platformun native dosyalarını ve Supabase izin listesini birlikte güncelleyin.
+
+```powershell
+flutter run -d <device-id> `
+  --dart-define=SUPABASE_URL=https://<project-ref>.supabase.co `
+  --dart-define=SUPABASE_ANON_KEY=<publishable-or-anon-key>
+```
+
+İsteğe bağlı `SUPABASE_AUTH_REDIRECT_URL` varsayılan callback'i değiştirebilir.
+Release build komutlarına da aynı `--dart-define` değerlerini verin.
+Publishable/anon anahtar istemciye dağıtılabilir; veri erişiminin sınırı
+veritabanındaki kullanıcıya özel RLS politikalarıdır.
+
+### Veri davranışı ve doğrulama
+
+Misafir veritabanı ile her hesabın yerel veritabanı ayrıdır. Çıkış yapmak misafir
+kayıtlarını başka hesabın verileriyle değiştirmez. Takvim tarihleri gün olarak
+saklanır; saat dilimi değişiminde başka güne kaydırılmaz. Özel programların yerel
+sayısal kimlikleri cihazlar arası kimlik olarak kullanılmaz.
+
+Yedek dosyaları kişisel ölçümler ve antrenman geçmişi içerebilir; paylaşmadan önce
+alıcıyı kontrol edin. Yedek içe aktarma ve veri sıfırlama aktif çalışma alanına
+uygulanır; hesap açıkken bulut verilerine etkisi onay ekranında açıklanır.
+Kimlik doğrulama token'ları ve sunucu sırları yedeklere dahil edilmez.
+
+Üretime geçmeden önce ayrı iki kullanıcıyla özel verilerin birbirine kapalı
+olduğunu, misafir aktarımını, çevrimdışı değişiklikleri, iki cihaz çakışmalarını
+ve hesabın gerçekten silindiğini deneyin. Google/Apple akışlarını uygulama hem
+kapalıyken hem açıkken Android/iOS cihazlarında doğrulayın. iOS imzalama ve
+cihaz doğrulaması macOS/Xcode gerektirir; yalnızca yapılandırma dosyalarının
+depoda bulunması sağlayıcıların canlı ortamda etkin olduğu anlamına gelmez.
+
+Hesap silme Edge Function'ının yerel testleri (Deno):
+
+```powershell
+deno test --allow-env supabase\functions\delete-account\handler_test.ts
+deno check supabase\functions\delete-account\index.ts
+```
+
+Migration uygulanmış, **yalnızca denemeye ayrılmış** bir PostgreSQL/Supabase
+veritabanında sahiplik, yeniden deneme ve çakışma senaryoları:
+
+```powershell
+psql $env:TEST_DATABASE_URL -v ON_ERROR_STOP=1 -f test\supabase_account_sync_test.sql
+```
+
+Bu SQL dosyası veritabanı sahibi olarak çalıştırılır; senaryolarını `authenticated`
+ve `anon` rolleriyle yürütür ve sonunda oluşturduğu kayıtları geri alır.
 
 ## Önizleme / Çalıştırma
 

@@ -7,9 +7,11 @@ import '../services/exercise_localizer.dart';
 import '../widgets/category_style.dart';
 import 'category_exercises_screen.dart';
 
-/// Shows all exercise categories (body parts) as a browsable grid.
+/// Shows all exercise categories (body parts) as a browsable grid with full Scaffold.
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+  final bool isEmbedded;
+
+  const CategoriesScreen({super.key, this.isEmbedded = false});
 
   @override
   Widget build(BuildContext context) {
@@ -22,55 +24,60 @@ class CategoriesScreen extends StatelessWidget {
     }
 
     final categories = exerciseProvider.categories;
+    final body = GridView.builder(
+      padding: const EdgeInsets.all(12),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 1.3,
+      ),
+      itemCount: categories.length,
+      itemBuilder: (context, index) {
+        final category = categories[index];
+        final count = exerciseProvider.countForCategory(category);
+        return Card(
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => CategoryExercisesScreen(category: category),
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(iconForCategory(category), size: 36),
+                  const SizedBox(height: 8),
+                  Text(
+                    titleCase(ExerciseLocalizer.localizedBodyPart(category, lang)),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '$count exercises',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    if (isEmbedded) {
+      return body;
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Exercise Library')),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(12),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 1.3,
-        ),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          final count = exerciseProvider.countForCategory(category);
-          return Card(
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => CategoryExercisesScreen(category: category),
-                  ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(iconForCategory(category), size: 36),
-                    const SizedBox(height: 8),
-                    Text(
-                      titleCase(ExerciseLocalizer.localizedBodyPart(category, lang)),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '$count exercises',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+      body: body,
     );
   }
 }

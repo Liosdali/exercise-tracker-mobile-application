@@ -11,6 +11,7 @@ import '../providers/program_progress_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/workout_provider.dart';
 import '../services/calorie_calculator_service.dart';
+import '../theme/atlas_colors.dart';
 import '../widgets/category_style.dart';
 import '../widgets/rest_timer_sheet.dart';
 
@@ -77,7 +78,9 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
   @override
   void initState() {
     super.initState();
-    _repsController = TextEditingController(text: widget.steps.first.targetReps.toString());
+    _repsController = TextEditingController(
+      text: widget.steps.first.targetReps.toString(),
+    );
     _weightController = TextEditingController(text: '0');
     // "Antrenmanı Başlat": start the elapsed-time timer as soon as the
     // guided workout screen opens.
@@ -129,20 +132,25 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     double totalVolume = 0;
     int totalSets = 0;
+    final database = DatabaseHelper.instance.workspace();
+    final entries = <WorkoutEntry>[];
 
     for (final entry in _logs.entries) {
       final step = widget.steps[entry.key];
       final setLogs = entry.value;
       final avgReps = setLogs.isEmpty
           ? step.targetReps
-          : (setLogs.map((s) => s.reps).reduce((a, b) => a + b) / setLogs.length).round();
+          : (setLogs.map((s) => s.reps).reduce((a, b) => a + b) /
+                    setLogs.length)
+                .round();
       final avgWeight = setLogs.isEmpty
           ? 0.0
-          : setLogs.map((s) => s.weight).reduce((a, b) => a + b) / setLogs.length;
+          : setLogs.map((s) => s.weight).reduce((a, b) => a + b) /
+                setLogs.length;
       totalSets += setLogs.length;
       totalVolume += setLogs.length * avgReps * avgWeight;
 
-      await workoutProvider.addEntry(
+      entries.add(
         WorkoutEntry(
           date: today,
           exerciseId: step.exercise.id,
@@ -160,13 +168,17 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     if (!mounted) return;
 
     // Duration tracked by the stopwatch started when this screen opened.
-    final durationMinutes = (_stopwatch.elapsed.inSeconds / 60).ceil().clamp(1, 1000000);
+    final durationMinutes = (_stopwatch.elapsed.inSeconds / 60).ceil().clamp(
+      1,
+      1000000,
+    );
 
     // Resolve the user's current weight for the MET calorie formula:
     // latest logged body measurement -> a safe default.
     double weightKg = CalorieCalculatorService.fallbackWeightKg;
-    final measurements = await DatabaseHelper.instance.allMeasurements();
+    final measurements = await database.allMeasurements();
     for (final m in measurements) {
+      if (m.date.compareTo(today) > 0) continue;
       if (m.weightKg != null && m.weightKg! > 0) {
         weightKg = m.weightKg!;
         break;
@@ -178,7 +190,7 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
       durationMinutes: durationMinutes.toDouble(),
     );
 
-    await DatabaseHelper.instance.insertWorkoutSession(
+    await database.insertCompletedWorkout(
       WorkoutSession(
         date: today,
         durationMinutes: durationMinutes,
@@ -189,17 +201,22 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
         title: widget.title,
         createdAt: DateTime.now().toIso8601String(),
       ),
+      entries,
     );
+    await workoutProvider.init();
+    await workoutProvider.loadEntriesFor(today);
 
     if (!mounted) return;
 
-    if (widget.programKey != null && widget.dayIndex != null && widget.totalDays != null) {
+    if (widget.programKey != null &&
+        widget.dayIndex != null &&
+        widget.totalDays != null) {
       await context.read<ProgramProgressProvider>().markCompleted(
-            widget.programKey!,
-            widget.dayIndex!,
-            widget.totalDays!,
-            today,
-          );
+        widget.programKey!,
+        widget.dayIndex!,
+        widget.totalDays!,
+        today,
+      );
     }
 
     if (!mounted) return;
@@ -229,7 +246,9 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
-            value: (_exerciseIndex + (_setIndex + 1) / step.targetSets) / widget.steps.length,
+            value:
+                (_exerciseIndex + (_setIndex + 1) / step.targetSets) /
+                widget.steps.length,
           ),
         ),
       ),
@@ -237,11 +256,17 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            l10n.activeWorkoutExerciseCountLabel(_exerciseIndex + 1, widget.steps.length),
+            l10n.activeWorkoutExerciseCountLabel(
+              _exerciseIndex + 1,
+              widget.steps.length,
+            ),
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 4),
-          Text(step.exercise.name, style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            step.exercise.name,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 4),
           Text(titleCase(step.exercise.bodyPart)),
           const SizedBox(height: 16),
@@ -260,7 +285,13 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text(l10n.activeWorkoutSetProgressLabel(_setIndex + 1, step.targetSets, step.targetReps)),
+          Text(
+            l10n.activeWorkoutSetProgressLabel(
+              _setIndex + 1,
+              step.targetSets,
+              step.targetReps,
+            ),
+          ),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -268,15 +299,23 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
                 child: TextField(
                   controller: _repsController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: l10n.activeWorkoutRepsLabel, border: const OutlineInputBorder()),
+                  decoration: InputDecoration(
+                    labelText: l10n.activeWorkoutRepsLabel,
+                    border: const OutlineInputBorder(),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: TextField(
                   controller: _weightController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(labelText: l10n.activeWorkoutWeightLabel, border: const OutlineInputBorder()),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.activeWorkoutWeightLabel,
+                    border: const OutlineInputBorder(),
+                  ),
                 ),
               ),
             ],
@@ -286,7 +325,9 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
             onPressed: _completeSet,
             icon: const Icon(Icons.check),
             label: Text(
-              _isLastSetOfExercise && _isLastExercise ? l10n.activeWorkoutFinishButton : l10n.activeWorkoutCompleteSetButton,
+              _isLastSetOfExercise && _isLastExercise
+                  ? l10n.activeWorkoutFinishButton
+                  : l10n.activeWorkoutCompleteSetButton,
             ),
           ),
         ],
@@ -319,15 +360,26 @@ class WorkoutSummaryScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.emoji_events, size: 64, color: Colors.amber),
+              Icon(Icons.emoji_events, size: 64, color: context.atlas.warn),
               const SizedBox(height: 16),
-              Text(title, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 24),
-              _StatRow(label: l10n.workoutSummaryDurationLabel, value: l10n.workoutSummaryDurationValue(durationMinutes)),
-              _StatRow(label: l10n.workoutSummaryCaloriesLabel, value: '${calories.toStringAsFixed(0)} kcal'),
+              _StatRow(
+                label: l10n.workoutSummaryDurationLabel,
+                value: l10n.workoutSummaryDurationValue(durationMinutes),
+              ),
+              _StatRow(
+                label: l10n.workoutSummaryCaloriesLabel,
+                value: '${calories.toStringAsFixed(0)} kcal',
+              ),
               const SizedBox(height: 24),
               FilledButton(
-                onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                onPressed: () =>
+                    Navigator.of(context).popUntil((route) => route.isFirst),
                 child: Text(l10n.workoutSummaryBackHomeButton),
               ),
             ],

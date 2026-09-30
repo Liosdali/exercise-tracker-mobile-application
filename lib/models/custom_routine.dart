@@ -31,6 +31,7 @@ class CustomRoutine {
 /// A single exercise entry within a [CustomRoutine].
 class CustomRoutineExercise {
   final int? id;
+  final String? syncId;
   final int? routineId;
   final String exerciseId;
   final String exerciseName;
@@ -41,6 +42,7 @@ class CustomRoutineExercise {
 
   const CustomRoutineExercise({
     this.id,
+    this.syncId,
     this.routineId,
     required this.exerciseId,
     required this.exerciseName,
@@ -53,6 +55,7 @@ class CustomRoutineExercise {
   Map<String, Object?> toMap() {
     return {
       'id': id,
+      'sync_id': syncId,
       'routine_id': routineId,
       'exercise_id': exerciseId,
       'exercise_name': exerciseName,
@@ -66,6 +69,7 @@ class CustomRoutineExercise {
   factory CustomRoutineExercise.fromMap(Map<String, Object?> map) {
     return CustomRoutineExercise(
       id: map['id'] as int?,
+      syncId: map['sync_id'] as String?,
       routineId: map['routine_id'] as int?,
       exerciseId: map['exercise_id'] as String,
       exerciseName: map['exercise_name'] as String,

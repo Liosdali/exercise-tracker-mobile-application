@@ -1,0 +1,42 @@
+# Publishes site/ (privacy policy, terms, account deletion) to GitHub Pages.
+# The app links to these URLs (lib/config/legal_links.dart) and both stores
+# require them, so they must stay reachable.
+#
+# One-time: repo Settings > Pages > Source: "GitHub Actions".
+name: Legal pages
+
+on:
+  push:
+    branches: [master]
+    paths: ['site/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refuse to publish an unfilled contact address
+        run: |
+          if grep -rl 'CONTACT_EMAIL' site; then
+            echo "::error::Replace CONTACT_EMAIL in the files above before publishing."
+            exit 1
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

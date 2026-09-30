@@ -1,6 +1,7 @@
 /// A single logged workout entry: one exercise performed on one date.
 class WorkoutEntry {
   final int? id;
+  final int? sessionId;
   final String date; // yyyy-MM-dd
   final String exerciseId;
   final String exerciseName;
@@ -13,6 +14,7 @@ class WorkoutEntry {
 
   const WorkoutEntry({
     this.id,
+    this.sessionId,
     required this.date,
     required this.exerciseId,
     required this.exerciseName,
@@ -26,6 +28,7 @@ class WorkoutEntry {
 
   WorkoutEntry copyWith({
     int? id,
+    int? sessionId,
     String? date,
     String? exerciseId,
     String? exerciseName,
@@ -38,6 +41,7 @@ class WorkoutEntry {
   }) {
     return WorkoutEntry(
       id: id ?? this.id,
+      sessionId: sessionId ?? this.sessionId,
       date: date ?? this.date,
       exerciseId: exerciseId ?? this.exerciseId,
       exerciseName: exerciseName ?? this.exerciseName,
@@ -53,6 +57,7 @@ class WorkoutEntry {
   Map<String, Object?> toMap() {
     return {
       'id': id,
+      'session_id': sessionId,
       'date': date,
       'exercise_id': exerciseId,
       'exercise_name': exerciseName,
@@ -68,6 +73,7 @@ class WorkoutEntry {
   factory WorkoutEntry.fromMap(Map<String, Object?> map) {
     return WorkoutEntry(
       id: map['id'] as int?,
+      sessionId: map['session_id'] as int?,
       date: map['date'] as String,
       exerciseId: map['exercise_id'] as String,
       exerciseName: map['exercise_name'] as String,

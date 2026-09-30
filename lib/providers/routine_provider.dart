@@ -1,11 +1,14 @@
-import 'package:flutter/foundation.dart';
+import 'account_change_notifier.dart';
 
 import '../data/database_helper.dart';
 import '../models/custom_routine.dart';
 
 /// CRUD for user-created custom routines, backed by the local database.
-class RoutineProvider extends ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+class RoutineProvider extends AccountChangeNotifier {
+  final DatabaseHelper _db = DatabaseHelper.instance.workspace();
+
+  @override
+  Future<void> reloadAccount() => load();
 
   List<CustomRoutine> _routines = [];
   bool _loaded = false;

@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Workouts'**
   String get navWorkouts;
 
+  /// No description provided for @navTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get navTeam;
+
   /// No description provided for @navCalendar.
   ///
   /// In en, this message translates to:
@@ -169,6 +175,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm'**
   String get commonConfirm;
+
+  /// Copies a value to the clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get commonCopy;
+
+  /// Confirmation after copying a technical error
+  ///
+  /// In en, this message translates to:
+  /// **'Error details copied to clipboard'**
+  String get errorDetailsCopied;
 
   /// No description provided for @commonClose.
   ///
@@ -319,6 +337,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No measurements logged yet.'**
   String get profileNoMeasurements;
+
+  /// No description provided for @measurementWeightValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kg'**
+  String measurementWeightValue(String value);
+
+  /// No description provided for @measurementHeightValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} cm tall'**
+  String measurementHeightValue(String value);
+
+  /// No description provided for @measurementBodyFatValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}% fat'**
+  String measurementBodyFatValue(String value);
+
+  /// No description provided for @measurementChestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest {value} cm'**
+  String measurementChestValue(String value);
+
+  /// No description provided for @measurementWaistValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Waist {value} cm'**
+  String measurementWaistValue(String value);
+
+  /// No description provided for @accountViewMeasurementHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'View measurement history'**
+  String get accountViewMeasurementHistory;
 
   /// No description provided for @settingsTitle.
   ///
@@ -589,6 +643,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Browse ready-made programs, or build your own custom routines and multi-day programs.'**
   String get tutorialWorkoutsTabDescription;
+
+  /// No description provided for @tutorialTeamTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get tutorialTeamTabTitle;
+
+  /// No description provided for @tutorialTeamTabDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with friends, share your progress, and find motivation in our community.'**
+  String get tutorialTeamTabDescription;
 
   /// No description provided for @tutorialCalendarTabTitle.
   ///
@@ -1442,11 +1508,1397 @@ abstract class AppLocalizations {
   /// **'Estimated calories'**
   String get workoutSummaryCaloriesLabel;
 
+  /// No description provided for @feedCaloriesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{calories} kcal'**
+  String feedCaloriesValue(int calories);
+
   /// No description provided for @workoutSummaryBackHomeButton.
   ///
   /// In en, this message translates to:
   /// **'Back to Home'**
   String get workoutSummaryBackHomeButton;
+
+  /// No description provided for @accountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountTitle;
+
+  /// No description provided for @accountGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get accountGuest;
+
+  /// No description provided for @accountGuestDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your guest data stays on this device. Sign in to privately sync across devices.'**
+  String get accountGuestDescription;
+
+  /// No description provided for @accountSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in'**
+  String get accountSignedIn;
+
+  /// No description provided for @accountEditProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit personal profile'**
+  String get accountEditProfile;
+
+  /// No description provided for @accountGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get accountGoogle;
+
+  /// No description provided for @accountApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get accountApple;
+
+  /// No description provided for @accountConfigurationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Accounts are unavailable: SUPABASE_URL and SUPABASE_ANON_KEY must be configured correctly. You can still use guest mode offline.'**
+  String get accountConfigurationError;
+
+  /// No description provided for @accountMobileOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Google and Apple sign-in is available on Android and iOS.'**
+  String get accountMobileOnly;
+
+  /// No description provided for @accountLoginError.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in failed. Check your connection and try again.'**
+  String get accountLoginError;
+
+  /// No description provided for @accountLoginCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in was cancelled or timed out. Your local data is unchanged.'**
+  String get accountLoginCancelled;
+
+  /// No description provided for @accountSessionExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session needs renewal. Sign in again to sync; your saved data remains available offline.'**
+  String get accountSessionExpired;
+
+  /// No description provided for @accountOperationError.
+  ///
+  /// In en, this message translates to:
+  /// **'The operation could not be completed. Your saved data is retained. Please try again.'**
+  String get accountOperationError;
+
+  /// No description provided for @accountWorkspaceError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your local workspace could not be opened. Retry to safely load your data.'**
+  String get accountWorkspaceError;
+
+  /// No description provided for @accountRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get accountRetry;
+
+  /// No description provided for @accountBrowserWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete sign-in in your browser. If you closed it, cancel here to try again.'**
+  String get accountBrowserWaiting;
+
+  /// No description provided for @accountGuestImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import guest data?'**
+  String get accountGuestImportTitle;
+
+  /// No description provided for @accountGuestImportMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this device\'s guest workouts, programs, profile and history into this account? Only import data that belongs to you. Guest data is kept separately, and importing may upload it to your private account.'**
+  String get accountGuestImportMessage;
+
+  /// No description provided for @accountGuestImportAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Import my guest data'**
+  String get accountGuestImportAccept;
+
+  /// No description provided for @accountGuestImportDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep guest data separate'**
+  String get accountGuestImportDecline;
+
+  /// No description provided for @accountSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing private account data…'**
+  String get accountSyncing;
+
+  /// No description provided for @accountPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pending changes'**
+  String accountPending(int count);
+
+  /// No description provided for @accountSyncError.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed. Your changes are saved on this device. Check your connection and retry.'**
+  String get accountSyncError;
+
+  /// No description provided for @accountSyncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync / retry'**
+  String get accountSyncNow;
+
+  /// No description provided for @accountConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve conflicts ({count})'**
+  String accountConflicts(int count);
+
+  /// No description provided for @accountSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get accountSignOut;
+
+  /// No description provided for @accountSignOutWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'There are {count} pending changes and {conflicts} unresolved conflicts. Unsynced data and both conflict versions stay in this account\'s workspace on this device, but may not yet be available elsewhere. Sign out and return to the separate guest workspace?'**
+  String accountSignOutWarning(int count, int conflicts);
+
+  /// No description provided for @accountProfileOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'All fields are optional. Age and measurements are not required for sign-in. Changes are saved in your current workspace.'**
+  String get accountProfileOptional;
+
+  /// No description provided for @accountName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get accountName;
+
+  /// No description provided for @accountAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age (optional)'**
+  String get accountAge;
+
+  /// No description provided for @accountWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg, optional)'**
+  String get accountWeight;
+
+  /// No description provided for @accountHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Height (cm, optional)'**
+  String get accountHeight;
+
+  /// No description provided for @accountGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender (optional)'**
+  String get accountGender;
+
+  /// No description provided for @accountGenderUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get accountGenderUnspecified;
+
+  /// No description provided for @accountGenderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get accountGenderFemale;
+
+  /// No description provided for @accountGenderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get accountGenderMale;
+
+  /// No description provided for @accountGenderOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get accountGenderOther;
+
+  /// No description provided for @accountAgeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a nonnegative whole number or leave blank.'**
+  String get accountAgeInvalid;
+
+  /// No description provided for @accountMeasurementInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a finite number greater than zero or leave blank.'**
+  String get accountMeasurementInvalid;
+
+  /// No description provided for @accountDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDelete;
+
+  /// No description provided for @accountDeleteSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently remove your account and server data.'**
+  String get accountDeleteSummary;
+
+  /// No description provided for @accountDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete this account and all its private and social server data? Pending local changes will also be removed. Guest data is separate. This cannot be undone and requires a connection. If linked to Apple, its authorization must be revoked by the server before deletion can complete.'**
+  String get accountDeleteWarning;
+
+  /// No description provided for @accountDeleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion could not be completed. No success has been confirmed. Reconnect and retry; contact support if Apple authorization cannot be revoked.'**
+  String get accountDeleteError;
+
+  /// No description provided for @accountCloudResetWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This resets only the signed-in account\'s workspace. Deletions will sync to this account on your other devices. Guest data and other accounts are unaffected.'**
+  String get accountCloudResetWarning;
+
+  /// No description provided for @accountCloudImportWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This replaces data in the signed-in account\'s workspace. The imported changes and deletions will sync to this account on other devices. Guest data and other accounts are unaffected.'**
+  String get accountCloudImportWarning;
+
+  /// No description provided for @accountPendingLossWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} changes have not reached the cloud yet, and {conflicts} conflicts are unresolved. They are discarded here and will never reach your other devices. Sync first if you want to keep them.'**
+  String accountPendingLossWarning(int count, int conflicts);
+
+  /// No description provided for @accountGuestResetWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this device\'s guest workspace is affected. Signed-in account workspaces are unchanged.'**
+  String get accountGuestResetWarning;
+
+  /// No description provided for @accountBackupScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Exports contain only the current workspace, never sign-in tokens or credentials. Keep backups private: they may include personal profile and health data.'**
+  String get accountBackupScope;
+
+  /// No description provided for @accountWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome!'**
+  String get accountWelcome;
+
+  /// No description provided for @accountOnboardingName.
+  ///
+  /// In en, this message translates to:
+  /// **'What should we call you? (Optional)'**
+  String get accountOnboardingName;
+
+  /// No description provided for @accountContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get accountContinue;
+
+  /// No description provided for @accountSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get accountSkip;
+
+  /// No description provided for @accountDeletionCleanupError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your server account was deleted, but device cleanup did not finish. Retry to remove its local data and credentials safely.'**
+  String get accountDeletionCleanupError;
+
+  /// No description provided for @syncConflictsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve sync conflicts'**
+  String get syncConflictsTitle;
+
+  /// No description provided for @syncConflictResolveError.
+  ///
+  /// In en, this message translates to:
+  /// **'The conflict could not be resolved. Both versions are retained; reconnect and retry.'**
+  String get syncConflictResolveError;
+
+  /// No description provided for @syncNoConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'No unresolved conflicts.'**
+  String get syncNoConflicts;
+
+  /// No description provided for @syncConflictDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted record'**
+  String get syncConflictDeleted;
+
+  /// No description provided for @syncLocalVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'This device\'s version'**
+  String get syncLocalVersion;
+
+  /// No description provided for @syncRemoteVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Account\'s server version'**
+  String get syncRemoteVersion;
+
+  /// No description provided for @syncKeepLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Use device version'**
+  String get syncKeepLocal;
+
+  /// No description provided for @syncKeepRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Use server version'**
+  String get syncKeepRemote;
+
+  /// No description provided for @accountDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted from the server and its local data has been removed. Your separate guest data is unchanged.'**
+  String get accountDeletedSuccess;
+
+  /// No description provided for @accountContinueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as guest'**
+  String get accountContinueAsGuest;
+
+  /// No description provided for @accountAppleReauthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple authorization must be revoked before deletion. Sign in with Apple again on Android, then retry deleting your account. If Apple does not supply a refresh token, use an iOS device or contact support. No account data has been deleted.'**
+  String get accountAppleReauthentication;
+
+  /// No description provided for @accountAppleReauthenticateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reauthenticate with Apple'**
+  String get accountAppleReauthenticateButton;
+
+  /// No description provided for @accountDeletionCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion was cancelled. Your account and data are unchanged.'**
+  String get accountDeletionCancelled;
+
+  /// No description provided for @accountDeletionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion is not configured on the server. Contact support to complete deletion. Your account and data have not been deleted.'**
+  String get accountDeletionUnavailable;
+
+  /// No description provided for @accountAppleMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'This Apple account does not match the Apple identity linked to your current account. Reauthenticate with the correct Apple account and retry. Nothing has been deleted.'**
+  String get accountAppleMismatch;
+
+  /// No description provided for @syncRelatedRecordsNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This conflict includes related workout records. Choosing a version applies to the whole group.'**
+  String get syncRelatedRecordsNotice;
+
+  /// No description provided for @conflictFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get conflictFieldName;
+
+  /// No description provided for @conflictFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get conflictFieldTitle;
+
+  /// No description provided for @conflictFieldNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get conflictFieldNotes;
+
+  /// No description provided for @conflictFieldWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get conflictFieldWeight;
+
+  /// No description provided for @conflictFieldHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get conflictFieldHeight;
+
+  /// No description provided for @conflictFieldAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get conflictFieldAge;
+
+  /// No description provided for @conflictFieldGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get conflictFieldGender;
+
+  /// No description provided for @conflictFieldBodyFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Body fat'**
+  String get conflictFieldBodyFat;
+
+  /// No description provided for @conflictFieldChest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get conflictFieldChest;
+
+  /// No description provided for @conflictFieldWaist.
+  ///
+  /// In en, this message translates to:
+  /// **'Waist'**
+  String get conflictFieldWaist;
+
+  /// No description provided for @conflictFieldNeck.
+  ///
+  /// In en, this message translates to:
+  /// **'Neck'**
+  String get conflictFieldNeck;
+
+  /// No description provided for @conflictFieldHip.
+  ///
+  /// In en, this message translates to:
+  /// **'Hip'**
+  String get conflictFieldHip;
+
+  /// No description provided for @conflictFieldExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get conflictFieldExercise;
+
+  /// No description provided for @conflictFieldCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get conflictFieldCategory;
+
+  /// No description provided for @conflictFieldDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (minutes)'**
+  String get conflictFieldDuration;
+
+  /// No description provided for @conflictFieldDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get conflictFieldDays;
+
+  /// No description provided for @conflictFieldExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises'**
+  String get conflictFieldExercises;
+
+  /// No description provided for @conflictFieldDayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get conflictFieldDayName;
+
+  /// No description provided for @conflictFieldValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get conflictFieldValue;
+
+  /// No description provided for @conflictFieldUnlockedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get conflictFieldUnlockedAt;
+
+  /// No description provided for @conflictFieldProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Program'**
+  String get conflictFieldProgram;
+
+  /// No description provided for @conflictFieldNextDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Next day'**
+  String get conflictFieldNextDay;
+
+  /// No description provided for @conflictFieldLastCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Last completed'**
+  String get conflictFieldLastCompleted;
+
+  /// No description provided for @syncConflictOriginBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Both versions changed since the last sync.'**
+  String get syncConflictOriginBoth;
+
+  /// No description provided for @syncConflictOriginLocalOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this device changed this record.'**
+  String get syncConflictOriginLocalOnly;
+
+  /// No description provided for @syncConflictOriginRemoteOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the server changed this record.'**
+  String get syncConflictOriginRemoteOnly;
+
+  /// No description provided for @syncConflictFieldsDiffer.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 field differs ({fields})} other{{count} fields differ ({fields})}}'**
+  String syncConflictFieldsDiffer(int count, String fields);
+
+  /// No description provided for @syncConflictNoVisibleDifference.
+  ///
+  /// In en, this message translates to:
+  /// **'The visible details match; only internal sync data differs.'**
+  String get syncConflictNoVisibleDifference;
+
+  /// No description provided for @syncConflictDeletedLocally.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted on this device · Still on the server'**
+  String get syncConflictDeletedLocally;
+
+  /// No description provided for @syncConflictDeletedRemotely.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted on the server · Still on this device'**
+  String get syncConflictDeletedRemotely;
+
+  /// No description provided for @syncConflictDeletedBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Both versions delete this record.'**
+  String get syncConflictDeletedBoth;
+
+  /// No description provided for @syncConflictDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Choosing the deleted version removes this record permanently.'**
+  String get syncConflictDeleteWarning;
+
+  /// No description provided for @syncConflictCollectionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} to {to}'**
+  String syncConflictCollectionCount(String from, String to);
+
+  /// No description provided for @syncConflictCollectionOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Order changed'**
+  String get syncConflictCollectionOrder;
+
+  /// No description provided for @syncConflictCollectionMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'{removed} replaced by {added}'**
+  String syncConflictCollectionMembers(String removed, String added);
+
+  /// No description provided for @syncConflictCollectionContent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} changed ({names})'**
+  String syncConflictCollectionContent(int count, String names);
+
+  /// No description provided for @syncConflictGroupSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'This choice applies to all {count} related records.'**
+  String syncConflictGroupSummary(int count);
+
+  /// No description provided for @syncConflictShowDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Show details'**
+  String get syncConflictShowDetails;
+
+  /// No description provided for @syncConflictDetailsWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Details ({count} records)'**
+  String syncConflictDetailsWithCount(int count);
+
+  /// No description provided for @syncConflictRawData.
+  ///
+  /// In en, this message translates to:
+  /// **'Raw data'**
+  String get syncConflictRawData;
+
+  /// No description provided for @syncConflictModifiedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited {date}'**
+  String syncConflictModifiedOn(String date);
+
+  /// No description provided for @syncConflictNewer.
+  ///
+  /// In en, this message translates to:
+  /// **'newer'**
+  String get syncConflictNewer;
+
+  /// No description provided for @syncConflictValueOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get syncConflictValueOn;
+
+  /// No description provided for @syncConflictValueOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get syncConflictValueOff;
+
+  /// No description provided for @teamCreateTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Team'**
+  String get teamCreateTeam;
+
+  /// No description provided for @teamJoinTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Team'**
+  String get teamJoinTeam;
+
+  /// No description provided for @teamEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Teams Yet'**
+  String get teamEmptyTitle;
+
+  /// No description provided for @teamEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new team to start connecting with friends, or join an existing one with an invite code.'**
+  String get teamEmptyDescription;
+
+  /// No description provided for @teamCreateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new team to collaborate with friends and track workouts together.'**
+  String get teamCreateDescription;
+
+  /// No description provided for @teamNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Name'**
+  String get teamNameLabel;
+
+  /// No description provided for @teamNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a team name'**
+  String get teamNameRequired;
+
+  /// No description provided for @teamDescriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Description'**
+  String get teamDescriptionLabel;
+
+  /// No description provided for @teamCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Team created successfully!'**
+  String get teamCreatedSuccess;
+
+  /// No description provided for @teamCreateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be automatically added as the team admin with an invite code to share.'**
+  String get teamCreateNote;
+
+  /// Label above the team kit color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Team color'**
+  String get teamColorLabel;
+
+  /// Helper text under the team color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the color your team wears in leaderboards and the feed.'**
+  String get teamColorHint;
+
+  /// Admin action opening the team color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Change color'**
+  String get teamColorChangeAction;
+
+  /// Confirmation after saving a new team color
+  ///
+  /// In en, this message translates to:
+  /// **'Team color updated'**
+  String get teamColorUpdated;
+
+  /// Shown when saving a new team color fails or is not permitted
+  ///
+  /// In en, this message translates to:
+  /// **'Team color could not be updated'**
+  String get teamColorUpdateError;
+
+  /// Name of the crimson kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Crimson'**
+  String get kitColorCrimson;
+
+  /// Name of the claret kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Claret'**
+  String get kitColorClaret;
+
+  /// Name of the violet kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get kitColorViolet;
+
+  /// Name of the royal blue kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Royal'**
+  String get kitColorRoyal;
+
+  /// Name of the teal kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get kitColorTeal;
+
+  /// Name of the forest green kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get kitColorForest;
+
+  /// Name of the gold kit color
+  ///
+  /// In en, this message translates to:
+  /// **'Gold'**
+  String get kitColorGold;
+
+  /// Name of the steel kit color, the default
+  ///
+  /// In en, this message translates to:
+  /// **'Steel'**
+  String get kitColorSteel;
+
+  /// No description provided for @teamJoinDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the invite code to join an existing team. You can get this code from the team owner.'**
+  String get teamJoinDescription;
+
+  /// No description provided for @teamInviteCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Code'**
+  String get teamInviteCodeLabel;
+
+  /// No description provided for @teamCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an invite code'**
+  String get teamCodeRequired;
+
+  /// No description provided for @teamInviteCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this code with others to invite them to your team'**
+  String get teamInviteCodeHint;
+
+  /// No description provided for @teamInviteCodeTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips for finding your invite code:'**
+  String get teamInviteCodeTip;
+
+  /// No description provided for @teamInviteCodeTip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the team owner to share the invite code from team settings'**
+  String get teamInviteCodeTip1;
+
+  /// No description provided for @teamInviteCodeTip2.
+  ///
+  /// In en, this message translates to:
+  /// **'The code is typically 8 characters long and all uppercase'**
+  String get teamInviteCodeTip2;
+
+  /// No description provided for @teamCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid invite code. Please check and try again.'**
+  String get teamCodeInvalid;
+
+  /// No description provided for @teamAlreadyMember.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already a member of this team.'**
+  String get teamAlreadyMember;
+
+  /// No description provided for @teamJoinError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error joining team. Please try again.'**
+  String get teamJoinError;
+
+  /// No description provided for @teamJoinedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully joined {teamName}!'**
+  String teamJoinedSuccess(String teamName);
+
+  /// No description provided for @teamMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get teamMembers;
+
+  /// No description provided for @teamMemberCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 member} other{{count} members}}'**
+  String teamMemberCount(num count);
+
+  /// No description provided for @teamNoMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'No members yet'**
+  String get teamNoMembers;
+
+  /// No description provided for @teamAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get teamAdmin;
+
+  /// No description provided for @teamInviteMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Members'**
+  String get teamInviteMembers;
+
+  /// No description provided for @teamInviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Code'**
+  String get teamInviteCode;
+
+  /// No description provided for @teamInviteLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Link'**
+  String get teamInviteLink;
+
+  /// No description provided for @teamCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code copied to clipboard'**
+  String get teamCodeCopied;
+
+  /// No description provided for @teamLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Team'**
+  String get teamLeave;
+
+  /// No description provided for @teamLeaveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Team'**
+  String get teamLeaveConfirmTitle;
+
+  /// No description provided for @teamLeaveConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to leave {teamName}?'**
+  String teamLeaveConfirmMessage(String teamName);
+
+  /// No description provided for @teamLeftSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'You have left the team'**
+  String get teamLeftSuccess;
+
+  /// No description provided for @teamLeaveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error leaving team. Please try again.'**
+  String get teamLeaveError;
+
+  /// No description provided for @teamDeleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Team'**
+  String get teamDeleteConfirmTitle;
+
+  /// No description provided for @teamDeleteConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {teamName}? This action cannot be undone.'**
+  String teamDeleteConfirmMessage(String teamName);
+
+  /// No description provided for @teamDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Team deleted successfully'**
+  String get teamDeletedSuccess;
+
+  /// No description provided for @teamDeleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting team. Please try again.'**
+  String get teamDeleteError;
+
+  /// No description provided for @teamSelectTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a team'**
+  String get teamSelectTeam;
+
+  /// No description provided for @teamSignInRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to create or join a team. Your guest workouts stay on this device.'**
+  String get teamSignInRequired;
+
+  /// No description provided for @teamLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your teams. Check your connection and try again.'**
+  String get teamLoadError;
+
+  /// No description provided for @teamFeedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the activity feed. Check your connection and try again.'**
+  String get teamFeedError;
+
+  /// No description provided for @teamMyTeams.
+  ///
+  /// In en, this message translates to:
+  /// **'My Teams'**
+  String get teamMyTeams;
+
+  /// No description provided for @teamShareInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Invite Link'**
+  String get teamShareInvite;
+
+  /// No description provided for @teamLinkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link copied to clipboard'**
+  String get teamLinkCopied;
+
+  /// No description provided for @suggestionInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get suggestionInbox;
+
+  /// No description provided for @teamInviteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Join my team {teamName} on Atlas Workout!'**
+  String teamInviteMessage(String teamName);
+
+  /// No description provided for @teamAllMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'All Members'**
+  String get teamAllMembers;
+
+  /// No description provided for @teamNoActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No social activity yet.\nJoin a team or invite friends!'**
+  String get teamNoActivity;
+
+  /// No description provided for @teamActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Activity'**
+  String get teamActivity;
+
+  /// No description provided for @teamActivityWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get teamActivityWorkouts;
+
+  /// No description provided for @teamActivityCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get teamActivityCalories;
+
+  /// No description provided for @teamActivityMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get teamActivityMinutes;
+
+  /// No description provided for @memberActivityDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Member Activity Details'**
+  String get memberActivityDetail;
+
+  /// No description provided for @teamMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Member'**
+  String get teamMember;
+
+  /// No description provided for @actionSuggest.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest'**
+  String get actionSuggest;
+
+  /// No description provided for @suggestionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest Program Change'**
+  String get suggestionTitle;
+
+  /// No description provided for @teamLeaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get teamLeaderboard;
+
+  /// No description provided for @leaderboardWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get leaderboardWeekly;
+
+  /// No description provided for @leaderboardMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get leaderboardMonthly;
+
+  /// No description provided for @leaderboardMetricWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get leaderboardMetricWorkouts;
+
+  /// No description provided for @leaderboardMetricWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Lifted'**
+  String get leaderboardMetricWeight;
+
+  /// No description provided for @leaderboardMetricCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get leaderboardMetricCalories;
+
+  /// No description provided for @leaderboardEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard is empty'**
+  String get leaderboardEmpty;
+
+  /// No description provided for @leaderboardWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'workouts'**
+  String get leaderboardWorkouts;
+
+  /// No description provided for @leaderboardRank.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get leaderboardRank;
+
+  /// No description provided for @leaderboardStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get leaderboardStats;
+
+  /// No description provided for @actionCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get actionCancel;
+
+  /// No description provided for @suggestionPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get suggestionPending;
+
+  /// No description provided for @suggestionAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get suggestionAccepted;
+
+  /// No description provided for @suggestionRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get suggestionRejected;
+
+  /// No description provided for @suggestionNoPending.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending suggestions'**
+  String get suggestionNoPending;
+
+  /// No description provided for @suggestionNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions'**
+  String get suggestionNone;
+
+  /// No description provided for @suggestionNoMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'(No message provided)'**
+  String get suggestionNoMessage;
+
+  /// No description provided for @suggestionStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get suggestionStatusPending;
+
+  /// No description provided for @suggestionStatusAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get suggestionStatusAccepted;
+
+  /// No description provided for @suggestionStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get suggestionStatusRejected;
+
+  /// No description provided for @suggestionDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion Details'**
+  String get suggestionDetail;
+
+  /// No description provided for @suggestionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get suggestionType;
+
+  /// No description provided for @suggestionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get suggestionMessage;
+
+  /// No description provided for @suggestionYourResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Response'**
+  String get suggestionYourResponse;
+
+  /// No description provided for @suggestionResponseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an optional response (optional)'**
+  String get suggestionResponseHint;
+
+  /// No description provided for @suggestionTheirResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Their Response'**
+  String get suggestionTheirResponse;
+
+  /// No description provided for @suggestionReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get suggestionReject;
+
+  /// No description provided for @suggestionAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get suggestionAccept;
+
+  /// No description provided for @suggestionAcceptedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion accepted!'**
+  String get suggestionAcceptedSuccess;
+
+  /// No description provided for @suggestionRejectedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion rejected!'**
+  String get suggestionRejectedSuccess;
+
+  /// No description provided for @suggestionTypeExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get suggestionTypeExercise;
+
+  /// No description provided for @suggestionTypeProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Program Change'**
+  String get suggestionTypeProgram;
+
+  /// No description provided for @suggestionTypeFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get suggestionTypeFeedback;
+
+  /// No description provided for @feedReportUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Report {userName}'**
+  String feedReportUser(String userName);
+
+  /// No description provided for @feedBlockUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Block {userName}'**
+  String feedBlockUser(String userName);
+
+  /// No description provided for @feedReportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User reported. We review reports within 24 hours.'**
+  String get feedReportSuccess;
+
+  /// No description provided for @feedBlockSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User blocked. You won\'t see their activity anymore.'**
+  String get feedBlockSuccess;
+
+  /// No description provided for @feedReportError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send the report. Please try again.'**
+  String get feedReportError;
+
+  /// No description provided for @feedBlockError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t block this user. Please try again.'**
+  String get feedBlockError;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsTermsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of use'**
+  String get settingsTermsOfUse;
+
+  /// No description provided for @legalLinkOpenError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the page. Check your connection and try again.'**
+  String get legalLinkOpenError;
+
+  /// No description provided for @communityTermsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community terms'**
+  String get communityTermsTitle;
+
+  /// No description provided for @communityTermsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Teams let you share activity with other people. Before you continue, you agree to the terms of use: no abusive, hateful, sexual or otherwise objectionable content, and no harassment. Content that breaks these rules is removed, and the accounts behind it can be banned. You can report or block any user from their post in the feed.'**
+  String get communityTermsBody;
+
+  /// No description provided for @communityTermsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the terms of use'**
+  String get communityTermsRead;
+
+  /// No description provided for @communityTermsAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree'**
+  String get communityTermsAccept;
+
+  /// No description provided for @communityTermsDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get communityTermsDecline;
 }
 
 class _AppLocalizationsDelegate

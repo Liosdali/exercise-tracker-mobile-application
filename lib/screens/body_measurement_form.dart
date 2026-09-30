@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../data/database_helper.dart';
+import '../l10n/app_localizations.dart';
 import '../models/body_measurement.dart';
 import '../services/body_fat_calculator_service.dart';
+import '../services/user_account_service.dart';
 
 /// Form to add a new body-measurement log entry: weight, height, and
 /// circumferences (waist/neck/hip), from which the body fat percentage is
@@ -75,11 +79,34 @@ class _BodyMeasurementFormState extends State<BodyMeasurementForm> {
       calculatedBodyFat: _liveCalculatedBodyFat,
       chestCm: double.tryParse(_chestController.text),
       waistCm: double.tryParse(_waistController.text),
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+      notes: _notesController.text.trim().isEmpty
+          ? null
+          : _notesController.text.trim(),
       createdAt: DateTime.now().toIso8601String(),
     );
-    await DatabaseHelper.instance.insertMeasurement(measurement);
-    if (mounted) Navigator.of(context).pop(true);
+    final l10n = AppLocalizations.of(context)!;
+    final accounts = context.read<UserAccountService>();
+    try {
+      await DatabaseHelper.instance.workspace().insertMeasurement(measurement);
+      // The insert has already recorded itself in sync_records via the table
+      // triggers; this only refreshes the counts the account UI reads, which
+      // would otherwise lag behind until the periodic sync happened to run.
+      // Profile edits do the same through updateProfile.
+      await accounts.refresh();
+      if (mounted) Navigator.of(context).pop(true);
+    } on ArgumentError {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.accountMeasurementInvalid)));
+      }
+    } on DatabaseException {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.accountOperationError)));
+      }
+    }
   }
 
   @override
@@ -110,27 +137,37 @@ class _BodyMeasurementFormState extends State<BodyMeasurementForm> {
             const SizedBox(height: 8),
             TextField(
               controller: _heightController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(labelText: 'Boy (cm)'),
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _weightController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(labelText: 'Kilo (kg)'),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _neckController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Boyun çevresi (cm)'),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Boyun çevresi (cm)',
+              ),
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _waistController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(labelText: 'Bel çevresi (cm)'),
               onChanged: (_) => setState(() {}),
             ),
@@ -138,16 +175,24 @@ class _BodyMeasurementFormState extends State<BodyMeasurementForm> {
               const SizedBox(height: 8),
               TextField(
                 controller: _hipController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Kalça çevresi (cm)'),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: const InputDecoration(
+                  labelText: 'Kalça çevresi (cm)',
+                ),
                 onChanged: (_) => setState(() {}),
               ),
             ],
             const SizedBox(height: 8),
             TextField(
               controller: _chestController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Göğüs çevresi (cm) - opsiyonel'),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Göğüs çevresi (cm) - opsiyonel',
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
