@@ -4,7 +4,7 @@ Atlas Workout (`com.mythosforgelabs.atlasworkout`) için mağaza yayını kontro
 listesi. Koddaki kısım bu dalda yapıldı; geri kalanlar hesap panelleri ve
 içerik hazırlığıdır.
 
-Durum işaretleri: ✅ depoda hazır · ⬜ senin yapman gereken · ⚠️ red riski
+Durum işaretleri: ✅ depoda hazır · 🟡 kod hazır, kurulum bekliyor · ⬜ senin yapman gereken · ⚠️ red riski
 
 ---
 
@@ -31,13 +31,33 @@ Bunlar olmadan iki mağazadan da büyük olasılıkla red gelir.
   ekibe katılmadan önce koşulları (sıfır tolerans maddesi dahil) kabul
   ediyor. Kabul, cihaz ve koşul sürümü başına bir kez isteniyor;
   koşullar esaslı şekilde değişirse `communityTermsVersion` artırılır.
-- ⬜ ⚠️ **Şikayetlerin 24 saat içinde ele alınması.** Şikayet ve engelleme
-  uygulamada var ✅ (`user_reports`, `user_blocks`). Şikayetleri okuyan bir
-  süreç ise yok: şu an kayıtları yalnızca Supabase panelinden görebilirsin.
-  Apple, şikayet edilen içeriğin 24 saat içinde kaldırılmasını ve kullanıcının
-  gerekirse çıkarılmasını ister. Uygulamadaki mesaj da artık "24 saat içinde
-  inceleriz" diyor. En basit çözüm, `user_reports` tablosuna Supabase Database
-  Webhook ile e-posta bildirimi bağlamak.
+- 🟡 **Şikayetlerin 24 saat içinde ele alınması.** Kod hazır: her yeni
+  `user_reports` kaydı `notify_new_user_report` trigger'ı ile `report-notify`
+  Edge Function'ına gider. Fonksiyon şikayeti, kullanıcı adları, 24 saatlik
+  son tarih ve Supabase panel bağlantılarıyla birlikte Resend üzerinden
+  e-postalar. Bildirim gönderilemezse şikayet kaydı yine de başarılı olur.
+  ⬜ Tek seferlik kurulum:
+  1. resend.com'da **baykal246@gmail.com** ile hesap aç → API Keys → anahtar
+     oluştur (`re_...`). Kendi alan adın doğrulanana kadar Resend yalnızca
+     hesap sahibinin e-postasına gönderir; bu kurulum için yeterli.
+  2. Rastgele bir webhook sırrı üret (ör. PowerShell:
+     `[guid]::NewGuid().ToString('N') + [guid]::NewGuid().ToString('N')`).
+  3. Fonksiyon sırlarını ayarla ve fonksiyonu yayınla:
+     ```bash
+     supabase secrets set RESEND_API_KEY=re_... REPORT_EMAIL_TO=baykal246@gmail.com REPORT_WEBHOOK_SECRET=<sır>
+     supabase functions deploy report-notify
+     ```
+  4. Supabase SQL Editor'de, aynı sır ile:
+     ```sql
+     select vault.create_secret('https://<project-ref>.supabase.co', 'project_url');
+     select vault.create_secret('<sır>', 'report_webhook_secret');
+     ```
+  5. Migration'ı uygula: `supabase db push`
+     (`202609300001_notify_new_user_report.sql`).
+  6. Dene: uygulamada ikinci bir hesapla bir gönderiyi şikayet et. E-posta
+     gelmezse Supabase → Edge Functions → report-notify → Logs'a, ve
+     `select * from net._http_response order by created desc limit 5;`
+     sonucuna bak.
 - ⬜ ⚠️ **Egzersiz görsellerinin lisansı.** `storage/` altındaki 1324 GIF ve
   `exercises.json`, ID biçimine bakılırsa ExerciseDB'den geliyor gibi
   görünüyor. ExerciseDB GIF'leri ücretsiz değildir; ticari lisans gerektirir.
