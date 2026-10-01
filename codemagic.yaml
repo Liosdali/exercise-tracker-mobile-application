@@ -31,9 +31,20 @@ workflows:
       - name: Write .env
         # .env is gitignored but bundled as a Flutter asset, so the build
         # fails without it. Only the public anon key belongs here.
+        # Fail here rather than ship a build whose account features are
+        # silently disabled: the app treats empty or malformed values as
+        # "not configured" and the tester only sees a generic message.
         script: |
+          fail() { echo "ERROR: $1 (Codemagic > App > Environment variables, group atlas_ios)"; exit 1; }
+          [ -n "$SUPABASE_URL" ] || fail "SUPABASE_URL is empty or missing"
+          [ -n "$SUPABASE_ANON_KEY" ] || fail "SUPABASE_ANON_KEY is empty or missing"
+          echo "$SUPABASE_URL" | grep -Eq '^https://[a-z0-9]+\.supabase\.co/?$' \
+            || fail "SUPABASE_URL must look like https://<project-ref>.supabase.co (no quotes or spaces)"
+          echo "$SUPABASE_ANON_KEY" | grep -Eq '^[A-Za-z0-9._-]+$' \
+            || fail "SUPABASE_ANON_KEY contains quotes, spaces or other invalid characters"
           printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' \
             "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > .env
+          echo "Wrote .env for $SUPABASE_URL (anon key: ${#SUPABASE_ANON_KEY} chars)"
       - name: Get packages
         script: flutter pub get
       - name: Tests
