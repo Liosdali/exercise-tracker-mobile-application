@@ -80,7 +80,7 @@ void main() {
       find.byType(TeamHeader),
       matchesGoldenFile('goldens/team_header_dark.png'),
     );
-  });
+  }, tags: ['golden']);
 
   testWidgets('golden: team header in light', (tester) async {
     await pumpAtlas(
@@ -100,5 +100,5 @@ void main() {
       find.byType(TeamHeader),
       matchesGoldenFile('goldens/team_header_light.png'),
     );
-  });
+  }, tags: ['golden']);
 }

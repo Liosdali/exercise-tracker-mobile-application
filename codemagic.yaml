@@ -37,7 +37,9 @@ workflows:
       - name: Get packages
         script: flutter pub get
       - name: Tests
-        script: flutter test
+        # Goldens are rendered on Windows and differ by a few pixels on macOS,
+        # so they only run locally (see dart_test.yaml).
+        script: flutter test --exclude-tags golden
         ignore_failure: true
       - name: Apply signing profiles
         script: xcode-project use-profiles

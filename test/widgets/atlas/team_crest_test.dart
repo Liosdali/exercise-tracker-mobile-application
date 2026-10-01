@@ -80,7 +80,7 @@ void main() {
       find.byType(TeamCrest),
       matchesGoldenFile('goldens/team_crest_dark.png'),
     );
-  });
+  }, tags: ['golden']);
 
   testWidgets('golden: crest in light', (tester) async {
     await pumpAtlas(
@@ -96,5 +96,5 @@ void main() {
       find.byType(TeamCrest),
       matchesGoldenFile('goldens/team_crest_light.png'),
     );
-  });
+  }, tags: ['golden']);
 }

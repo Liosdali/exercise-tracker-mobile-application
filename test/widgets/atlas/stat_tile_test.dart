@@ -89,7 +89,7 @@ void main() {
       find.byType(StatTile),
       matchesGoldenFile('goldens/stat_tile_dark.png'),
     );
-  });
+  }, tags: ['golden']);
 
   testWidgets('golden: stat tile in light', (tester) async {
     await pumpAtlas(
@@ -105,5 +105,5 @@ void main() {
       find.byType(StatTile),
       matchesGoldenFile('goldens/stat_tile_light.png'),
     );
-  });
+  }, tags: ['golden']);
 }

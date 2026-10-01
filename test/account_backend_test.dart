@@ -13,6 +13,7 @@ import 'package:exercise_app/services/backup_service.dart';
 import 'package:exercise_app/services/sync_service.dart';
 import 'package:exercise_app/services/user_account_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:uuid/uuid.dart';
@@ -287,7 +288,7 @@ void main() {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
     directory = Directory(
-      '${Directory.current.path}\\.dart_tool\\account_backend_${const Uuid().v4()}',
+      p.join(Directory.current.path, '.dart_tool', 'account_backend_${const Uuid().v4()}'),
     );
     await directory.create(recursive: true);
     await databaseFactory.setDatabasesPath(directory.path);
@@ -869,7 +870,7 @@ void main() {
     () async {
       await helper.closeWorkspace();
       final id = const Uuid().v4();
-      final path = '${directory.path}\\account_$id.db';
+      final path = p.join(directory.path, 'account_$id.db');
       // Produce the actual legacy schema using the existing additive creators,
       // then remove only V7 additions in this isolated fixture.
       await helper.switchAccount(id);
@@ -1435,7 +1436,7 @@ void main() {
         await account.clearDeletedAccount(id);
         await account.clearDeletedAccount(id);
         expect(
-          await File('${directory.path}\\account_$id.db').exists(),
+          await File(p.join(directory.path, 'account_$id.db')).exists(),
           isFalse,
         );
         await account.initialize(id);

@@ -1,0 +1,4 @@
+tags:
+  # Pixel comparisons against PNGs rendered on Windows. Font rasterisation
+  # differs on macOS/Linux, so CI there runs `--exclude-tags golden`.
+  golden:

@@ -128,7 +128,7 @@ void main() {
       find.byType(FeedItem),
       matchesGoldenFile('goldens/feed_item_dark.png'),
     );
-  });
+  }, tags: ['golden']);
 
   testWidgets('golden: feed item in light', (tester) async {
     await pumpAtlas(
@@ -149,5 +149,5 @@ void main() {
       find.byType(FeedItem),
       matchesGoldenFile('goldens/feed_item_light.png'),
     );
-  });
+  }, tags: ['golden']);
 }

@@ -79,7 +79,7 @@ void main() {
       find.byType(Column).first,
       matchesGoldenFile('goldens/status_mark_dark.png'),
     );
-  });
+  }, tags: ['golden']);
 
   testWidgets('golden: all four statuses in light', (tester) async {
     await pumpAtlas(
@@ -107,5 +107,5 @@ void main() {
       find.byType(Column).first,
       matchesGoldenFile('goldens/status_mark_light.png'),
     );
-  });
+  }, tags: ['golden']);
 }

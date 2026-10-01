@@ -251,7 +251,7 @@ void main() {
       find.byType(AnimatedLeaderboard),
       matchesGoldenFile('goldens/leaderboard_dark.png'),
     );
-  });
+  }, tags: ['golden']);
 
   testWidgets('golden: leaderboard in light', (tester) async {
     await pumpAtlas(
@@ -267,5 +267,5 @@ void main() {
       find.byType(AnimatedLeaderboard),
       matchesGoldenFile('goldens/leaderboard_light.png'),
     );
-  });
+  }, tags: ['golden']);
 }
